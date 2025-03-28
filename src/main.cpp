@@ -1,12 +1,12 @@
 #include <iostream>
-#include "process/PCB.h"
-#include "process_generator/process_generator.h"
+#include "process/pcb.h"
+#include "process/process_generator/process_generator.h"
 
 void data_(int n, ProcessGenerator &pg);
 int main()
 {
 	// initialize generator
-	ProcessGenerator pg(0.5, 10.0, 3.0, 10);
+	ProcessGenerator pg(0.85, 10.0, 3.0, 10);
 
 	// generate processes
 	std::cout << "First batch:" << std::endl;
