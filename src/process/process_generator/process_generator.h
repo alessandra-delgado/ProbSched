@@ -2,19 +2,8 @@
 #define PROCESS_GENERATOR_H
 
 #include <vector>
-#include <random>
-#include "../process/PCB.h"
-
-class RandomGenerator
-{
-	private:
-	std::mt19937 gen; // Mersenne Twister pseudorandom number generator
-	public:
-	RandomGenerator();
-	double exponential(double lambda);		// generate numbers with exponential dritribution
-	int normal(double mean, double stddev); // generate numbers with normal dritribution
-	int uniform(int min, int max);
-};
+#include "../pcb.h"
+#include "random_generator.h"
 
 class ProcessGenerator
 {
@@ -32,6 +21,7 @@ class ProcessGenerator
 	PCB generatePCB(int current_time);
 	std::vector<PCB> generatePCBList(int num_processes);
 	std::vector<PCB> generatePeriodicPCBList(int num_processes, int base_period);
+	
 };
 
 #endif

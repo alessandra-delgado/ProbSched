@@ -5,7 +5,7 @@
 class PCB
 {
 private:
-	static int next_pid; // Sequential id
+	static inline int next_pid = 1; // Sequential id
 	int pid;
 	int priority;	  // Generated with uniform distribution/weighted random selection
 	int exec_time;	  // Countdown for time already executed

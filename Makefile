@@ -8,6 +8,7 @@ SRC_DIR := src
 EXE_DIR := $(BUILD_DIR)/$(EXE)
 
 MKDIR := mkdir -p
+CXXFLAGS := -std=c++20 -Wall -Wextra -Wpedantic
 # LIBS := no libs so far xd
 
 SRCS := $(shell find $(SRC_DIR) -name *.cpp)
@@ -25,7 +26,7 @@ $(EXE_DIR): $(OBJS)
 
 $(BUILD_DIR)/%.o : %.cpp
 	$(MKDIR) $(dir $@)
-	$(CC) -c $< -o $@
+	$(CC) $(CXXFLAGS) -c $< -o $@
 
 # =============================
 clean:
