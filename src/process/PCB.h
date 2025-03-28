@@ -1,3 +1,5 @@
+#ifndef PCB_H
+#define PCB_H
 #include <string>
 
 class PCB
@@ -35,9 +37,10 @@ public:
 	inline void set_name(std::string &n) { name = n; } // (little cool optimization)
 };
 
-int PCB::next_pid = 1;
+
 // ? What should happen when a process is dealocated:
 // ? 	a) Do all processes ahead get their pid decremented?
 // ? 	b) Do their pids remain the same like nothing happened? <-- In this case, should we add the process
 // ? 																state as an atribute to this class?
 
+#endif

@@ -4,6 +4,7 @@
 #include <random>      // generate random numbers
 #include <chrono>   // get seed
 
+int PCB::next_pid = 1; // todo: fix this
 // generate gen with seed
 RandomGenerator::RandomGenerator() :
 	gen(std::chrono::system_clock::now().time_since_epoch().count()) {}
@@ -38,6 +39,7 @@ arrival_rate(lambda),
 // generate individual PCB
 
 PCB ProcessGenerator::generatePCB(int current_time) {
+    
     PCB pcb; // new PCB
     int arrival = current_time + static_cast<int>(rng.exponential(1.0/arrival_rate));
     int burst = rng.normal(burst_mean, burst_stddev);
@@ -47,7 +49,8 @@ PCB ProcessGenerator::generatePCB(int current_time) {
     pcb.set_exec_time(burst);
     pcb.set_priority(rng.uniform(1, max_priority));
     pcb.set_deadline(arrival + rng.uniform(1, deadline_range));
-    pcb.set_name("Process_" + std::to_string(pcb.get_pid()));
+    std::string name = "Process_" + std::to_string(pcb.get_pid());
+    pcb.set_name(name);
     
     return pcb;
 }
@@ -57,7 +60,6 @@ PCB ProcessGenerator::generatePCB(int current_time) {
 std::vector<PCB> ProcessGenerator::generatePCBList(int num_processes) {
     std::vector<PCB> pcbs;
     int current_time = 0;
-    
     for (int i = 0; i < num_processes; ++i) {
         PCB pcb = generatePCB(current_time);
         current_time = pcb.get_arrival_time();
