@@ -44,7 +44,7 @@ PCB ProcessGenerator::generatePCB(int current_time) {
     
     pcb.set_arrival_time(arrival);
     pcb.set_burst_time(burst);
-    pcb.set_remaining_time(burst);
+    pcb.set_exec_time(burst);
     pcb.set_priority(rng.uniform(1, max_priority));
     pcb.set_deadline(arrival + rng.uniform(1, deadline_range));
     pcb.set_name("Process_" + std::to_string(pcb.get_pid()));
@@ -74,8 +74,8 @@ std::vector<PCB> ProcessGenerator::generatePeriodicPCBList(int num_processes, in
     
     for (int i = 0; i < num_processes; ++i) {
         PCB pcb = generatePCB(current_time);
-        pcb.set_period(base_period + rng.uniform(-5, 5));
-        current_time += pcb.get_period();
+        pcb.set_burst_time(base_period + rng.uniform(-5, 5));
+        current_time += pcb.get_burst_time();
         pcbs.push_back(pcb);
      }
     
