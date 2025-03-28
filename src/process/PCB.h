@@ -35,8 +35,9 @@ public:
 	inline void set_burst_time(int n) { burst_time = n; }
 	inline void set_arrival_time(int n) { arrival_time = n; }
 	inline void set_name(std::string &n) { name = n; } // (little cool optimization)
-};
 
+	inline void reset_pid() { next_pid = 1; } // Reset pid when creating a new list/batch of processes
+};
 
 // ? What should happen when a process is dealocated:
 // ? 	a) Do all processes ahead get their pid decremented?
