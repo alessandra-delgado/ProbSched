@@ -4,7 +4,7 @@
 #include <random>      // generate random numbers
 #include <chrono>   // get seed
 
-int PCB::next_pid = 1; // todo: fix this
+int PCB::next_pid; // todo: fix this
 // generate gen with seed
 RandomGenerator::RandomGenerator() :
 	gen(std::chrono::system_clock::now().time_since_epoch().count()) {}
@@ -60,8 +60,10 @@ PCB ProcessGenerator::generatePCB(int current_time) {
 std::vector<PCB> ProcessGenerator::generatePCBList(int num_processes) {
     std::vector<PCB> pcbs;
     int current_time = 0;
+    PCB pcb;
+    pcb.reset_pid(); // Guarantee that pid starts at 1 for every new batch of processes
     for (int i = 0; i < num_processes; ++i) {
-        PCB pcb = generatePCB(current_time);
+        pcb = generatePCB(current_time);
         current_time = pcb.get_arrival_time();
         pcbs.push_back(pcb);
     }
