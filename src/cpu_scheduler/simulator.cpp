@@ -13,4 +13,8 @@
 //      - should the stats be displayed during 
 
 
-// have two separate functions in this file that take care of the different types of scheduling (run time or predefined)
+// have two separate functions in this file that take care of the different types of scheduling (run time or predefined)?
+
+// to brainstorm yet
+
+// creating a scheduler class for the algorithms?????????
