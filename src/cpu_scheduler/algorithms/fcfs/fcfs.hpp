@@ -1,8 +1,6 @@
-#ifndef FCFS_H
-#define FCFS_H
-
-#include "../../ischeduler.h"
-#include "../../../process/PCB.h"
+#pragma once
+#include "../../scheduler.hpp"
+#include "../../../process/PCB.hpp"
 
 class FCFS : public PCB
 {
@@ -11,4 +9,3 @@ class FCFS : public PCB
     virtual void remove_pcb();
     virtual PCB get_next_pcb();
 };
-#endif
