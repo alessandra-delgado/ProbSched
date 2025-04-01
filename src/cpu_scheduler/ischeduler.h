@@ -1,5 +1,5 @@
-#ifndef SCHEDULER_H
-#define SCHEDULER_H
+#ifndef ISCHEDULER_H
+#define ISCHEDULER_H
 
 #include "../process/PCB.h"
 
