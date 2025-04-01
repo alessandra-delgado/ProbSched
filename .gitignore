@@ -1,4 +1,7 @@
 
 .vscode/
+.vs/
+
+*.vsidx
 
 build/

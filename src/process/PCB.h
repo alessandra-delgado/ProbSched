@@ -1,9 +1,11 @@
+#ifndef PCB_H
+#define PCB_H
 #include <string>
 
 class PCB
 {
 private:
-	static int next_pid; // Sequential id
+	static inline int next_pid = 1; // Sequential id
 	int pid;
 	int priority;	  // Generated with uniform distribution/weighted random selection
 	int exec_time;	  // Countdown for time already executed
@@ -33,6 +35,13 @@ public:
 	inline void set_burst_time(int n) { burst_time = n; }
 	inline void set_arrival_time(int n) { arrival_time = n; }
 	inline void set_name(std::string &n) { name = n; } // (little cool optimization)
+
+	inline void reset_pid() { next_pid = 1; } // Reset pid when creating a new list/batch of processes
 };
 
-int PCB::next_pid = 1;
+// ? What should happen when a process is dealocated:
+// ? 	a) Do all processes ahead get their pid decremented?
+// ? 	b) Do their pids remain the same like nothing happened? <-- In this case, should we add the process
+// ? 																state as an atribute to this class?
+
+#endif
