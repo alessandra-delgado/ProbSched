@@ -1,11 +1,11 @@
-#ifndef PCB_H
-#define PCB_H
+#pragma once
 #include <string>
-
+#include "process_state/process_state.hpp"
 class PCB
 {
 private:
 	static inline int next_pid = 1; // Sequential id
+	ProcessState state;
 	int pid;
 	int priority;	  // Generated with uniform distribution/weighted random selection
 	int exec_time;	  // Countdown for time already executed
@@ -16,9 +16,10 @@ private:
 
 	// todo: Add more atributes as needed like 'periodic'...
 public:
-	PCB() : pid(next_pid++), priority(0), exec_time(0), deadline(0), burst_time(0), arrival_time(0), name("") {}
+	PCB() : state(ProcessState::New), pid(next_pid++), priority(0), exec_time(0), deadline(0), burst_time(0), arrival_time(0), name("") {}
 
 	// * getters ---------------------------------------------------------
+	inline ProcessState get_state() const { return state; }
 	inline int get_pid() const { return pid; }
 	inline int get_priority() const { return priority; }
 	inline int get_exec_time() const { return exec_time; }
@@ -29,6 +30,7 @@ public:
 
 	// * setters ---------------------------------------------------------
 	// 'n' represents any new value for an atribute
+	inline void set_state(ProcessState n) { state = n; }
 	inline void set_priority(int n) { priority = n; }
 	inline void set_exec_time(int n) { exec_time = n; }
 	inline void set_deadline(int n) { deadline = n; }
@@ -38,10 +40,3 @@ public:
 
 	inline void reset_pid() { next_pid = 1; } // Reset pid when creating a new list/batch of processes
 };
-
-// ? What should happen when a process is dealocated:
-// ? 	a) Do all processes ahead get their pid decremented?
-// ? 	b) Do their pids remain the same like nothing happened? <-- In this case, should we add the process
-// ? 																state as an atribute to this class?
-
-#endif

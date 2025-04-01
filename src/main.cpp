@@ -1,6 +1,6 @@
 #include <iostream>
-#include "process/pcb.h"
-#include "process/process_generator/process_generator.h"
+#include "process/PCB.hpp"
+#include "process/process_generator/process_generator.hpp"
 
 void data_(int n, ProcessGenerator &pg);
 int main()
@@ -22,6 +22,7 @@ void data_(int n, ProcessGenerator &pg){
 	for (const auto &pcb : list)
 	{
 		std::cout << "Processo ID: " << pcb.get_pid()
+				  << " | Estado: " << to_string(pcb.get_state())
 				  << " | Nome: " << pcb.get_name()
 				  << " | Tempo de Chegada: " << pcb.get_arrival_time()
 				  << " | Burst Time: " << pcb.get_burst_time()

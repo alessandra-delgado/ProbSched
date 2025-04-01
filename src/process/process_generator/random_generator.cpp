@@ -1,5 +1,5 @@
 #include <chrono>
-#include "random_generator.h"
+#include "random_generator.hpp"
 
 // generate gen with seed
 RandomGenerator::RandomGenerator() :

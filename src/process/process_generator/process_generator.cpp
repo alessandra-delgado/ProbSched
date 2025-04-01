@@ -1,7 +1,4 @@
-#include "process_generator.h"
-#include <algorithm> // std::max
-#include <string>	 // string manipulation
-#include <random>	 // generate random numbers
+#include "process_generator.hpp"
 
 ProcessGenerator::ProcessGenerator(double lambda, double mean_burst, double stddev_burst, int max_prio, int dl_range)
 {

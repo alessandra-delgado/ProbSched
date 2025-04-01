@@ -1,9 +1,7 @@
-#ifndef PROCESS_GENERATOR_H
-#define PROCESS_GENERATOR_H
-
+#pragma once
 #include <vector>
-#include "../pcb.h"
-#include "random_generator.h"
+#include "../PCB.hpp"
+#include "random_generator.hpp"
 
 class ProcessGenerator
 {
@@ -23,5 +21,3 @@ class ProcessGenerator
 	std::vector<PCB> generatePeriodicPCBList(int num_processes, int base_period);
 	
 };
-
-#endif
