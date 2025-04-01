@@ -17,5 +17,5 @@ std::string to_string(ProcessState state)
 	default:
 		return "N/A";
 	}
-	return "N/A"; // for reached end of function warning
+	return "N/A"; // for 'reached end of non-void function' warning
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "process/process_state/process_state.hpp"
+#include "process_state/process_state.hpp"
 class PCB
 {
 private:
@@ -19,7 +19,7 @@ public:
 	PCB() : state(ProcessState::New), pid(next_pid++), priority(0), exec_time(0), deadline(0), burst_time(0), arrival_time(0), name("") {}
 
 	// * getters ---------------------------------------------------------
-	// todo: add setters and getters for process state.
+	inline ProcessState get_state() const { return state; }
 	inline int get_pid() const { return pid; }
 	inline int get_priority() const { return priority; }
 	inline int get_exec_time() const { return exec_time; }
@@ -30,6 +30,7 @@ public:
 
 	// * setters ---------------------------------------------------------
 	// 'n' represents any new value for an atribute
+	inline void set_state(ProcessState n) { state = n; }
 	inline void set_priority(int n) { priority = n; }
 	inline void set_exec_time(int n) { exec_time = n; }
 	inline void set_deadline(int n) { deadline = n; }
