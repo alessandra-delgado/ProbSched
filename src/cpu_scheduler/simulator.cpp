@@ -1,5 +1,5 @@
-#include "../scheduler.hpp"
-#include "algorithms.hpp"
+#include "scheduler.hpp"
+#include "algorithms/algorithms.hpp"
 
 void simulator(){
     
