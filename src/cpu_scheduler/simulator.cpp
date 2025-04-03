@@ -18,13 +18,13 @@ void simulator()
     FCFS fcfs;
     std::vector<std::unique_ptr<Scheduler>> algorithms;
     algorithms.push_back((std::make_unique<FCFS>()));
-
+    std::cout << "algorithm was picked!" << std::endl;
     // generate processes
     
 
     while (true)
     {
-        algorithms[i]->schedule();
+        algorithms[i-1]->schedule();
         // will add a break somewhere
     }
     // 2 - Enquanto que não terminar ciclo
