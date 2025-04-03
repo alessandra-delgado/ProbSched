@@ -15,26 +15,16 @@ void simulator()
     if (i < 1)
         return;
 
-    FCFS fcfs;
     std::vector<std::unique_ptr<Scheduler>> algorithms;
     algorithms.push_back((std::make_unique<FCFS>()));
-    std::cout << "algorithm was picked!" << std::endl;
-    // generate processes
     
-
+    std::cout << "Simulation start" << std::endl;
     while (true)
     {
         algorithms[i-1]->schedule();
-        // will add a break somewhere
     }
-    // 2 - Enquanto que não terminar ciclo
-    // --> ver se há processo a correr
-    // --> ver se a queue está vazia
-    // --> escolher um novo processo
-    // ----> incrementar tempo, repetir
 
     std::cout << "Fim do scheduler :)" << std::endl;
-    // ! Dividir random de pre-determinado
 }
 
 void display(ProcessGenerator &pg, std::vector<PCB> list)
