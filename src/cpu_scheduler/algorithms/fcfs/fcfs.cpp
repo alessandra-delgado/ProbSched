@@ -33,6 +33,9 @@ void FCFS::schedule()
     ProcessGenerator pg(0.85, 10.0, 3.0, 10);
     RandomGenerator rng;
     while(true){
+        // todo: fix process state now changint to running or ready
+        // todo: fix processes not generating 
+        // todo: output to show what other processes are in the queue
         Scheduler::increment_current_time();
         if (running_process)
         {
