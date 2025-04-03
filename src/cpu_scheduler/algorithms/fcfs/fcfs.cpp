@@ -33,14 +33,14 @@ void FCFS::schedule()
     ProcessGenerator pg(0.85, 10.0, 3.0, 10);
     RandomGenerator rng;
     while(true){
-        // todo: fix process state now changint to running or ready
+        // todo: fix process state not changing to running or ready
         // todo: fix processes not generating 
         // todo: output to show what other processes are in the queue
         Scheduler::increment_current_time();
         if (running_process)
         {
             running_process->dec_exec_time();
-            if (running_process->get_exec_time() == 0){
+            if (running_process->get_exec_time() < 0){
                 running_process->set_state(ProcessState::Terminated);
                 running_process = nullptr;
             }
@@ -55,8 +55,9 @@ void FCFS::schedule()
             PCB pcb = pg.generatePCB(Scheduler::get_current_time());
             add_pcb(pcb);
         }
-        if (!running_process && !is_ready_empty())
+        if (!running_process && !is_ready_empty()){
             running_process = const_cast<PCB*>(&get_next_pcb());
+        }
 
         std::cout << "Current time: " << Scheduler::get_current_time()
                   << " | Process Running: " << (running_process ? running_process->get_name() : "NONE")
