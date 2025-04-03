@@ -6,7 +6,7 @@
 class Scheduler
 {
 private:
-	static inline int current_time = 0;
+	static inline int current_time = -1;
 public:
 	inline static void set_current_time(int t) { current_time = t; }
 	inline static int get_current_time() { return current_time; }

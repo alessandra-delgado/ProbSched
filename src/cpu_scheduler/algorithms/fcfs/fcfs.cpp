@@ -36,6 +36,7 @@ void FCFS::schedule()
         // todo: fix process state not changing to running or ready
         // todo: fix processes not generating 
         // todo: output to show what other processes are in the queue
+        // todo: fix process being ran when not on arrival time >:(
         Scheduler::increment_current_time();
         if (running_process)
         {
@@ -50,6 +51,7 @@ void FCFS::schedule()
             int e = static_cast<int>(rng.exponential(0.6));
             if (e < 2) // Generate a random number to verify if a new process is created
             {
+                std::cout << "Current time: " << Scheduler::get_current_time() << std::endl;
                 continue;
             }
             PCB pcb = pg.generatePCB(Scheduler::get_current_time());
