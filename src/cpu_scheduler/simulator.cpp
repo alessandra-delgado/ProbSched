@@ -11,6 +11,7 @@
 #include "../process/process_generator/random_generator.hpp"
 
 std::atomic<bool> stop_sched(false);
+// todo: change handler to also exit program if not on sim
 void handle_sigint(int sig)
 {
     std::cout << std::endl << "Waiting to stop the simulation..." << std::endl;
