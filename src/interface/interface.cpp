@@ -4,6 +4,7 @@
 // temporary stuff
 int pick_algorithm()
 {
+    std::cout << "===========================================" << std::endl;
     std::cout << "Which algorithm do you want to use?" << std::endl;
     std::cout << "1 - First Come First Served" << std::endl;
     std::cout << "Other algorithms coming soon :)" << std::endl;

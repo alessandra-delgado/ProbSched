@@ -1,54 +1,44 @@
 #include <iostream>
 #include <vector>
-#include <memory>
+#include <csignal>
+#include <atomic>
+
+#include "simulator.hpp"
 #include "scheduler.hpp"
 #include "../interface/interface.hpp"
 #include "algorithms/algorithms.hpp"
+#include "../process/process_generator/process_generator.hpp"
+#include "../process/process_generator/random_generator.hpp"
 
+std::atomic<bool> stop_sched(false);
+// todo: change handler to also exit program if not on sim
+void handle_sigint(int sig)
+{
+    std::cout << std::endl << "Waiting to stop the simulation..." << std::endl;
+    stop_sched = true;
+}
 // todo: refactoring
-void display(ProcessGenerator &pg, std::vector<PCB> list);
 void simulator()
 {
-    // 1 - Escolher um algoritmo, tipo de geração de processo
-    int i = pick_algorithm();
-    if(i < 1) return;
-
-    FCFS fcfs;
-    std::vector<std::unique_ptr<Scheduler>> algorithms;
-    algorithms.push_back((std::make_unique<FCFS>()));
-
-	// generate processes 
-    ProcessGenerator pg(0.85, 10.0, 3.0, 10);
-
+    signal(SIGINT, handle_sigint);
     while (true)
-    {  
-        if(algorithms[i]->is_ready_empty()){
-            PCB pcb = pg.generatePCB(Scheduler::get_current_time());
-            algorithms[i]->add_pcb(pcb);
-        }
+    {
+        stop_sched = false;
+        // 1 - Escolher um algoritmo, tipo de geração de processo...
+        int i = pick_algorithm() - 1;
+        if (i < 0)
+            break;
+
+        std::vector<std::unique_ptr<Scheduler>> algorithms;
+        algorithms.push_back((std::make_unique<FCFS>()));
+
         
-
-        if(Scheduler::get_current_time() > 100) break;
-        // will add a break somewhere
+        std::cout << "Simulation start" << std::endl;
+        std::cout << "\033[41;30mPress CTRL + C to stop simulation.\033[0m" << std::endl;
+        Scheduler::reset_current_time();
+        algorithms[i]->schedule();
+        std::cout << "Simulation stopped" << std::endl;
     }
-    // 2 - Enquanto que não terminar ciclo
-    // --> ver se há processo a correr
-    // --> ver se a queue está vazia
-    // --> escolher um novo processo
-    // ----> incrementar tempo, repetir
 
-    std::cout << "Fim do scheduler :)" << std::endl;
-    // ! Dividir random de pre-determinado
-}
-
-void display(ProcessGenerator &pg, std::vector<PCB> list){
-	for (const auto &pcb : list)
-	{
-		std::cout << "Processo ID: " << pcb.get_pid()
-				  << " | Estado: " << to_string(pcb.get_state())
-				  << " | Nome: " << pcb.get_name()
-				  << " | Tempo de Chegada: " << pcb.get_arrival_time()
-				  << " | Burst Time: " << pcb.get_burst_time()
-				  << " | Prioridade: " << pcb.get_priority() << std::endl;
-	}
+    std::cout << "Exited ProbSched." << std::endl;
 }
