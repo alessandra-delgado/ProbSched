@@ -11,6 +11,7 @@ public:
 	inline static void set_current_time(int t) { current_time = t; }
 	inline static int get_current_time() { return current_time; }
 	inline static void increment_current_time() { current_time++; }
+	inline static void reset_current_time() { current_time = 0; }
 
 	// Here, functions are made pure virtual functions,
 	// which forces the implementation of the following functions
