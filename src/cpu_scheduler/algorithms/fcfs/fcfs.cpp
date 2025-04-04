@@ -45,6 +45,8 @@ void FCFS::schedule()
     RandomGenerator rng;
     running_process = nullptr;
     int current_time = 0;
+    int next_arrival = 0;
+
     while (true)
     {
         if (stop_sched)
@@ -53,14 +55,19 @@ void FCFS::schedule()
         // todo: might have to fix really long burst times and process generation overall -- update: they're not that long anymore
         // todo: organize/refactor this
 
-        double e = (rng.exponential(0.58));
-        std::cout << e << std::endl;
-
-        if (e > 1.5 && e < 4.5) // Generate a random number to verify if a new process is created
-        {
-            PCB pcb = pg.generatePCB(current_time);
-            add_pcb(pcb);
+        if(current_time >= next_arrival){
+            double e = (rng.exponential(0.58));
+            std::cout << e << std::endl;
+            if (e < 4.5 && e > 1.1) // Simulates process creation or no arrivals sometimes
+            {
+                PCB pcb = pg.generatePCB(current_time);
+                add_pcb(pcb);
+                next_arrival = current_time + pcb.get_arrival_time();
+                std::cout << "\033[31mNext arrival: \033[0m" << next_arrival << std::endl;
+            }
         }
+
+
         if (running_process != nullptr) // If there's a process running (pointer not null)
         {
             running_process->dec_exec_time();
