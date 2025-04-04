@@ -97,6 +97,7 @@ void FCFS::schedule()
                       << " | Execution time: " << running_process->get_exec_time()
                       << std::endl;
         }
+        std::cout << std::endl << std::endl;
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
         Scheduler::increment_current_time();
