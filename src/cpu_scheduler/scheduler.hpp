@@ -18,6 +18,6 @@ public:
 	virtual bool is_ready_empty() = 0;
 	virtual void add_pcb(PCB pcb) = 0;
 	virtual void remove_pcb() = 0;
-	virtual const PCB& get_next_pcb() = 0;
+	virtual const PCB get_next_pcb() = 0;
 	virtual void schedule() = 0;
 };
