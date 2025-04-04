@@ -95,7 +95,7 @@ void FCFS::schedule()
 
 void FCFS::temp_stats()
 {
-    std::cout << "\033[H\033[J";
+    //std::cout << "\033[H\033[J"; //clr
     std::cout << "=================================================================================================" << std::endl;
     std::cout << "Processes currently in waiting in ready queue vvv" << std::endl;
     std::priority_queue<PCB, std::vector<PCB>, ArrivalTimeComparator> pq = ready;
