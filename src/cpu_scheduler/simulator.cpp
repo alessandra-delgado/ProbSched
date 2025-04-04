@@ -1,20 +1,43 @@
-// Where main simulation action will take: generating processes, and user interface is called in
+#include <iostream>
+#include <vector>
+#include <csignal>
+#include <atomic>
 
-// 1 - Comunicating with the user:
-// a) Ask if user wants to generate from file, or if random (with limit of process amount or just infinite until program ends)
-//      - must return process vector to here
-//      -> if processes keep being added to the list, the scheduler will have to be implemented in a way that allows both ways to recieve processes
-//          ? use global variables for this matter ^^^ ?
-// b) Ask which algorithm the user wants to use to simulate the cpu scheduling
-//      throw in the ready queue, or update the ready queue along with the scheduling
+#include "simulator.hpp"
+#include "scheduler.hpp"
+#include "../interface/interface.hpp"
+#include "algorithms/algorithms.hpp"
+#include "../process/process_generator/process_generator.hpp"
+#include "../process/process_generator/random_generator.hpp"
 
-// 2 - CPU Scheduling starts
-//      - algorithm runs
-//      - should the stats be displayed during 
+std::atomic<bool> stop_sched(false);
+void handle_sigint(int sig)
+{
+    std::cout << std::endl << "Waiting to stop the simulation..." << std::endl;
+    stop_sched = true;
+}
+// todo: refactoring
+void simulator()
+{
+    signal(SIGINT, handle_sigint);
+    while (true)
+    {
+        stop_sched = false;
+        // 1 - Escolher um algoritmo, tipo de geração de processo...
+        int i = pick_algorithm() - 1;
+        if (i < 0)
+            break;
 
+        std::vector<std::unique_ptr<Scheduler>> algorithms;
+        algorithms.push_back((std::make_unique<FCFS>()));
 
-// have two separate functions in this file that take care of the different types of scheduling (run time or predefined)?
+        
+        std::cout << "Simulation start" << std::endl;
+        std::cout << "\033[41;30mPress CTRL + C to stop simulation.\033[0m" << std::endl;
+        Scheduler::reset_current_time();
+        algorithms[i]->schedule();
+        std::cout << "Simulation stopped" << std::endl;
+    }
 
-// to brainstorm yet
-
-// creating a scheduler class for the algorithms?????????
+    std::cout << "Exited ProbSched." << std::endl;
+}

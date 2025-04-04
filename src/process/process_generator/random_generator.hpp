@@ -3,9 +3,9 @@
 
 class RandomGenerator
 {
-	private:
+private:
 	std::mt19937 gen; // Mersenne Twister pseudorandom number generator
-	public:
+public:
 	RandomGenerator();
 	double exponential(double lambda);		// generate numbers with exponential dritribution
 	int normal(double mean, double stddev); // generate numbers with normal dritribution
