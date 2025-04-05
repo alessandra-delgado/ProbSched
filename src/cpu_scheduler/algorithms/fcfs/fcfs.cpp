@@ -3,6 +3,7 @@
 #include <thread>
 #include <chrono>
 #include <atomic>
+#include <iomanip>
 
 #include "fcfs.hpp"
 #include "../../../process/process_generator/process_generator.hpp"
@@ -45,6 +46,8 @@ void FCFS::schedule()
     RandomGenerator rng;
     running_process = nullptr;
     int current_time = 0;
+   
+    
     while (true)
     {
         if (stop_sched)
@@ -63,6 +66,7 @@ void FCFS::schedule()
         }
         if (running_process != nullptr) // If there's a process running (pointer not null)
         {
+            util++;
             running_process->dec_exec_time();
             if (running_process->get_exec_time() <= 0)
             {
@@ -106,7 +110,7 @@ void FCFS::temp_stats()
         pq.pop();
     }
     std::cout << std::endl;
-    std::cout << "=====================================================" << std::endl;
+    std::cout << "************= STATS =************" << std::endl;
 
     std::cout << "Current time: " << Scheduler::get_current_time();
     if (running_process == nullptr)
@@ -124,6 +128,11 @@ void FCFS::temp_stats()
             << " | Execution time: " << running_process->get_exec_time()
             << std::endl;
     }
+
+
+    std::cout << "Util time: " << util << std::endl;
+    
+    std::cout << "CPU utilization: " << std::setprecision(2) << ((float)util/Scheduler::get_current_time())*100.0 << "%"<< std::endl;
     std::cout << std::endl
               << std::endl;
 }

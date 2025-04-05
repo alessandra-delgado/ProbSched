@@ -5,4 +5,3 @@ int main()
 	simulator();
 	return 0;
 }
-
