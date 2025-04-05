@@ -22,7 +22,7 @@ int main_menu()
 
     auto main_menu = Renderer(menu, [&]{
         return vbox({
-            text("== ProbSched - OS 24/25 ==") | bold | hcenter, // center title text
+            text("===== ProbSched - OS 24/25 =====") | bold | hcenter, // center title text
             separator(),
             menu->Render() | center, // center the menu itself
             separator(),
