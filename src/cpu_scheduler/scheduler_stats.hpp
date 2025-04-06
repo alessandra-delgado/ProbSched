@@ -17,11 +17,11 @@ private:
     inline static std::vector<PCB> ready_queue;
 
 public:
-    void collect(
+    static void collect(
         int current_time,
         int total_utilization_time,
-        const std::vector<PCB> &ready_queue,
-        const std::vector<PCB> &terminated_processes);
+        const std::vector<PCB> ready_queue,
+        const std::vector<PCB> terminated_processes);
 
-    void display_stats();
+    static void display_stats();
 };

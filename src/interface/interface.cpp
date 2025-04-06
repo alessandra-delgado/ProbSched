@@ -10,7 +10,7 @@
 
 int main_menu()
 {
-    std::cout << "\033[H\033[J"; // clear
+    //std::cout << "\033[H\033[J"; // clear
     using namespace ftxui;
     std::vector<std::string> menu_entries = {
         "Start Simulation",

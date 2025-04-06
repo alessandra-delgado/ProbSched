@@ -55,6 +55,7 @@ void FCFS::schedule()
     {
 
         running_process->dec_exec_time();
+        cpu_time++;
         if (running_process->get_exec_time() <= 0)
         {
             running_process->set_state(ProcessState::Terminated);
@@ -62,6 +63,7 @@ void FCFS::schedule()
                       << running_process->get_name()
                       << " finished execution (" << to_string(running_process->get_state()) << ")" << std::endl;
             running_process = nullptr;
+            schedule_new = true;
             return; // choose process on the same instant
         }
     }
@@ -75,10 +77,7 @@ void FCFS::schedule()
             running_process->set_state(ProcessState::Running);
             remove_pcb();
         }
-    }
-
-
-    
+    }    
 }
 
 std::vector<PCB> FCFS::ready_queue_to_vector()

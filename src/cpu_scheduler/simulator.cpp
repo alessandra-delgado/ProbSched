@@ -6,7 +6,7 @@
 #include <chrono>
 
 #include "simulator.hpp"
-#include "scheduler.hpp"
+#include "scheduler_stats.hpp"
 #include "../interface/interface.hpp"
 #include "algorithms/algorithms.hpp"
 #include "../process/process_generator/process_generator.hpp"
@@ -43,18 +43,31 @@ void simulator()
         std::cout << "Simulation start" << std::endl;
         std::cout << "\033[41;30mPress CTRL + C to stop simulation.\033[0m" << std::endl;
 
-        while (!stop_sched) // Scheduling until CTRL + c 
+        while (!stop_sched) // Scheduling until CTRL + c
         {
 
             algorithms[i]->schedule();
 
             // SchedulerStats.display_stats(); <- to-do
 
-            std::this_thread::sleep_for(std::chrono::seconds(1)); // just so the screen is readable
-            Scheduler::increment_current_time();
+            SchedulerStats::collect(Scheduler::get_current_time(),
+                                    Scheduler::get_cpu_time(),
+                                    algorithms[i]->ready_queue_to_vector(),
+                                    Scheduler::get_terminated_processes());
+            if (Scheduler::to_schedule())
+            {
+                Scheduler::reset_schedule_new();
+                continue;
+            }
+            else
+            {
+                SchedulerStats::display_stats();
+                std::this_thread::sleep_for(std::chrono::seconds(1)); // just so the screen is readable
+                Scheduler::increment_current_time();
+            }
         }
         std::cout << "Simulation stopped" << std::endl;
     }
 
-    std::cout << "Exited ProbSched." << std::endl;
+    std::cout << "Exited ProbSched.";
 }
