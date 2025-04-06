@@ -43,7 +43,6 @@ const PCB FCFS::get_next_pcb()
 
 void FCFS::schedule()
 {
-    SchedulerStats stats;
     ProcessGenerator pg(0.85, 5.0, 3.0, 10);
     RandomGenerator rng;
     running_process = nullptr;
@@ -91,13 +90,13 @@ void FCFS::schedule()
 
         // temporary statistics --> not very informative so far.
         
-        temp_stats(stats);
+        temp_stats();
         std::this_thread::sleep_for(std::chrono::seconds(1)); // just so the screen is readable
         Scheduler::increment_current_time();
     }
 }
 
-void FCFS::temp_stats(SchedulerStats& stats)
+void FCFS::temp_stats()
 {
     //std::cout << "\033[H\033[J"; //clr
     std::cout << "=================================================================================================" << std::endl;
@@ -130,7 +129,7 @@ void FCFS::temp_stats(SchedulerStats& stats)
     }
 
 
-    std::cout << "Util time: " << stats.total_utilization_time << std::endl;
+    std::cout << "Util time: " << SchedulerStats::total_utilization_time << std::endl;
     
     std::cout << "CPU utilization: " << std::setprecision(2) << ((float)SchedulerStats::total_utilization_time/Scheduler::get_current_time())*100.0 << "%"<< std::endl;
     std::cout << std::endl
