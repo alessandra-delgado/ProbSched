@@ -6,6 +6,7 @@
 #include <iomanip>
 
 #include "fcfs.hpp"
+#include "../../scheduler_stats.hpp"
 #include "../../../process/process_generator/process_generator.hpp"
 
 extern std::atomic<bool> stop_sched;
@@ -42,17 +43,15 @@ const PCB FCFS::get_next_pcb()
 
 void FCFS::schedule()
 {
+    SchedulerStats stats;
     ProcessGenerator pg(0.85, 5.0, 3.0, 10);
     RandomGenerator rng;
     running_process = nullptr;
-    int current_time = 0;
-   
     
     while (true)
     {
         if (stop_sched)
             return;
-        current_time = Scheduler::get_current_time();
         // todo: might have to fix really long burst times and process generation overall -- update: they're not that long anymore
         // todo: organize/refactor this
 
@@ -61,17 +60,17 @@ void FCFS::schedule()
 
         if (e > 1.5 && e < 4.5) // Generate a random number to verify if a new process is created
         {
-            PCB pcb = pg.generatePCB(current_time);
+            PCB pcb = pg.generatePCB(Scheduler::get_current_time());
             add_pcb(pcb);
         }
         if (running_process != nullptr) // If there's a process running (pointer not null)
         {
-            util++;
+            
             running_process->dec_exec_time();
             if (running_process->get_exec_time() <= 0)
             {
                 running_process->set_state(ProcessState::Terminated);
-                std::cout << "Current time: " << current_time << " | "
+                std::cout << "Current time: " << Scheduler::get_current_time() << " | "
                           << running_process->get_name()
                           << " finished execution (" << to_string(running_process->get_state()) << ")" << std::endl;
                 running_process = nullptr;
@@ -82,7 +81,7 @@ void FCFS::schedule()
         if (!is_ready_empty() && (running_process == nullptr))
         {
             PCB pcb = get_next_pcb();
-            if (pcb.get_arrival_time() <= current_time) // had to leave this line here because currently processes' arrival time = current time + small gen time
+            if (pcb.get_arrival_time() <= Scheduler::get_current_time()) // had to leave this line here because currently processes' arrival time = current time + small gen time
             {
                 running_process = std::make_unique<PCB>(pcb);
                 running_process->set_state(ProcessState::Running);
@@ -91,13 +90,14 @@ void FCFS::schedule()
         }
 
         // temporary statistics --> not very informative so far.
-        temp_stats();
+        
+        temp_stats(stats);
         std::this_thread::sleep_for(std::chrono::seconds(1)); // just so the screen is readable
         Scheduler::increment_current_time();
     }
 }
 
-void FCFS::temp_stats()
+void FCFS::temp_stats(SchedulerStats& stats)
 {
     //std::cout << "\033[H\033[J"; //clr
     std::cout << "=================================================================================================" << std::endl;
@@ -130,9 +130,9 @@ void FCFS::temp_stats()
     }
 
 
-    std::cout << "Util time: " << util << std::endl;
+    std::cout << "Util time: " << stats.total_utilization_time << std::endl;
     
-    std::cout << "CPU utilization: " << std::setprecision(2) << ((float)util/Scheduler::get_current_time())*100.0 << "%"<< std::endl;
+    std::cout << "CPU utilization: " << std::setprecision(2) << ((float)SchedulerStats::total_utilization_time/Scheduler::get_current_time())*100.0 << "%"<< std::endl;
     std::cout << std::endl
               << std::endl;
 }

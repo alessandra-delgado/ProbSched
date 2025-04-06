@@ -7,12 +7,14 @@ private:
 	static inline int next_pid = 1; // Sequential id
 	ProcessState state;
 	int pid;
-	int priority;	  // Generated with uniform distribution/weighted random selection
-	int exec_time;	  // Countdown for time already executed
-	int deadline;	  // For deadline based algorithms
-	int burst_time;	  // CPU burst times -> if short: Exponential, else if variable: Normal
-	int arrival_time; // Poisson/Exponential generated value + previous arrival time (example)
-	std::string name; // For statistics
+	int priority;		 // Generated with uniform distribution/weighted random selection
+	int exec_time;		 // Countdown for time already executed
+	int deadline;		 // For deadline based algorithms
+	int burst_time;		 // CPU burst times -> if short: Exponential, else if variable: Normal
+	int arrival_time;	 // Poisson/Exponential generated value + previous arrival time (example)
+	int start_time;		 // When it's scheduled for the first time
+	int completion_time; // When it finished execution
+	std::string name;	 // For statistics
 
 	// todo: Add more atributes as needed like 'periodic'...
 public:

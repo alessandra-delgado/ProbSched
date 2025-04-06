@@ -25,5 +25,5 @@ public:
     void remove_pcb() override;
     const PCB get_next_pcb() override;
     void schedule() override;
-    void temp_stats();
+    void temp_stats(SchedulerStats &stats);
 };

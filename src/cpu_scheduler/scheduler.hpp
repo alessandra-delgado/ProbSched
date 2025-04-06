@@ -6,14 +6,6 @@
 class Scheduler
 {
 protected:
-	double cpu_utilization = 0;
-	double avg_waiting_time = 0;
-	double avg_turnaround_time = 0;
-	double throughput = 0;
-	int util = 0;
-	int terminated = 0;
-
-private:
 	static inline int current_time = 0;
 
 public:
