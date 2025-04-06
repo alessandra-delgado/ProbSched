@@ -54,12 +54,14 @@ void SchedulerStats::collect(int current_time,
     total_waiting_time = 0;
     total_turnaround_time = 0;
 
-    for(const auto pcb : ready_queue){
+    for(const auto& pcb : ready_queue){
         int waiting_time = current_time - pcb.get_arrival_time();
         total_waiting_time += waiting_time;
     }
 
-    if(Scheduler::get_running_process()){
-        total_waiting_time = 0; // to fix.
+    const PCB* running_process = Scheduler::get_running_process().get();
+    if(running_process){
+        int running_waiting_time = current_time - running_process -> get_arrival_time();
+        total_waiting_time = total_waiting_time + running_waiting_time;
     }
 }
