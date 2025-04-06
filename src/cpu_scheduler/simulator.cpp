@@ -14,11 +14,10 @@
 
 std::atomic<bool> stop_sched(false);
 // todo: change handler to also exit program if not on sim
+
 // Handle CTRL + C
 void handle_sigint(int sig)
 {
-    std::cout << std::endl
-              << "Waiting to stop the simulation..." << std::endl;
     stop_sched = true;
 }
 // todo: refactoring
@@ -36,8 +35,8 @@ void simulator()
         stop_sched = false;
 
         // ! 1 - Escolher um algoritmo, tipo de geração de processo...
-        int i = pick_algorithm() - 1;
-        if (i < 0)
+        int i = pick_algorithm();
+        if (i >= (int)algorithms.size())
             break;
 
         std::cout << "Simulation start" << std::endl;
@@ -68,6 +67,4 @@ void simulator()
         }
         std::cout << "Simulation stopped" << std::endl;
     }
-
-    std::cout << "Exited ProbSched.";
 }
