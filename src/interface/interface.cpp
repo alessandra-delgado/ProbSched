@@ -10,6 +10,7 @@
 
 int main_menu()
 {
+    std::cout << "\033[H\033[J"; // clear
     using namespace ftxui;
     std::vector<std::string> menu_entries = {
         "Start Simulation",
@@ -46,6 +47,7 @@ int main_menu()
 
 int pick_algorithm()
 {
+    std::cout << "\033[H\033[J";
     std::cout << "===========================================" << std::endl;
     std::cout << "Which algorithm do you want to use?" << std::endl;
     std::cout << "1 - First Come First Served" << std::endl;

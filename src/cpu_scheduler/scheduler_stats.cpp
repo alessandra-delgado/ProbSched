@@ -1,0 +1,65 @@
+#include <iostream>
+#include <iomanip>
+#include "scheduler.hpp"
+#include "scheduler_stats.hpp"
+
+void SchedulerStats::display_stats()
+{
+    // std::cout << "\033[H\033[J"; //clr
+    std::cout << "=================================================================================================" << std::endl;
+    std::cout << "Processes currently in waiting in ready queue vvv" << std::endl;
+    for (auto pcb : ready_queue)
+    {
+        std::cout << "\033[32m" << pcb.get_name() << "\033[0m"
+                  << " -> Arrival time: " << "\033[31m" << pcb.get_arrival_time() << "\033[0m" << std::endl;
+    }
+
+    std::cout << std::endl;
+    std::cout << "************= STATS =************" << std::endl;
+
+    std::cout << "Current time: " << Scheduler::get_current_time();
+    if (Scheduler::get_running_process() == nullptr)
+    {
+        std::cout << " | Process Running: " << "NONE"
+                  << std::endl;
+    }
+    else
+    {
+        std::cout
+            << " | Process Running: " << "\033[33m" << Scheduler::get_running_process()->get_name() << "\033[0m"
+            << " | Process State: " << to_string(Scheduler::get_running_process()->get_state())
+            << " | Burst time: " << Scheduler::get_running_process()->get_burst_time()
+            << " | Arrival time: " << Scheduler::get_running_process()->get_arrival_time()
+            << " | Execution time: " << Scheduler::get_running_process()->get_exec_time()
+            << std::endl;
+    }
+
+    std::cout << "Util time: " << SchedulerStats::total_utilization_time << std::endl;
+
+    std::cout << "CPU utilization: " << std::setprecision(2) << ((float)SchedulerStats::total_utilization_time / Scheduler::get_current_time()) * 100.0 << "%" << std::endl;
+    std::cout << std::endl
+              << std::endl;
+}
+
+void SchedulerStats::collect(int current_time,
+                             int total_utilization_time,
+                             const std::vector<PCB> &ready_queue,
+                             const std::vector<PCB> &terminated_processes)
+{
+    this->current_time = current_time;
+    this->total_utilization_time = total_utilization_time;
+    this->terminated_processes = terminated_processes;
+    this->ready_queue = ready_queue;
+
+    total_waiting_time = 0;
+    total_turnaround_time = 0;
+
+    for(const auto pcb : ready_queue){
+        int waiting_time = current_time - pcb.get_arrival_time();
+        total_waiting_time += waiting_time;
+    }
+
+    if(Scheduler::get_running_process()){
+        total_waiting_time = 0; // to fix.
+    }
+}

@@ -16,7 +16,6 @@ struct ArrivalTimeComparator
 class FCFS : public Scheduler
 {
 private:
-    inline static std::unique_ptr<PCB> running_process;
     std::priority_queue<PCB, std::vector<PCB>, ArrivalTimeComparator> ready;
 
 public:
@@ -25,5 +24,5 @@ public:
     void remove_pcb() override;
     const PCB get_next_pcb() override;
     void schedule() override;
-    void temp_stats();
+    std::vector<PCB> ready_queue_to_vector() override;
 };

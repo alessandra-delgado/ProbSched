@@ -3,7 +3,6 @@
 #include "interface/interface.hpp"
 
 int main() {
-	std::cout << "\033[H\033[J";
 	switch(main_menu()){
 		case 0:
 			simulator();
