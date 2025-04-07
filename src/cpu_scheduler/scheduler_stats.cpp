@@ -17,17 +17,12 @@ using namespace ftxui;
 
 void SchedulerStats::display_stats()
 {
-    // Static variables to track size changes
-    static int last_width = 0;
-    static int last_height = 0;
-    static bool first_render = true;
-
-    // New: Static circular buffer to store process execution history
+    // Static circular buffer to store process execution history
     static const int HISTORY_SIZE = 60;                                // 60 second window
     static std::vector<std::string> process_history(HISTORY_SIZE, ""); // Store process names
     static int history_index = 0;                                      // Current position in circular buffer
 
-    // New: Record current running process in history
+    // Record current running process in history
     const auto &running_process = Scheduler::get_running_process();
     if (running_process)
     {
@@ -247,8 +242,7 @@ void SchedulerStats::display_stats()
                         text(" " + label + " ") |
                         bgcolor(block_color) |
                         color(Color::Black) |
-                        size(WIDTH, EQUAL, block_length+1) |
-                        size(HEIGHT, EQUAL, 1));
+                        size(WIDTH, EQUAL, block_length));
                 }
 
                 // Start a new block
@@ -269,8 +263,7 @@ void SchedulerStats::display_stats()
                 text(" " + label + " ") |
                 bgcolor(block_color) |
                 color(Color::Black) |
-                size(WIDTH, EQUAL, display_length) |
-                size(HEIGHT, EQUAL, 1));
+                size(WIDTH, EQUAL, display_length));
         }
 
         // Combine all gantt blocks into a single hbox
