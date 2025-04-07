@@ -59,9 +59,11 @@ void FCFS::schedule()
         if (running_process->get_exec_time() <= 0)
         {
             running_process->set_state(ProcessState::Terminated);
-            std::cout << "Current time: " << Scheduler::get_current_time() << " | "
+            /*std::cout << "Current time: " << Scheduler::get_current_time() << " | "
                       << running_process->get_name()
-                      << " finished execution (" << to_string(running_process->get_state()) << ")" << std::endl;
+                      << " finished execution (" << to_string(running_process->get_state()) << ")" << std::endl;*/
+            running_process->set_completion_time(current_time);
+            terminated_processes.push_back(*running_process);
             running_process = nullptr;
             schedule_new = true;
             return; // choose process on the same instant
