@@ -39,9 +39,6 @@ void simulator()
         if (i >= (int)algorithms.size())
             break;
 
-        std::cout << "Simulation start" << std::endl;
-        std::cout << "\033[41;30mPress CTRL + C to stop simulation.\033[0m" << std::endl;
-
         while (!stop_sched) // Scheduling until CTRL + c
         {
 
