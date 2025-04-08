@@ -58,6 +58,7 @@ int pick_algorithm()
         "Priority Scheduling Non-Preemptive",
         "Shortest Job Non-Preemptive",
         "Shortest Job Preemptive",
+        "Round Robin",
         "Quit"
     };
 

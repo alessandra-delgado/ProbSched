@@ -1,44 +1,55 @@
 #include <iostream>
 #include <stdexcept>
 #include <atomic>
+#include <iomanip>
 
-#include "sjnonp.hpp"
-#include "../../../scheduler_stats.hpp"
+#include "rr.hpp"
+#include "../../scheduler_stats.hpp"
 
-extern std::atomic<bool> stop_sched();
+extern std::atomic<bool> stop_sched;
 
-bool ShortestJobNonPreemptive::is_ready_empty(){
+bool RoundRobin::is_ready_empty() {
     return ready.empty();
-};
+}
 
-void ShortestJobNonPreemptive::add_pcb(PCB pcb){
+void RoundRobin::add_pcb(PCB pcb) {
     pcb.set_state(ProcessState::Ready);
     ready.push(pcb);
-};
+}
 
-void ShortestJobNonPreemptive::remove_pcb() {
+void RoundRobin::remove_pcb() {
     if (!ready.empty())
         ready.pop();
 }
 
-const PCB ShortestJobNonPreemptive::get_next_pcb() {
+const PCB RoundRobin::get_next_pcb() {
     if (ready.empty())
         throw std::runtime_error("No PCB in ready queue.");
-    return ready.top();
+    return ready.front();
 }
 
-void ShortestJobNonPreemptive::schedule() {
+void RoundRobin::schedule() {
+    if (stop_sched)
+        return;
+
     if (running_process != nullptr) {
         running_process->dec_exec_time();
         cpu_time++;
+
         if (running_process->get_exec_time() <= 0) {
             running_process->set_state(ProcessState::Terminated);
             running_process->set_completion_time(current_time);
             terminated_processes.push_back(*running_process);
             running_process = nullptr;
             schedule_new = true;
-            return;
+        } else if (Scheduler::get_current_time() % time_quantum == 0) {
+            // if quantum time is reached, move process to the end of queue
+            running_process->set_state(ProcessState::Ready);
+            add_pcb(*running_process);
+            running_process = nullptr;
+            schedule_new = true;
         }
+        return;
     }
 
     if (!is_ready_empty() && (running_process == nullptr)) {
@@ -51,12 +62,12 @@ void ShortestJobNonPreemptive::schedule() {
     }
 }
 
-std::vector<PCB> ShortestJobNonPreemptive::ready_queue_to_vector() {
+std::vector<PCB> RoundRobin::ready_queue_to_vector() {
     std::vector<PCB> rq;
-    std::priority_queue<PCB, std::vector<PCB>, BurstTimeComparator> pq = ready;
-    while (!pq.empty()) {
-        rq.push_back(pq.top());
-        pq.pop();
+    std::queue<PCB> temp_queue = ready;
+    while (!temp_queue.empty()) {
+        rq.push_back(temp_queue.front());
+        temp_queue.pop();
     }
     return rq;
 }
