@@ -165,7 +165,7 @@ void SchedulerStats::display_stats() {
         
         // Show deadline misses
         current_process_elements.push_back(
-            hbox({text("Deadline Misses: "),
+            hbox({text("Deadline Misses: "), // todo: fix to not count deadline misses on real time
                   text(std::to_string(deadline_misses)) | color(Color::Yellow)}));
 
                   
@@ -252,8 +252,7 @@ void SchedulerStats::display_stats() {
 
             vbox({
                 hbox({vbox(current_process_elements) | border | flex,
-                      vbox(gantt_elements) | border | flex}) |
-                    size(HEIGHT, LESS_THAN, 10),
+                      vbox(gantt_elements) | border | flex}) | size(HEIGHT, LESS_THAN, 20), // might have to change height
 
                 hbox({vbox({text("Ready Queue") | bold | center,
                             center(vbox(table_with_border))}) |
