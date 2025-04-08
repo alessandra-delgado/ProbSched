@@ -11,6 +11,10 @@
 #include "algorithms/algorithms.hpp"
 #include "../process/process_generator/process_generator.hpp"
 #include "../process/process_generator/random_generator.hpp"
+#include "algorithms/ps/Non-Preemptive/psnon.hpp"
+#include "algorithms/sj/Non-Preemptive/sjnonp.hpp"
+#include "algorithms/sj/Preemptive/sjp.hpp"
+
 
 std::atomic<bool> stop_sched(false);
 // todo: change handler to also exit program if not on sim
@@ -26,7 +30,10 @@ void simulator()
     // add algorithms to array
     std::vector<std::unique_ptr<Scheduler>> algorithms;
     algorithms.push_back((std::make_unique<FCFS>()));
-
+    algorithms.push_back(std::make_unique<NonPreemptivePriority>());
+    algorithms.push_back(std::make_unique<ShortestJobNonPreemptive>());
+    algorithms.push_back(std::make_unique<ShortestJobPreemptive>());
+    
     signal(SIGINT, handle_sigint);
     while (true)
     {
