@@ -31,10 +31,10 @@ void simulator()
     // add algorithms to array
     std::vector<std::unique_ptr<Scheduler>> algorithms;
     algorithms.push_back((std::make_unique<FCFS>()));
-    algorithms.push_back(std::make_unique<NonPreemptivePriority>());
-    algorithms.push_back(std::make_unique<ShortestJobNonPreemptive>());
-    algorithms.push_back(std::make_unique<ShortestJobPreemptive>());
-    algorithms.push_back(std::make_unique<RoundRobin>(2)); // quantum of 2
+    algorithms.push_back((std::make_unique<NonPreemptivePriority>()));
+    algorithms.push_back((std::make_unique<ShortestJobNonPreemptive>()));
+    algorithms.push_back((std::make_unique<ShortestJobPreemptive>()));
+    algorithms.push_back((std::make_unique<RoundRobin>(2))); // quantum of 2
     
     signal(SIGINT, handle_sigint);
     while (true)

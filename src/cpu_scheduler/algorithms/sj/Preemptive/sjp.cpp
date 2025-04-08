@@ -7,44 +7,61 @@
 
 extern std::atomic<bool> stop_sched;
 
-bool ShortestJobPreemptive::is_ready_empty() {
+bool ShortestJobPreemptive::is_ready_empty()
+{
     return ready.empty();
 }
 
-void ShortestJobPreemptive::add_pcb(PCB pcb) {
+void ShortestJobPreemptive::add_pcb(PCB pcb)
+{
     pcb.set_state(ProcessState::Ready);
     ready.push(pcb);
 }
 
-void ShortestJobPreemptive::remove_pcb() {
+void ShortestJobPreemptive::remove_pcb()
+{
     if (!ready.empty())
         ready.pop();
 }
 
-const PCB ShortestJobPreemptive::get_next_pcb() {
+const PCB ShortestJobPreemptive::get_next_pcb()
+{
     if (ready.empty())
         throw std::runtime_error("No PCB in ready queue.");
     return ready.top();
 }
 
-void ShortestJobPreemptive::schedule() {
+void ShortestJobPreemptive::schedule()
+{
     if (stop_sched)
         return;
 
-    if (running_process != nullptr) {
+    double e = (rng.exponential(0.58));
+    if (e > 1.5 && e < 4.5) // Generate a random number to verify if a new process is created
+    {
+        PCB pcb = pg.generatePCB(Scheduler::get_current_time());
+        add_pcb(pcb);
+    }
+    if (running_process != nullptr)
+    {
         running_process->dec_exec_time();
         cpu_time++;
-        if (running_process->get_exec_time() <= 0) {
+        if (running_process->get_exec_time() <= 0)
+        {
             running_process->set_state(ProcessState::Terminated);
             running_process->set_completion_time(current_time);
             terminated_processes.push_back(*running_process);
             running_process = nullptr;
             schedule_new = true;
-        } else {
+        }
+        else
+        {
             // Verifica se há um processo com menor burst time na fila
-            if (!is_ready_empty()) {
+            if (!is_ready_empty())
+            {
                 PCB next_pcb = get_next_pcb();
-                if (next_pcb.get_burst_time() < running_process->get_burst_time()) {
+                if (next_pcb.get_burst_time() < running_process->get_burst_time())
+                {
                     // Preempção: salva o estado atual do processo em execução
                     running_process->set_state(ProcessState::Ready);
                     add_pcb(*running_process);
@@ -58,9 +75,11 @@ void ShortestJobPreemptive::schedule() {
         return;
     }
 
-    if (!is_ready_empty()) {
+    if (!is_ready_empty())
+    {
         PCB pcb = get_next_pcb();
-        if (pcb.get_arrival_time() <= Scheduler::get_current_time()) {
+        if (pcb.get_arrival_time() <= Scheduler::get_current_time())
+        {
             running_process = std::make_unique<PCB>(pcb);
             running_process->set_state(ProcessState::Running);
             remove_pcb();
@@ -68,10 +87,12 @@ void ShortestJobPreemptive::schedule() {
     }
 }
 
-std::vector<PCB> ShortestJobPreemptive::ready_queue_to_vector() {
+std::vector<PCB> ShortestJobPreemptive::ready_queue_to_vector()
+{
     std::vector<PCB> rq;
     std::priority_queue<PCB, std::vector<PCB>, BurstTimeComparator> pq = ready;
-    while (!pq.empty()) {
+    while (!pq.empty())
+    {
         rq.push_back(pq.top());
         pq.pop();
     }
