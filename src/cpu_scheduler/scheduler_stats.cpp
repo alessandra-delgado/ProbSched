@@ -12,59 +12,52 @@
 #include <algorithm>
 #include "scheduler_stats.hpp"
 
-
 using namespace ftxui;
 
-void SchedulerStats::display_stats()
-{
+void SchedulerStats::display_stats() {
     // Static circular buffer to store process execution history
-    static const int HISTORY_SIZE = 60;                                // 60 second window
-    static std::vector<std::string> process_history(HISTORY_SIZE, ""); // Store process names
-    static int history_index = 0;                                      // Current position in circular buffer
+    static const int HISTORY_SIZE = 60;
+    static std::vector<std::string> process_history(HISTORY_SIZE, "");
+    static int history_index = 0;
 
     // Record current running process in history
     const auto &running_process = Scheduler::get_running_process();
-    if (running_process)
-    {
+    if (running_process) {
         process_history[history_index] = std::to_string(running_process->get_pid());
-    }
-    else
-    {
+    } else {
         process_history[history_index] = ""; // Empty means idle
     }
-    history_index = (history_index + 1) % HISTORY_SIZE; // Move to next slot in circular buffer
+    history_index = (history_index + 1) % HISTORY_SIZE;
 
     // Create the elements for rendering
-    auto render_elements = [&]
-    {
-        // Create a table-like layout for ready queue
+    auto render_elements = [&]() -> Element {
+        // Declaração de variáveis no escopo correto
+        Elements current_process_elements;
+        Elements gantt_elements;
         std::vector<Elements> table_content;
+        Elements table_rows;
+        Elements table_with_border;
+        std::vector<Elements> terminated_table_content;
+        Elements terminated_table_rows;
+        Elements terminated_table_with_border;
 
-        // Add headers
+        // Add headers for ready queue
         table_content.push_back({text("Process Name") | bold | color(Color::Blue),
                                  text("Arrival Time") | bold | color(Color::Blue),
                                  text("Priority") | bold | color(Color::Blue)});
 
-        // Limit how many processes we display
         const size_t MAX_DISPLAY_PROCESSES = 15;
-
-        // Calculate how many processes to show and how many will be hidden
         size_t processes_to_show = std::min(ready_queue.size(), MAX_DISPLAY_PROCESSES);
         size_t hidden_processes = ready_queue.size() > MAX_DISPLAY_PROCESSES ? ready_queue.size() - MAX_DISPLAY_PROCESSES : 0;
 
-        // Add data rows (limited to MAX_DISPLAY_PROCESSES)
-        for (size_t i = 0; i < processes_to_show; i++)
-        {
+        for (size_t i = 0; i < processes_to_show; i++) {
             const auto &pcb = ready_queue[i];
             table_content.push_back({text(pcb.get_name()) | color(Color::Green),
                                      text(std::to_string(pcb.get_arrival_time())) | color(Color::Red),
                                      text(std::to_string(pcb.get_priority()))});
         }
 
-        // Create table rows
-        Elements table_rows;
-        for (const auto &row : table_content)
-        {
+        for (const auto &row : table_content) {
             table_rows.push_back(hbox({text("│ "),
                                        row[0] | size(WIDTH, EQUAL, 15),
                                        text(" │ "),
@@ -73,91 +66,62 @@ void SchedulerStats::display_stats()
                                        row[2] | size(WIDTH, EQUAL, 8),
                                        text(" │")}));
 
-            // Add separator after header
-            if (&row == &table_content[0])
-            {
+            if (&row == &table_content[0]) {
                 table_rows.push_back(text("├─────────────────┼──────────────┼──────────┤"));
             }
         }
 
-        // Table border
-        Elements table_with_border;
         table_with_border.push_back(text("┌─────────────────┬──────────────┬──────────┐"));
         table_with_border.insert(table_with_border.end(), table_rows.begin(), table_rows.end());
         table_with_border.push_back(text("└─────────────────┴──────────────┴──────────┘"));
 
-        // Add indication of hidden processes if any
-        if (hidden_processes > 0)
-        {
+        if (hidden_processes > 0) {
             table_with_border.push_back(
                 text("+ " + std::to_string(hidden_processes) + " more processes") |
                 color(Color::Yellow) | bold | center);
         }
 
-        // Create table for terminated processes
-        std::vector<Elements> terminated_table_content;
-
         // Add headers for terminated processes
         terminated_table_content.push_back({text("Process Name") | bold | color(Color::Blue),
-                                            text("Completion Time") | bold | color(Color::Blue)});
+                                           text("Completion Time") | bold | color(Color::Blue)});
 
-        // Limit how many terminated processes we display
         const size_t MAX_DISPLAY_TERMINATED = 15;
-
-        // Calculate how many terminated processes to show and how many will be hidden
         size_t terminated_to_show = std::min(terminated_processes.size(), MAX_DISPLAY_TERMINATED);
         size_t hidden_terminated = terminated_processes.size() > MAX_DISPLAY_TERMINATED ? terminated_processes.size() - MAX_DISPLAY_TERMINATED : 0;
 
-        // Add data rows for terminated processes (limited to MAX_DISPLAY_TERMINATED)
-        for (size_t i = 0; i < terminated_to_show; i++)
-        {
+        for (size_t i = 0; i < terminated_to_show; i++) {
             const auto &pcb = terminated_processes[i];
             terminated_table_content.push_back({text(pcb.get_name()) | color(Color::Green),
-                                                text(std::to_string(pcb.get_completion_time())) | color(Color::Red)});
+                                               text(std::to_string(pcb.get_completion_time())) | color(Color::Red)});
         }
 
-        // Create table rows for terminated processes
-        Elements terminated_table_rows;
-        for (const auto &row : terminated_table_content)
-        {
+        for (const auto &row : terminated_table_content) {
             terminated_table_rows.push_back(hbox({text("│ "),
                                                   row[0] | size(WIDTH, EQUAL, 15),
                                                   text(" │ "),
                                                   row[1] | size(WIDTH, EQUAL, 14),
                                                   text(" │")}));
 
-            // Add separator after header
-            if (&row == &terminated_table_content[0])
-            {
+            if (&row == &terminated_table_content[0]) {
                 terminated_table_rows.push_back(text("├─────────────────┼────────────────┤"));
             }
         }
 
-        // Table border for terminated processes
-        Elements terminated_table_with_border;
         terminated_table_with_border.push_back(text("┌─────────────────┬────────────────┐"));
         terminated_table_with_border.insert(terminated_table_with_border.end(), terminated_table_rows.begin(), terminated_table_rows.end());
         terminated_table_with_border.push_back(text("└─────────────────┴────────────────┘"));
 
-        // Add indication of hidden terminated processes if any
-        if (hidden_terminated > 0)
-        {
+        if (hidden_terminated > 0) {
             terminated_table_with_border.push_back(
                 text("+ " + std::to_string(hidden_terminated) + " more processes") |
                 color(Color::Yellow) | bold | center);
         }
 
-        // Create current process status panel
-        Elements current_process_elements;
-
         current_process_elements.push_back(text("Current time: " + std::to_string(Scheduler::get_current_time())));
 
-        if (!running_process)
-        {
+        if (!running_process) {
             current_process_elements.push_back(text("Process Running: NONE"));
-        }
-        else
-        {
+        } else {
             current_process_elements.push_back(
                 hbox({text("Process Running: "),
                       text(running_process->get_name()) | color(Color::Yellow)}));
@@ -168,7 +132,6 @@ void SchedulerStats::display_stats()
             current_process_elements.push_back(text("Execution time: " + std::to_string(running_process->get_exec_time())));
         }
 
-        // Add utilization stats
         current_process_elements.push_back(text("Util time: " + std::to_string(SchedulerStats::total_utilization_time)));
 
         float cpu_util = (Scheduler::get_current_time() > 0)
@@ -185,30 +148,44 @@ void SchedulerStats::display_stats()
             hbox({text("CPU utilization: "),
                   text(ss.str()) | color(util_color)}));
 
+        // Show the average waiting time
+        current_process_elements.push_back(
+            hbox({text("Average Waiting Time: "),
+                  text(std::to_string(average_waiting_time)) | color(Color::Yellow)}));
+        
+        // Show the average turnaround time
+        current_process_elements.push_back(
+            hbox({text("Average Turnaround Time: "),
+                text(std::to_string(average_turnaround_time)) | color(Color::Yellow)}));
+        
+        // Show throughput
+        current_process_elements.push_back(
+            hbox({text("Throughput: "),
+                  text(std::to_string(throughput)) | color(Color::Yellow)}));
+        
+        // Show deadline misses
+        current_process_elements.push_back(
+            hbox({text("Deadline Misses: "),
+                  text(std::to_string(deadline_misses)) | color(Color::Yellow)}));
+
+                  
         // Create Gantt chart elements
-        Elements gantt_elements;
         gantt_elements.push_back(text("Gantt Chart of last 60 seconds") | center | bold);
 
-        // Track which process was running in consecutive time slots to create blocks
         std::string current_block_process = "";
         int block_start = -1;
         int block_length = 0;
         std::vector<Element> gantt_blocks;
 
-        // Helper function to generate a hash-based color for process names
-        auto process_color = [](const std::string &process_name) -> Color
-        {
+        auto process_color = [](const std::string &process_name) -> Color {
             if (process_name.empty())
-                return Color::GrayDark; // Idle CPU
+                return Color::GrayDark;
 
-            // Simple hash function to generate consistent colors for process names
             size_t hash = 0;
-            for (char c : process_name)
-            {
+            for (char c : process_name) {
                 hash = hash * 31 + c;
             }
 
-            // List of distinct colors to choose from
             static const std::vector<Color> colors = {
                 Color::Red, Color::Green, Color::Yellow, Color::Blue,
                 Color::Magenta, Color::Cyan, Color::White};
@@ -216,25 +193,14 @@ void SchedulerStats::display_stats()
             return colors[hash % colors.size()];
         };
 
-        // Create gantt chart from process history
-        // Start from (history_index) and go back 60 seconds
-        for (int i = 0; i < HISTORY_SIZE; i++)
-        {
-            // Calculate the actual index in the circular buffer
+        for (int i = 0; i < HISTORY_SIZE; i++) {
             int idx = (history_index - 1 - i + HISTORY_SIZE) % HISTORY_SIZE;
             std::string proc = process_history[idx];
 
-            if (proc == current_block_process)
-            {
-                // Continue the current block
+            if (proc == current_block_process) {
                 block_length++;
-            }
-            else
-            {
-                // End previous block if there was one
-                if (block_start != -1)
-                {
-                    // Add the block to our gantt chart
+            } else {
+                if (block_start != -1) {
                     std::string label = current_block_process.empty() ? "IDLE" : current_block_process;
                     Color block_color = process_color(current_block_process);
 
@@ -245,16 +211,13 @@ void SchedulerStats::display_stats()
                         size(WIDTH, EQUAL, block_length));
                 }
 
-                // Start a new block
                 current_block_process = proc;
                 block_start = i;
                 block_length = 1;
             }
         }
 
-        // Add the last block if there is one
-        if (block_start != -1)
-        {
+        if (block_start != -1) {
             std::string label = current_block_process.empty() ? "IDLE" : current_block_process;
             Color block_color = process_color(current_block_process);
 
@@ -266,105 +229,130 @@ void SchedulerStats::display_stats()
                 size(WIDTH, EQUAL, display_length));
         }
 
-        // Combine all gantt blocks into a single hbox
-        // Note: We display them in reverse order (right-to-left) because we're going backward in time
         Elements gantt_row;
-        for (auto it = gantt_blocks.rbegin(); it != gantt_blocks.rend(); ++it)
-        {
+        for (auto it = gantt_blocks.rbegin(); it != gantt_blocks.rend(); ++it) {
             gantt_row.push_back(*it);
         }
 
         gantt_elements.push_back(hbox(gantt_row) | flex);
 
-        // Add time markers
         gantt_elements.push_back(
             hbox({
-                text("") | flex , // Left spacer
-                text("-60s"),    // Left marker
-                text("") | flex, // Middle spacer
-                text("-30s"),    // Middle marker
-                text("") | flex, // Right spacer
-                text("Now")      // Right marker
-            })
+                text("") | flex,
+                text("-60s"),
+                text("") | flex,
+                text("-30s"),
+                text("") | flex,
+                text("Now")
+            }));
 
-        );
+        return vbox({
+            hbox({text("Scheduler Statistics") | bold | center | flex, text("  ")}) |
+                color(Color::White) | bgcolor(Color::Blue),
 
-        return vbox({      // Title bar with window controls
-                     hbox({// Left side with "controls"
-                           // Center with title
-                           text("Scheduler Statistics") | bold | center | flex,
-                           // Right padding for balance
-                           text("  ")}) |
-                         color(Color::White) | bgcolor(Color::Blue),
+            vbox({
+                hbox({vbox(current_process_elements) | border | flex,
+                      vbox(gantt_elements) | border | flex}) |
+                    size(HEIGHT, LESS_THAN, 10),
 
-                     // Window content
-                     vbox({      // Upper section with stats and Gantt chart
-                           hbox({// Left: Current process status panel
-                                 vbox(current_process_elements) | border | flex,
-                                 // Right: Gantt chart
-                                 vbox(gantt_elements) | border | flex}) |
-                               size(HEIGHT, LESS_THAN, 10),
+                hbox({vbox({text("Ready Queue") | bold | center,
+                            center(vbox(table_with_border))}) |
+                          flex,
+                      separator(),
+                      vbox({text("Terminated Processes") | bold | center,
+                            center(vbox(terminated_table_with_border))}) |
+                          flex}) |
+                    border,
 
-                           // Lower section with tables
-                           hbox({vbox({text("Ready Queue") | bold | center,
-                                       center(vbox(table_with_border))}) |
-                                     flex,
-                                 separator(),
-                                 vbox({text("Terminated Processes") | bold | center,
-                                       center(vbox(terminated_table_with_border))}) |
-                                     flex}) |
-                               border,
-
-                           // Control instruction
-                           text("Press CTRL + C to stop simulation") | bold | color(Color::Red) | center}) |
-                         flex}) |
-               center | border | bgcolor(Color::Black);
+                text("Press CTRL + C to stop simulation") | bold | color(Color::Red) | center}) |
+                flex}) |
+            center | border | bgcolor(Color::Black);
     };
 
-    // Create a temporary screen to render the elements
     auto document = render_elements();
-
-    // Create a screen and render it once
     auto screen = Screen::Create(
-        Dimension::Full(),       // Width
-        Dimension::Fit(document) // Height
+        Dimension::Full(),
+        Dimension::Fit(document)
     );
 
     Render(screen, document);
-
-    // Print the rendered screen to stdout
-    std::cout << "\033[H\033[J"; // Clear screen
+    std::cout << "\033[H\033[J";
     screen.Print();
 }
-
 
 void SchedulerStats::collect(int current_time,
                              int total_utilization_time,
                              const std::vector<PCB> ready_queue,
-                             const std::vector<PCB> terminated_processes)
-{
+                             const std::vector<PCB> terminated_processes) {
     SchedulerStats::current_time = current_time;
     SchedulerStats::total_utilization_time = total_utilization_time;
     SchedulerStats::terminated_processes = terminated_processes;
-    std::reverse(SchedulerStats::terminated_processes.begin(), SchedulerStats::terminated_processes.end()); // Reverse the vector so the new finished processes show up
+    std::reverse(SchedulerStats::terminated_processes.begin(), SchedulerStats::terminated_processes.end());
     SchedulerStats::ready_queue = ready_queue;
 
-    total_waiting_time = 0;
-    total_turnaround_time = 0;
+    updateWaitingTime(current_time);
+    updateTurnaroundTime(terminated_processes);
+    updateThroughput(current_time);
+    updateDeadlineMisses(terminated_processes);
 
-    for (const auto &pcb : ready_queue)
-    {
-        if (pcb.get_arrival_time() >= current_time) // To include processes that have actually arrived
-        {
+    total_completed_processes = terminated_processes.size(); //update the number of completed processes
+}
+
+void SchedulerStats::updateWaitingTime(int current_time) {
+    total_waiting_time = 0;
+    total_processes = 0;
+
+    for (const auto &pcb : ready_queue) {
+        if (pcb.get_arrival_time() < current_time) {
             int waiting_time = current_time - pcb.get_arrival_time();
             total_waiting_time += waiting_time;
+            total_processes++;
         }
     }
 
     const PCB *running_process = Scheduler::get_running_process().get();
-    if (running_process)
-    {
+    if (running_process) {
         int running_waiting_time = current_time - running_process->get_arrival_time();
-        total_waiting_time = total_waiting_time + running_waiting_time;
+        total_waiting_time += running_waiting_time;
+        total_processes++;
+    }
+
+    if (total_processes > 0) {
+        average_waiting_time = static_cast<float>(total_waiting_time) / total_processes;
+    } else {
+        average_waiting_time = 0.0;
     }
 }
+
+void SchedulerStats::updateTurnaroundTime(const std::vector<PCB>& terminated_processes) {
+    total_turnaround_time = 0;
+    total_completed_processes = terminated_processes.size();
+
+    for (const auto& pcb : terminated_processes) {
+        int turnaround_time = pcb.get_completion_time() - pcb.get_arrival_time();
+        total_turnaround_time += turnaround_time;
+    }
+
+    if (total_completed_processes > 0) {
+        average_turnaround_time = static_cast<float>(total_turnaround_time) / total_completed_processes;
+    } else {
+        average_turnaround_time = 0.0;
+    }
+}
+
+void SchedulerStats::updateThroughput(int current_time) {
+    throughput = static_cast<float>(total_completed_processes) / current_time;
+}
+
+void SchedulerStats::updateDeadlineMisses(const std::vector<PCB>& terminated_processes) {
+    deadline_misses = 0;
+
+    for (const auto& pcb : terminated_processes) {
+        if (pcb.get_completion_time() > pcb.get_deadline()) {
+            deadline_misses++;
+        }
+    }
+}
+
+
+
