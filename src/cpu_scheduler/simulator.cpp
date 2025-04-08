@@ -14,6 +14,7 @@
 #include "algorithms/ps/Non-Preemptive/psnon.hpp"
 #include "algorithms/sj/Non-Preemptive/sjnonp.hpp"
 #include "algorithms/sj/Preemptive/sjp.hpp"
+#include "algorithms/rr/rr.hpp"
 
 
 std::atomic<bool> stop_sched(false);
@@ -33,6 +34,7 @@ void simulator()
     algorithms.push_back(std::make_unique<NonPreemptivePriority>());
     algorithms.push_back(std::make_unique<ShortestJobNonPreemptive>());
     algorithms.push_back(std::make_unique<ShortestJobPreemptive>());
+    algorithms.push_back(std::make_unique<RoundRobin>(2)); // quantum of 2
     
     signal(SIGINT, handle_sigint);
     while (true)
