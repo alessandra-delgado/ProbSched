@@ -37,11 +37,17 @@ void RoundRobin::schedule()
     if (stop_sched)
         return;
 
-    double e = (rng.exponential(0.58));
-    if (e > 1.5 && e < 4.5) // Generate a random number to verify if a new process is created
+    int queue_size = ready.size();
+    double prob = 1.0 / (1 + queue_size * 0.5);
+    if (rand() / double(RAND_MAX) < prob)
     {
-        PCB pcb = pg.generatePCB(Scheduler::get_current_time());
-        add_pcb(pcb);
+        double e = (rng.exponential(0.5));
+        // std::cout << e << std::endl; //DEBUG
+        if (e > 1.5 && e < 4.5) // Generate a random number to verify if a new process is created
+        {
+            PCB pcb = pg.generatePCB(Scheduler::get_current_time());
+            add_pcb(pcb);
+        }
     }
     if (running_process != nullptr)
     {
