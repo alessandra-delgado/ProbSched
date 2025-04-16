@@ -56,6 +56,7 @@ int pick_algorithm()
     std::vector<std::string> entries = {
         "First Come First Served",
         "Priority Scheduling Non-Preemptive",
+        "Priority Scheduling Preemptive",
         "Shortest Job Non-Preemptive",
         "Shortest Job Preemptive",
         "Round Robin",
