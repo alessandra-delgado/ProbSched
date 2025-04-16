@@ -54,11 +54,12 @@ void PriorityPreemptive::schedule()
     // If there is a current process running
     if (running_process != nullptr)
     {
+        // Check for preemptiveness
         if(!is_ready_empty()){
             PCB pcb = get_next_pcb();
             // and the process at the front has a higher priority than the one currently running (lower in integer)
             if(pcb.get_priority() < running_process->get_priority() && (pcb.get_arrival_time() <= get_current_time())){
-                remove_pcb(); // Remove the one currently on the top
+                remove_pcb(); // Remove the selected pcb from ready queue
                 add_pcb(*running_process); // Add the current in (yes, order matters)
                 running_process = std::make_unique<PCB>(pcb);
             }
