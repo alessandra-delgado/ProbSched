@@ -69,7 +69,7 @@ void FCFS::schedule()
             running_process->set_completion_time(current_time);
             terminated_processes.push_back(*running_process);
             running_process = nullptr;
-            schedule_new = true;
+            schedule_new = true; // ??? what was this for??????
             return; // choose process on the same instant
         }
     }

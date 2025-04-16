@@ -35,6 +35,7 @@ void ShortestJobNonPreemptive::schedule()
 {
     if (stop_sched)
         return;
+
     int queue_size = ready.size();
     double prob = 1.0 / (1 + queue_size * 0.5);
     if (rand() / double(RAND_MAX) < prob)
@@ -57,7 +58,6 @@ void ShortestJobNonPreemptive::schedule()
             running_process->set_completion_time(current_time);
             terminated_processes.push_back(*running_process);
             running_process = nullptr;
-            schedule_new = true;
             return;
         }
     }

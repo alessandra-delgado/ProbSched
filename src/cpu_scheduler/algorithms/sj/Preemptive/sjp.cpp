@@ -68,13 +68,15 @@ void ShortestJobPreemptive::schedule()
                 PCB next_pcb = get_next_pcb();
                 if (next_pcb.get_burst_time() < running_process->get_burst_time())
                 {
-                    // Preempção: salva o estado atual do processo em execução
-                    running_process->set_state(ProcessState::Ready);
+                    // 1 - We first remove this to-be-scheduled PCB (as it's saved in next_pcb var)
+                    remove_pcb();
+
+                    // 2 - We push the running process into the ready queue
                     add_pcb(*running_process);
-                    // Coloca o novo processo em execução
+
+                    // 3 - We pass the control to the now running process
                     running_process = std::make_unique<PCB>(next_pcb);
                     running_process->set_state(ProcessState::Running);
-                    remove_pcb();
                 }
             }
         }
