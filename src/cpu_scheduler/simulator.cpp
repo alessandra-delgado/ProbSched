@@ -11,9 +11,10 @@
 #include "algorithms/algorithms.hpp"
 #include "../process/process_generator/process_generator.hpp"
 #include "../process/process_generator/random_generator.hpp"
-#include "algorithms/ps/Non-Preemptive/psnon.hpp"
-#include "algorithms/sj/Non-Preemptive/sjnonp.hpp"
-#include "algorithms/sj/Preemptive/sjp.hpp"
+#include "algorithms/ps/non_preemptive/psnon.hpp"
+#include "algorithms/ps/preemptive/ps.hpp"
+#include "algorithms/sj/non_preemptive/sjnonp.hpp"
+#include "algorithms/sj/preemptive/sjp.hpp"
 #include "algorithms/rr/rr.hpp"
 
 
@@ -32,6 +33,7 @@ void simulator()
     std::vector<std::unique_ptr<Scheduler>> algorithms;
     algorithms.push_back((std::make_unique<FCFS>()));
     algorithms.push_back((std::make_unique<NonPreemptivePriority>()));
+    algorithms.push_back((std::make_unique<PriorityPreemptive>()));
     algorithms.push_back((std::make_unique<ShortestJobNonPreemptive>()));
     algorithms.push_back((std::make_unique<ShortestJobPreemptive>()));
     algorithms.push_back((std::make_unique<RoundRobin>(2))); // quantum of 2
