@@ -27,8 +27,9 @@ void PriorityPreemptive::remove_pcb()
 
 const PCB PriorityPreemptive::get_next_pcb()
 {
-    if (!ready.empty())
-        return ready.top();
+    if (ready.empty())
+        throw std::runtime_error("No PCB in ready queue.");
+    return ready.top();
 }
 
 void PriorityPreemptive::schedule()
