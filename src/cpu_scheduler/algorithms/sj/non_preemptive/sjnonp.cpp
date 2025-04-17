@@ -5,7 +5,7 @@
 #include "sjnonp.hpp"
 #include "../../../scheduler_stats.hpp"
 
-extern std::atomic<bool> stop_sched();
+extern std::atomic<bool> stop_sched;
 
 bool ShortestJobNonPreemptive::is_ready_empty()
 {
@@ -35,6 +35,7 @@ void ShortestJobNonPreemptive::schedule()
 {
     if (stop_sched)
         return;
+
     int queue_size = ready.size();
     double prob = 1.0 / (1 + queue_size * 0.5);
     if (rand() / double(RAND_MAX) < prob)
@@ -65,12 +66,9 @@ void ShortestJobNonPreemptive::schedule()
     if (!is_ready_empty() && (running_process == nullptr))
     {
         PCB pcb = get_next_pcb();
-        if (pcb.get_arrival_time() <= Scheduler::get_current_time())
-        {
-            running_process = std::make_unique<PCB>(pcb);
-            running_process->set_state(ProcessState::Running);
-            remove_pcb();
-        }
+        running_process = std::make_unique<PCB>(pcb);
+        running_process->set_state(ProcessState::Running);
+        remove_pcb();
     }
 }
 

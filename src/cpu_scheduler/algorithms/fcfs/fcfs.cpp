@@ -69,20 +69,17 @@ void FCFS::schedule()
             running_process->set_completion_time(current_time);
             terminated_processes.push_back(*running_process);
             running_process = nullptr;
-            schedule_new = true;
-            return; // choose process on the same instant
+            schedule_new = true; // ??? what was this for??????
+            return;              // choose process on the same instant
         }
     }
 
     if (!is_ready_empty() && (running_process == nullptr))
     {
         PCB pcb = get_next_pcb();
-        if (pcb.get_arrival_time() <= Scheduler::get_current_time()) // had to leave this line here because currently processes' arrival time = current time + small gen time
-        {
-            running_process = std::make_unique<PCB>(pcb);
-            running_process->set_state(ProcessState::Running);
-            remove_pcb();
-        }
+        running_process = std::make_unique<PCB>(pcb);
+        running_process->set_state(ProcessState::Running);
+        remove_pcb();
     }
 }
 
