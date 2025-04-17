@@ -66,7 +66,7 @@ void ShortestJobPreemptive::schedule()
             if (!is_ready_empty())
             {
                 PCB next_pcb = get_next_pcb();
-                if (next_pcb.get_burst_time() < running_process->get_burst_time())
+                if (next_pcb.get_exec_time() < running_process->get_exec_time())
                 {
                     // 1 - We first remove this to-be-scheduled PCB (as it's saved in next_pcb var)
                     remove_pcb();
