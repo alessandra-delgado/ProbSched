@@ -70,12 +70,9 @@ void NonPreemptivePriority::schedule()
     if (!is_ready_empty() && (running_process == nullptr))
     {
         PCB pcb = get_next_pcb();
-        if (pcb.get_arrival_time() <= Scheduler::get_current_time())
-        {
-            running_process = std::make_unique<PCB>(pcb);
-            running_process->set_state(ProcessState::Running);
-            remove_pcb();
-        }
+        running_process = std::make_unique<PCB>(pcb);
+        running_process->set_state(ProcessState::Running);
+        remove_pcb();
     }
 }
 

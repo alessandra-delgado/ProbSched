@@ -36,7 +36,7 @@ void PriorityPreemptive::schedule()
 {
     if (stop_sched)
         return;
-    
+
     // Soft cap on process generation (dynamic -> uses ready queue size)
     int queue_size = ready.size();
     double prob = 1.0 / (1 + queue_size * 0.5);
@@ -55,11 +55,13 @@ void PriorityPreemptive::schedule()
     if (running_process != nullptr)
     {
         // Check for preemptiveness
-        if(!is_ready_empty()){
+        if (!is_ready_empty())
+        {
             PCB pcb = get_next_pcb();
             // and the process at the front has a higher priority than the one currently running (lower in integer)
-            if(pcb.get_priority() < running_process->get_priority() && (pcb.get_arrival_time() <= get_current_time())){
-                remove_pcb(); // Remove the selected pcb from ready queue
+            if (pcb.get_priority() < running_process->get_priority())
+            {
+                remove_pcb();              // Remove the selected pcb from ready queue
                 add_pcb(*running_process); // Add the current in (yes, order matters)
                 running_process = std::make_unique<PCB>(pcb);
             }
@@ -81,12 +83,9 @@ void PriorityPreemptive::schedule()
     if (!is_ready_empty() && (running_process == nullptr))
     {
         PCB pcb = get_next_pcb();
-        if (pcb.get_arrival_time() <= Scheduler::get_current_time())
-        {
-            running_process = std::make_unique<PCB>(pcb);
-            running_process->set_state(ProcessState::Running);
-            remove_pcb();
-        }
+        running_process = std::make_unique<PCB>(pcb);
+        running_process->set_state(ProcessState::Running);
+        remove_pcb();
     }
 }
 

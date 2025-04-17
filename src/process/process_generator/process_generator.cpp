@@ -13,6 +13,23 @@ ProcessGenerator::ProcessGenerator(double lambda, double mean_burst, double stdd
 PCB ProcessGenerator::generatePCB(int current_time)
 {
 	PCB pcb; // new PCB
+	int arrival = current_time;
+	int burst = rng.normal(burst_mean, burst_stddev);
+
+	pcb.set_arrival_time(arrival);
+	pcb.set_burst_time(burst);
+	pcb.set_exec_time(burst);
+	pcb.set_priority(rng.uniform(1, max_priority));
+	pcb.set_deadline(arrival + rng.uniform(1, deadline_range));
+	std::string name = "Process_" + std::to_string(pcb.get_pid());
+	pcb.set_name(name);
+
+	return pcb;
+}
+
+PCB ProcessGenerator::generatePCBInterArrival(int current_time)
+{
+	PCB pcb; // new PCB
 	int arrival = current_time + static_cast<int>(rng.exponential(1.0 / arrival_rate));
 	int burst = rng.normal(burst_mean, burst_stddev);
 

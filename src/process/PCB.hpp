@@ -16,14 +16,15 @@ private:
 	std::string name;	 // For statistics
 
 	// * Real Time zone - by default, these are set to invalid parameters since there are only two real time algorithms in ProbSched
-	bool is_real_time = false;
-	int deadline = -1;
-	int period = -1;
-	int deadline_misses = -1;
-	int next_sched_time = -1;
+	bool is_real_time;
+	int deadline;
+	int period;
+	int deadline_misses;
+	int next_sched_time;
 
 public:
-	PCB() : state(ProcessState::New), pid(next_pid++), priority(0), exec_time(0), deadline(0), burst_time(0), arrival_time(0), name("") {}
+	PCB() : state(ProcessState::New), pid(next_pid++), priority(0), exec_time(0), burst_time(0), arrival_time(0), name(""),
+			is_real_time(false), deadline(0), period(-1), deadline_misses(-1), next_sched_time(-1) {}
 
 	// * getters ---------------------------------------------------------
 	inline ProcessState get_state() const { return state; }
