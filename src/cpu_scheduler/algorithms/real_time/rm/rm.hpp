@@ -20,5 +20,5 @@ public:
     void schedule() override;
     std::vector<PCB> ready_queue_to_vector() override;
 
-    void generate_pcb_queue();
+    void generate_pcb_queue(int n) override;
 };

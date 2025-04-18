@@ -5,6 +5,7 @@
 
 #include "rm.hpp"
 #include "../../../scheduler_stats.hpp"
+#include "../../../../process/process_generator/process_generator.hpp"
 
 extern std::atomic<bool> stop_sched;
 
@@ -92,8 +93,7 @@ std::vector<PCB> RateMonotonic::ready_queue_to_vector()
     return rq;
 }
 
-void RateMonotonic::generate_pcb_queue()
+void RateMonotonic::generate_pcb_queue(int n)
 {
-    // todo: Generate 3 pcbs at most
-
+    all_tasks = pg.generatePeriodicPCBList(n);
 }

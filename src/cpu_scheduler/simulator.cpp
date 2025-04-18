@@ -52,6 +52,9 @@ void simulator()
         if (i >= (int)algorithms.size())
             break;
 
+        if(i == 6){
+            algorithms[6]->generate_pcb_queue(3);
+        }
         while (!stop_sched) // Scheduling until CTRL + c
         {
 
