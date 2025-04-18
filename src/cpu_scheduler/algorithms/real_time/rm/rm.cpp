@@ -39,18 +39,53 @@ const PCB RateMonotonic::get_next_pcb()
 // scheduling logic
 void RateMonotonic::schedule()
 {
-    // i do nothing
+    if (stop_sched)
+        return;
+    for (auto &pcb : all_tasks)
+    {
+        if (current_time == pcb.get_next_sched_time())
+        {
+            pcb.set_exec_time(pcb.get_burst_time());
+            pcb.set_next_sched_time(pcb.get_next_sched_time() + pcb.get_period());
+            add_pcb(pcb); // Now add it to ready queue
+        }
+    }
+
+    if (running_process == nullptr || get_next_pcb().get_period() < running_process->get_period())
+    {
+        if (running_process)
+        {
+            add_pcb(*running_process);
+            // running_process == nullptr; // redundant line...
+        }
+        running_process = std::make_unique<PCB>(get_next_pcb());
+    }
+
+    if (running_process)
+    {
+        running_process->dec_exec_time();
+        if (running_process->get_exec_time() == 0)
+            running_process = nullptr;
+    }
+
+    current_time++;
 }
 
 // convert to vector
 std::vector<PCB> RateMonotonic::ready_queue_to_vector()
 {
     std::vector<PCB> rq;
-    std::priority_queue<PCB, std::vector<PCB>, HighestFrequencyComparator> pq = ready;
+    std::priority_queue<PCB, std::vector<PCB>, FrequencyComparator> pq = ready;
     while (!pq.empty())
     {
         rq.push_back(pq.top());
         pq.pop();
     }
     return rq;
+}
+
+void RateMonotonic::generate_pcb_queue()
+{
+    // todo: Generate 3 pcbs at most
+    
 }

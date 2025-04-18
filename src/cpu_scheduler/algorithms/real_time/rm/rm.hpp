@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../scheduler.hpp"
 #include "../../../../process/PCB.hpp"
-#include "highest_frequency_comparator.hpp"
+#include "frequency_comparator.hpp"
 
 #include <queue>
 #include <vector>
@@ -9,7 +9,8 @@
 
 class RateMonotonic : public Scheduler {
 private:
-    std::priority_queue<PCB, std::vector<PCB>, HighestFrequencyComparator> ready;
+    std::priority_queue<PCB, std::vector<PCB>, FrequencyComparator> ready;
+    std::vector<PCB> all_tasks; // real time system specific: a list of all periodic tasks to simulate
 
 public:
     bool is_ready_empty() override;
@@ -18,4 +19,6 @@ public:
     const PCB get_next_pcb() override;
     void schedule() override;
     std::vector<PCB> ready_queue_to_vector() override;
+
+    void generate_pcb_queue();
 };
