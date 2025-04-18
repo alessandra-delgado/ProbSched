@@ -45,20 +45,28 @@ void RateMonotonic::schedule()
     {
         if (current_time == pcb.get_next_sched_time())
         {
+            bool is_running = running_process && (pcb.get_pid() == running_process->get_pid());
+            // Refresh deadline misses
+            if(!is_running && pcb.get_exec_time() > 0)
+                pcb.inc_deadline_misses();
+            
             pcb.set_exec_time(pcb.get_burst_time());
             pcb.set_next_sched_time(pcb.get_next_sched_time() + pcb.get_period());
             add_pcb(pcb); // Now add it to ready queue
         }
     }
 
-    if (running_process == nullptr || get_next_pcb().get_period() < running_process->get_period())
-    {
-        if (running_process)
+    if(!is_ready_empty()){
+        PCB pcb = get_next_pcb();
+        if (running_process == nullptr || pcb.get_period() < running_process->get_period())
         {
-            add_pcb(*running_process);
-            // running_process == nullptr; // redundant line...
+            if (running_process)
+            {
+                add_pcb(*running_process);
+            }
+            running_process = std::make_unique<PCB>(get_next_pcb());
+            remove_pcb();
         }
-        running_process = std::make_unique<PCB>(get_next_pcb());
     }
 
     if (running_process)
@@ -87,5 +95,5 @@ std::vector<PCB> RateMonotonic::ready_queue_to_vector()
 void RateMonotonic::generate_pcb_queue()
 {
     // todo: Generate 3 pcbs at most
-    
+
 }

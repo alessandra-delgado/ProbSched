@@ -60,6 +60,7 @@ int pick_algorithm()
         "Shortest Job Non-Preemptive",
         "Shortest Job Preemptive",
         "Round Robin",
+        "Rate Monotonic"
         "Quit"
     };
 

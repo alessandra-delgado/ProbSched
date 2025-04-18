@@ -1,4 +1,5 @@
 #pragma once
+#include <set>
 #include <string>
 #include "process_state/process_state.hpp"
 class PCB
@@ -16,6 +17,7 @@ private:
 	std::string name;	 // For statistics
 
 	// * Real Time zone - by default, these are set to invalid parameters since there are only two real time algorithms in ProbSched
+	static inline std::set<int> used_periods; // To force periods to be unique
 	bool is_real_time;
 	int deadline;
 	int period;
@@ -66,4 +68,6 @@ public:
 
 	// - real time
 	inline void inc_deadline_misses() { deadline_misses++; }
+	inline static std::set<int> get_used_periods() { return used_periods; }
+	inline static void add_to_used_periods(int n) { used_periods.insert(n); }
 };

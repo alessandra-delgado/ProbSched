@@ -17,8 +17,8 @@ class ProcessGenerator
 	ProcessGenerator(double lambda, double mean_burst, double stddev_burst, int max_priority, int dl_range = 100);
 	
 	PCB generatePCB(int current_time);
+	PCB generatePCBRealTime();
 	PCB generatePCBInterArrival(int current_time);
 	std::vector<PCB> generatePCBList(int num_processes);
-	std::vector<PCB> generatePeriodicPCBList(int num_processes, int base_period);
-	
+	std::vector<PCB> generatePeriodicPCBList(int num_processes);
 };
