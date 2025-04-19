@@ -180,7 +180,6 @@ void SchedulerStats::display_stats(std::string title)
                   text(std::to_string(throughput)) | color(Color::Yellow)}));
 
         // Create Gantt chart elements
-        // Create Gantt chart elements
         gantt_elements.push_back(text("Gantt Chart of last 60 seconds") | center | bold);
 
         std::string current_block_process = "";
@@ -452,7 +451,13 @@ void SchedulerStats::display_stats_real_time(std::string title)
             return colors[hash % colors.size()];
         };
 
-        for (int i = 0; i < HISTORY_SIZE; i++)
+        // First, identify the first process to properly initialize current_block_process
+        int start_idx = (history_index - 1 + HISTORY_SIZE) % HISTORY_SIZE;
+        current_block_process = process_history[start_idx];
+        block_start = 0;
+        block_length = 1;
+
+        for (int i = 1; i < HISTORY_SIZE; i++)
         {
             int idx = (history_index - 1 - i + HISTORY_SIZE) % HISTORY_SIZE;
             std::string proc = process_history[idx];
@@ -463,17 +468,14 @@ void SchedulerStats::display_stats_real_time(std::string title)
             }
             else
             {
-                if (block_start != -1)
-                {
-                    std::string label = current_block_process.empty() ? "IDLE" : current_block_process;
-                    Color block_color = process_color(current_block_process);
+                std::string label = current_block_process.empty() ? "IDLE" : current_block_process;
+                Color block_color = process_color(current_block_process);
 
-                    gantt_blocks.push_back(
-                        text(" " + label + " ") |
-                        bgcolor(block_color) |
-                        color(Color::Black) |
-                        size(WIDTH, EQUAL, block_length));
-                }
+                gantt_blocks.push_back(
+                    text(" " + label + " ") |
+                    bgcolor(block_color) |
+                    color(Color::Black) |
+                    size(WIDTH, EQUAL, block_length));
 
                 current_block_process = proc;
                 block_start = i;
@@ -481,17 +483,17 @@ void SchedulerStats::display_stats_real_time(std::string title)
             }
         }
 
-        if (block_start != -1)
+        // Handle the last block
+        if (block_length > 0)
         {
             std::string label = current_block_process.empty() ? "IDLE" : current_block_process;
             Color block_color = process_color(current_block_process);
 
-            int display_length = std::max(block_length, 3);
             gantt_blocks.push_back(
                 text(" " + label + " ") |
                 bgcolor(block_color) |
                 color(Color::Black) |
-                size(WIDTH, EQUAL, display_length));
+                size(WIDTH, EQUAL, block_length));
         }
 
         Elements gantt_row;
