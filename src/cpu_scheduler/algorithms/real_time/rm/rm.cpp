@@ -14,19 +14,22 @@ extern std::atomic<bool> stop_sched;
 
 // scheduling logic
 void RateMonotonic::schedule()
-// todo: fix process generation periods or burst times/ fix the algorithm??
+// todo: fix process generation periods or burst times/fix the algorithm <- WHERE???
 {
     if (stop_sched)
         return;
-
+        
+    // Updating all the tasks in the system
     for (auto &pcb : all_tasks)
     {
+        // When the current time is equal to the processes's schedule time (or rather release time)
         if (current_time == pcb.get_next_sched_time())
         {
-            // Refresh deadline misses
+            // Refresh deadline misses if it was still running and it's past its scheduled time.
             if (pcb.get_exec_time() > 0 && current_time >= pcb.get_next_sched_time())
                 pcb.inc_deadline_misses();
-
+            
+            // Then, reset the execution time
             pcb.set_exec_time(pcb.get_burst_time());
             pcb.set_next_sched_time(current_time + pcb.get_period());
         }
@@ -81,7 +84,7 @@ std::vector<PCB> RateMonotonic::ready_queue_to_vector()
 void RateMonotonic::generate_pcb_queue(int n)
 {
     all_tasks = pg.generatePeriodicPCBList(n);
-    for (auto &pcb : all_tasks)
+/*  for (auto &pcb : all_tasks)
     {
         std::cout << "NAME: " << pcb.get_name()
                   << " PERIOD: " << pcb.get_period()
@@ -91,5 +94,5 @@ void RateMonotonic::generate_pcb_queue(int n)
                   << std::endl;
     }
 
-    std::this_thread::sleep_for(std::chrono::seconds(3)); // just so the screen is readable
+    std::this_thread::sleep_for(std::chrono::seconds(3)); // just so the screen is readable */
 }

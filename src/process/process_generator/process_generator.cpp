@@ -30,13 +30,13 @@ PCB ProcessGenerator::generatePCB(int current_time)
 PCB ProcessGenerator::generatePCBRealTime()
 {
 	PCB pcb;
-	int burst = rng.normal(burst_mean/2, burst_stddev);
+	int burst = std::max(1, rng.normal(burst_mean, burst_stddev));
 	pcb.set_burst_time(burst);
 	pcb.set_exec_time(burst);
 
 	while (true)
 	{
-		int candidate_period = burst * rng.uniform(2, 5);
+		int candidate_period = burst * rng.uniform(5, 10);
 		if (!PCB::get_used_periods().count(candidate_period))
 		{
 			PCB::add_to_used_periods(candidate_period);
@@ -92,7 +92,6 @@ std::vector<PCB> ProcessGenerator::generatePCBList(int num_processes)
 std::vector<PCB> ProcessGenerator::generatePeriodicPCBList(int num_processes)
 {
 	std::vector<PCB> pcbs;
-	int current_time = 0;
 
 	for (int i = 0; i < num_processes; ++i)
 	{

@@ -31,7 +31,8 @@ public:
         const std::vector<PCB> ready_queue,
         const std::vector<PCB> terminated_processes);
 
-        static void display_stats();
+        static void display_stats(std::string title);
+        static void display_stats_real_time(std::string title);
         static void updateWaitingTime(int current_time);
         static void updateTurnaroundTime(const std::vector<PCB>& terminated_processes);
         static void updateThroughput(int current_time);
