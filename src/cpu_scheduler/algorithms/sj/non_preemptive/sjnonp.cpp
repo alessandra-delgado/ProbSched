@@ -1,52 +1,52 @@
 #include <iostream>
 #include <stdexcept>
 #include <atomic>
-#include <iomanip>
 
-#include "psnon.hpp"
+#include "sjnonp.hpp"
 #include "../../../scheduler_stats.hpp"
 
 extern std::atomic<bool> stop_sched;
 
-// check if queue is empty
-bool NonPreemptivePriority::is_ready_empty()
+bool ShortestJobNonPreemptive::is_ready_empty()
 {
     return ready.empty();
-}
+};
 
-// add process to queue
-void NonPreemptivePriority::add_pcb(PCB pcb)
+void ShortestJobNonPreemptive::add_pcb(PCB pcb)
 {
     pcb.set_state(ProcessState::Ready);
     ready.push(pcb);
-}
+};
 
-// remove process of higher prioryty from queue
-void NonPreemptivePriority::remove_pcb()
+void ShortestJobNonPreemptive::remove_pcb()
 {
     if (!ready.empty())
         ready.pop();
 }
 
-// get next process
-const PCB NonPreemptivePriority::get_next_pcb()
+const PCB ShortestJobNonPreemptive::get_next_pcb()
 {
     if (ready.empty())
         throw std::runtime_error("No PCB in ready queue.");
     return ready.top();
 }
 
-// do scheduling logic
-void NonPreemptivePriority::schedule()
+void ShortestJobNonPreemptive::schedule()
 {
     if (stop_sched)
         return;
-    double e = (rng.exponential(0.58));
-    // std::cout << e << std::endl; //DEBUG
-    if (e > 1.5 && e < 4.5) // Generate a random number to verify if a new process is created
+
+    int queue_size = ready.size();
+    double prob = 1.0 / (1 + queue_size * 0.5);
+    if (rand() / double(RAND_MAX) < prob)
     {
-        PCB pcb = pg.generatePCB(Scheduler::get_current_time());
-        add_pcb(pcb);
+        double e = (rng.exponential(0.5));
+        // std::cout << e << std::endl; //DEBUG
+        if (e > 1.5 && e < 4.5) // Generate a random number to verify if a new process is created
+        {
+            PCB pcb = pg.generatePCB(Scheduler::get_current_time());
+            add_pcb(pcb);
+        }
     }
     if (running_process != nullptr)
     {
@@ -62,23 +62,20 @@ void NonPreemptivePriority::schedule()
             return;
         }
     }
+
     if (!is_ready_empty() && (running_process == nullptr))
     {
         PCB pcb = get_next_pcb();
-        if (pcb.get_arrival_time() <= Scheduler::get_current_time())
-        {
-            running_process = std::make_unique<PCB>(pcb);
-            running_process->set_state(ProcessState::Running);
-            remove_pcb();
-        }
+        running_process = std::make_unique<PCB>(pcb);
+        running_process->set_state(ProcessState::Running);
+        remove_pcb();
     }
 }
 
-// convert to vector
-std::vector<PCB> NonPreemptivePriority::ready_queue_to_vector()
+std::vector<PCB> ShortestJobNonPreemptive::ready_queue_to_vector()
 {
     std::vector<PCB> rq;
-    std::priority_queue<PCB, std::vector<PCB>, PriorityComparator> pq = ready;
+    std::priority_queue<PCB, std::vector<PCB>, BurstTimeComparator> pq = ready;
     while (!pq.empty())
     {
         rq.push_back(pq.top());
