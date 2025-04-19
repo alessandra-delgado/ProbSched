@@ -103,3 +103,10 @@ std::vector<PCB> ShortestJobPreemptive::ready_queue_to_vector()
     }
     return rq;
 }
+
+
+void ShortestJobPreemptive::reset() {
+    while (!ready.empty()) {
+        ready.pop();
+    }
+}

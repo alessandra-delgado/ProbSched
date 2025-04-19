@@ -93,3 +93,9 @@ std::vector<PCB> RoundRobin::ready_queue_to_vector()
     }
     return rq;
 }
+
+void RoundRobin::reset(){
+    while (!ready.empty()) {
+        ready.pop();
+    }
+}

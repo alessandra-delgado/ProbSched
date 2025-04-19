@@ -100,3 +100,9 @@ std::vector<PCB> PriorityPreemptive::ready_queue_to_vector()
     }
     return rq;
 }
+
+void PriorityPreemptive::reset() {
+    while (!ready.empty()) {
+        ready.pop();
+    }
+}

@@ -43,14 +43,23 @@ void simulator()
     signal(SIGINT, handle_sigint);
     while (true)
     {
-        // todo: reset schedulers and PCB here
+        // reset 
+        Scheduler::reset_cpu_time();
         Scheduler::reset_current_time();
+        Scheduler::reset_processes_running();
+        Scheduler::reset_schedule_new();
+        SchedulerStats::reset_stats();
+        Scheduler::clear_processes_terminated();
+
         stop_sched = false;
 
         // ! 1 - Escolher um algoritmo, tipo de geração de processo...
         int i = pick_algorithm();
         if (i >= (int)algorithms.size())
             break;
+
+        // reset algoritmo especifico
+        algorithms[i] -> reset();
 
         if(i == 6){
             algorithms[6]->generate_pcb_queue(3);

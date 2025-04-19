@@ -36,4 +36,20 @@ public:
         static void updateTurnaroundTime(const std::vector<PCB>& terminated_processes);
         static void updateThroughput(int current_time);
         static void updateDeadlineMisses(const std::vector<PCB>& terminated_processes);
+        static void reset_stats() {
+            total_response_time = 0;
+            total_utilization_time = 0;
+            total_turnaround_time = 0;
+            total_utilization_time = 0;
+            total_processes = 0;
+            total_completed_processes = 0;
+            current_time = 0;
+            average_turnaround_time = 0.0;
+            average_waiting_time = 0;
+            throughput = 0.0;
+            deadline_misses = 0;
+            terminated_processes.clear();
+            ready_queue.clear();
+            
+        }
     };

@@ -83,3 +83,9 @@ std::vector<PCB> ShortestJobNonPreemptive::ready_queue_to_vector()
     }
     return rq;
 }
+
+void ShortestJobNonPreemptive::reset(){
+    while (!ready.empty()) {
+        ready.pop();
+    }
+}

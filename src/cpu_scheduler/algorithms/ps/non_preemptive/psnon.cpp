@@ -88,3 +88,9 @@ std::vector<PCB> NonPreemptivePriority::ready_queue_to_vector()
     }
     return rq;
 }
+
+void NonPreemptivePriority::reset() {
+    while (!ready.empty()) {
+        ready.pop();
+    }
+}
