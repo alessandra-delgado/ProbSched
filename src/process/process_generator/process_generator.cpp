@@ -30,7 +30,7 @@ PCB ProcessGenerator::generatePCB(int current_time)
 PCB ProcessGenerator::generatePCBRealTime()
 {
 	PCB pcb;
-	int burst = rng.normal(burst_mean, burst_stddev);
+	int burst = rng.normal(burst_mean/2, burst_stddev);
 	pcb.set_burst_time(burst);
 	pcb.set_exec_time(burst);
 

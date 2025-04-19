@@ -3,97 +3,93 @@
 #include <atomic>
 #include <iomanip>
 
+#include <thread>
+#include <chrono>
+
 #include "rm.hpp"
 #include "../../../scheduler_stats.hpp"
 #include "../../../../process/process_generator/process_generator.hpp"
 
 extern std::atomic<bool> stop_sched;
 
-// check if queue is empty
-bool RateMonotonic::is_ready_empty()
-{
-    return ready.empty();
-}
-
-// add process to queue
-void RateMonotonic::add_pcb(PCB pcb)
-{
-    pcb.set_state(ProcessState::Ready);
-    ready.push(pcb);
-}
-
-// remove process of higher prioryty from queue
-void RateMonotonic::remove_pcb()
-{
-    if (!ready.empty())
-        ready.pop();
-}
-
-// get next process
-const PCB RateMonotonic::get_next_pcb()
-{
-    if (ready.empty())
-        throw std::runtime_error("No PCB in ready queue.");
-    return ready.top();
-}
-
 // scheduling logic
 void RateMonotonic::schedule()
+// todo: fix process generation periods or burst times/ fix the algorithm??
 {
     if (stop_sched)
         return;
+
     for (auto &pcb : all_tasks)
     {
         if (current_time == pcb.get_next_sched_time())
         {
-            bool is_running = running_process && (pcb.get_pid() == running_process->get_pid());
             // Refresh deadline misses
-            if(!is_running && pcb.get_exec_time() > 0)
+            if (pcb.get_exec_time() > 0 && current_time >= pcb.get_next_sched_time())
                 pcb.inc_deadline_misses();
-            
+
             pcb.set_exec_time(pcb.get_burst_time());
-            pcb.set_next_sched_time(pcb.get_next_sched_time() + pcb.get_period());
-            add_pcb(pcb); // Now add it to ready queue
+            pcb.set_next_sched_time(current_time + pcb.get_period());
         }
     }
 
-    if(!is_ready_empty()){
-        PCB pcb = get_next_pcb();
-        if (running_process == nullptr || pcb.get_period() < running_process->get_period())
+    PCB *best_candidate = nullptr;
+    for (auto &task : all_tasks)
+    {
+        if (task.get_exec_time() > 0)
         {
-            if (running_process)
-            {
-                add_pcb(*running_process);
-            }
-            running_process = std::make_unique<PCB>(get_next_pcb());
-            remove_pcb();
+            if (!best_candidate || task.get_period() < best_candidate->get_period())
+                best_candidate = &task;
         }
     }
 
+    if (best_candidate)
+    {
+        if (!running_process || (best_candidate->get_pid() != running_process->get_pid()))
+        {
+            running_process = std::make_unique<PCB>(*best_candidate);
+            running_process->set_state(ProcessState::Running);
+            return;
+        }
+        running_process->dec_exec_time();
+    }
     if (running_process)
     {
-        running_process->dec_exec_time();
-        if (running_process->get_exec_time() == 0)
-            running_process = nullptr;
+        for (auto &task : all_tasks)
+        {
+            if (running_process && (task.get_pid() == running_process->get_pid()))
+            {
+                task.set_exec_time(running_process->get_exec_time());
+                break;
+            }
+        }
     }
 
-    current_time++;
+    if (running_process && (running_process->get_exec_time() == 0))
+    {
+        running_process->set_state(ProcessState::Ready);
+        running_process = nullptr;
+        schedule_new = true;
+    }
 }
 
 // convert to vector
 std::vector<PCB> RateMonotonic::ready_queue_to_vector()
 {
-    std::vector<PCB> rq;
-    std::priority_queue<PCB, std::vector<PCB>, FrequencyComparator> pq = ready;
-    while (!pq.empty())
-    {
-        rq.push_back(pq.top());
-        pq.pop();
-    }
-    return rq;
+    return all_tasks;
 }
 
 void RateMonotonic::generate_pcb_queue(int n)
 {
     all_tasks = pg.generatePeriodicPCBList(n);
+    for (auto &pcb : all_tasks)
+    {
+        std::cout << "NAME: " << pcb.get_name()
+                  << " PERIOD: " << pcb.get_period()
+                  << " ARRIVAL TIME: " << pcb.get_arrival_time()
+                  << " BURST TIME: " << pcb.get_burst_time()
+                  << " EXEC TIME: " << pcb.get_exec_time()
+                  << std::endl;
+    }
+
+    std::this_thread::sleep_for(std::chrono::seconds(3)); // just so the screen is readable
 }
