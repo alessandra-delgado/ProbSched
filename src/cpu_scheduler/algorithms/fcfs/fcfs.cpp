@@ -94,3 +94,8 @@ std::vector<PCB> FCFS::ready_queue_to_vector()
     }
     return rq;
 }
+void FCFS::reset(){
+    while (!ready.empty()) {
+        ready.pop();
+    }
+}

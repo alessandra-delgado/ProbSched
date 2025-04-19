@@ -29,6 +29,9 @@ public:
 	inline static void reset_current_time() { current_time = 0; }
 	inline static std::unique_ptr<PCB>& get_running_process() { return running_process; }
 	inline static std::vector<PCB> get_terminated_processes() { return terminated_processes; }
+	inline static void reset_cpu_time(){ cpu_time = 0;}
+	inline static void clear_processes_terminated() {terminated_processes.clear();}
+	inline static void reset_processes_running() { running_process.reset();}
 
 	// Here, functions are made pure virtual functions,
 	// which forces the implementation of the following functions
@@ -43,4 +46,6 @@ public:
 
 	virtual bool real_time() = 0;
 	virtual void generate_pcb_queue(int) {}
+	virtual void reset() = 0;
+
 };
