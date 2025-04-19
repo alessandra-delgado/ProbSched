@@ -27,7 +27,7 @@ void handle_sigint(int sig)
 {
     stop_sched = true;
 }
-// todo: refactoring
+
 void simulator()
 {
     // add algorithms to array
@@ -52,6 +52,7 @@ void simulator()
         if (i >= (int)algorithms.size())
             break;
 
+        if(algorithms[i] )
         if(i == 6){
             algorithms[6]->generate_pcb_queue(3);
         }
@@ -73,7 +74,10 @@ void simulator()
             }
             else
             {
-                SchedulerStats::display_stats();
+                if(!(algorithms[i]->real_time()))
+                    SchedulerStats::display_stats(algorithms[i]->get_scheduler_name());
+                else
+                    SchedulerStats::display_stats_real_time(algorithms[i]->get_scheduler_name());
                 std::this_thread::sleep_for(std::chrono::seconds(1)); // just so the screen is readable
                 Scheduler::increment_current_time();
             }

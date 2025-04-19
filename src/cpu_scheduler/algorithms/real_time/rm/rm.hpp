@@ -19,4 +19,7 @@ public:
     std::vector<PCB> ready_queue_to_vector() override;
 
     void generate_pcb_queue(int n) override;
+	virtual bool real_time() override { return true; }
+    std::string get_scheduler_name() override { return "Rate Monotonic"; }
+
 };

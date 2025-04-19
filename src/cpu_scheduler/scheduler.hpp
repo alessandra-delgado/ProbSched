@@ -39,6 +39,8 @@ public:
 	virtual const PCB get_next_pcb() = 0;
 	virtual void schedule() = 0;
 	virtual std::vector<PCB> ready_queue_to_vector() = 0;
+	virtual std::string get_scheduler_name() = 0;
 
+	virtual bool real_time() = 0;
 	virtual void generate_pcb_queue(int) {}
 };
