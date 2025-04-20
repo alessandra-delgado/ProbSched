@@ -269,7 +269,7 @@ void SchedulerStats::display_stats(std::string title)
         return vbox({hbox({text("Scheduler Statistics - " + title) | bold | center | flex, text("  ")}) |
                          color(Color::White) | bgcolor(Color::Blue),
 
-                     vbox({hbox({vbox(current_process_elements) | border | flex,
+                     vbox({hbox({vbox(current_process_elements) | border | flex | size(HEIGHT, EQUAL, 13),
                                  vbox(gantt_elements) | border | flex}) |
                                size(HEIGHT, LESS_THAN, 20), // might have to change height
 
@@ -515,7 +515,7 @@ void SchedulerStats::display_stats_real_time(std::string title)
         return vbox({hbox({text("Scheduler Statistics - " + title) | bold | center | flex, text("  ")}) |
                          color(Color::White) | bgcolor(Color::Blue),
 
-                     vbox({hbox({vbox(current_process_elements) | border | flex,
+                     vbox({hbox({vbox(current_process_elements) | border | flex| size(HEIGHT, EQUAL, 12),
                                  vbox(gantt_elements) | border | flex}) |
                                size(HEIGHT, LESS_THAN, 20), // might have to change height
 
