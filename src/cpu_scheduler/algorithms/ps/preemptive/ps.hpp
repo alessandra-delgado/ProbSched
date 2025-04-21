@@ -17,6 +17,7 @@ public:
 	void remove_pcb() override;						   // remove process of higher priority from the queue
 	const PCB get_next_pcb() override;				   // get next process
 	void schedule() override;						   // do scheduling logic
+	void reset() override;
 	std::vector<PCB> ready_queue_to_vector() override; // convert to vector
     std::string get_scheduler_name() override { return "Priority Scheduling (Preemptive)"; }
 

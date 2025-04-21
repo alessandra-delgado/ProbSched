@@ -19,6 +19,7 @@ public:
     void remove_pcb() override;
     const PCB get_next_pcb() override;
     void schedule() override;
+    void reset() override;
     std::vector<PCB> ready_queue_to_vector() override;
 
     void set_time_quantum(int quantum) { time_quantum = quantum; }

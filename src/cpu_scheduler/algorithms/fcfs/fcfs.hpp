@@ -24,6 +24,7 @@ public:
     void remove_pcb() override;
     const PCB get_next_pcb() override;
     void schedule() override;
+    void reset() override;
     std::vector<PCB> ready_queue_to_vector() override;
     std::string get_scheduler_name() override { return "First Come First Served"; }
 	virtual bool real_time() override { return false; }
