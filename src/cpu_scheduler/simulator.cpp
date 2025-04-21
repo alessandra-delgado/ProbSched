@@ -39,7 +39,8 @@ void simulator()
     algorithms.push_back((std::make_unique<PriorityPreemptive>()));
     algorithms.push_back((std::make_unique<ShortestJobNonPreemptive>()));
     algorithms.push_back((std::make_unique<ShortestJobPreemptive>()));
-    algorithms.push_back((std::make_unique<RoundRobin>(2))); // quantum of 2 // todo: change so user can adjust time quantum
+    int rr_quantum = 2; // quantum of 2 
+    algorithms.push_back((std::make_unique<RoundRobin>(rr_quantum))); 
     algorithms.push_back((std::make_unique<RateMonotonic>()));
     algorithms.push_back((std::make_unique<EarliestDeadlineFirst>()));
     
@@ -60,6 +61,10 @@ void simulator()
         int i = pick_algorithm();
         if (i >= (int)algorithms.size())
             break;
+
+        if (i == 5) { // Round Robin index
+            dynamic_cast<RoundRobin*>(algorithms[i].get())->set_time_quantum(rr_quantum);
+        }
 
         // reset algoritmo especifico
         algorithms[i] -> reset();

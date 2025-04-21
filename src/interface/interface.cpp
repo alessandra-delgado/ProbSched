@@ -49,6 +49,42 @@ int main_menu()
     screen.Loop(handler);
     return selected;
 }
+int get_time_quantum() {
+    std::cout << "\033[H\033[J"; // clear
+    
+    auto screen = ScreenInteractive::Fullscreen();
+    int quantum = 2;  // Default value
+    std::string input;
+    bool valid = false;
+
+    auto component = Container::Vertical({
+        Input(&input, "Enter time quantum (1-10): "),
+        Button("Confirm", [&] {
+            try {
+                quantum = std::stoi(input);
+                if (quantum >= 1 && quantum <= 10) {
+                    valid = true;
+                    screen.ExitLoopClosure()();
+                }
+            } catch (...) {
+                // Invalid input
+            }
+        })
+    });
+    auto renderer = Renderer(component, [&] {
+        return vbox({
+            text("Round Robin - Set Time Quantum") | bold | hcenter,
+            separator(),
+            component->Render() | center,
+            separator(),
+            !valid && input.empty() ? text("Please enter a value between 1 and 10") | color(Color::Red) : 
+            text("Time quantum will be: " + std::to_string(quantum)) | color(Color::Green)
+        }) | border | center;
+    });
+
+    screen.Loop(renderer);
+    return quantum;
+}
 
 int pick_algorithm()
 {
@@ -66,6 +102,7 @@ int pick_algorithm()
     };
 
     int selected = 0;
+    static int rr_quantum = 2; // default value
 
     auto screen = ScreenInteractive::Fullscreen();
     auto menu = Menu(&entries, &selected);
@@ -77,6 +114,7 @@ int pick_algorithm()
                 separator(),
                 menu->Render() | center, // center the menu itself
                 separator(),
+                selected == 5 ? text("Current time quantum: " + std::to_string(rr_quantum)) : text(""),
                 bgcolor(Color::SeaGreen1, color(Color::Black, text("Update: All algorithms added. Polishing..."))) | center
                 }) | border);
         });
@@ -85,6 +123,9 @@ int pick_algorithm()
     auto handler = CatchEvent(main_menu, [&](Event event)
                               {
         if(event == Event::Return){
+            if (selected == 5) {  // Round Robin selected
+                rr_quantum = get_time_quantum();
+            }
             screen.ExitLoopClosure()();
                 return true;
         }
