@@ -36,16 +36,17 @@ public:
 	// Here, functions are made pure virtual functions,
 	// which forces the implementation of the following functions
 	// in each scheduling algorithm (derived classes).
-	virtual bool is_ready_empty() {};
-	virtual void add_pcb(PCB pcb) {};
-	virtual void remove_pcb() {};
-	virtual const PCB get_next_pcb() {};
-	virtual void schedule() {};
-	virtual std::vector<PCB> ready_queue_to_vector() {};
-	virtual std::string get_scheduler_name() = 0;
+	virtual bool is_ready_empty() { return false; }
+    virtual void add_pcb(PCB pcb) { pcb = PCB();}
+    virtual void remove_pcb() {}
+    virtual const PCB get_next_pcb() { return PCB(); }
 
-	virtual bool real_time() = 0;
-	virtual void generate_pcb_queue(int) {}
-	virtual void reset() = 0;
+    virtual void generate_pcb_queue(int) {}
+
+    virtual std::vector<PCB> ready_queue_to_vector() = 0;
+    virtual void schedule() = 0;
+    virtual bool real_time() = 0;
+    virtual void reset() = 0;
+    virtual std::string get_scheduler_name() = 0;
 
 };
