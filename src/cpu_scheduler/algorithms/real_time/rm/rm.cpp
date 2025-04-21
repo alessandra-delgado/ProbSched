@@ -98,14 +98,13 @@ std::vector<PCB> RateMonotonic::ready_queue_to_vector()
 
 void RateMonotonic::generate_pcb_queue(int n)
 {
+    if (n <= 0) n = max_processes;
     all_tasks = pg.generatePeriodicPCBList(n);
 }
 
 void RateMonotonic::reset()
 {
     all_tasks.clear();
-    while (running_process)
-    {
-        running_process.reset();
-    }
+    running_process.reset();
+    Scheduler::reset();
 }

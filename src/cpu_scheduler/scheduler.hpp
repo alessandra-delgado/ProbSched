@@ -8,7 +8,7 @@
 class Scheduler
 {
 protected:
-	static inline ProcessGenerator pg = ProcessGenerator(0.85, 5.0, 3.0, 10); // use this process generator for the scheduler!
+	ProcessGenerator pg;
 	static inline RandomGenerator rng;
 	static inline int current_time = 0;
 	static inline int cpu_time = 0;
@@ -42,11 +42,23 @@ public:
     virtual const PCB get_next_pcb() { return PCB(); }
 
     virtual void generate_pcb_queue(int) {}
+	virtual void reset() {
+        reset_cpu_time();
+    }
+        pg.reset();  // Reset do gerador de processos
+        clear_processes_terminated();
+        reset_schedule_new();
+        reset_processes_running();
+        reset_current_time();
+	Scheduler(double lambda = 0.5, double mean_burst = 5.0, double stddev_burst = 1.5,
+		int max_priority = 10, int dl_range = 100):pg(lambda, mean_burst, stddev_burst, max_priority, dl_range) {}
 
     virtual std::vector<PCB> ready_queue_to_vector() = 0;
     virtual void schedule() = 0;
     virtual bool real_time() = 0;
-    virtual void reset() = 0;
     virtual std::string get_scheduler_name() = 0;
 
+    virtual ~Scheduler() = default;
+	 
+	
 };

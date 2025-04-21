@@ -11,13 +11,7 @@
 #include "algorithms/algorithms.hpp"
 #include "../process/process_generator/process_generator.hpp"
 #include "../process/process_generator/random_generator.hpp"
-#include "algorithms/ps/non_preemptive/psnon.hpp"
-#include "algorithms/ps/preemptive/ps.hpp"
-#include "algorithms/sj/non_preemptive/sjnonp.hpp"
-#include "algorithms/sj/preemptive/sjp.hpp"
-#include "algorithms/rr/rr.hpp"
-#include "algorithms/real_time/rm/rm.hpp"
-#include "algorithms/real_time/edf/edf.hpp"
+
 
 
 
@@ -39,7 +33,8 @@ void simulator()
     algorithms.push_back((std::make_unique<PriorityPreemptive>()));
     algorithms.push_back((std::make_unique<ShortestJobNonPreemptive>()));
     algorithms.push_back((std::make_unique<ShortestJobPreemptive>()));
-    algorithms.push_back((std::make_unique<RoundRobin>(2))); // quantum of 2 // todo: change so user can adjust time quantum
+    int rr_quantum = 2; // quantum of 2 
+    algorithms.push_back((std::make_unique<RoundRobin>(rr_quantum))); 
     algorithms.push_back((std::make_unique<RateMonotonic>()));
     algorithms.push_back((std::make_unique<EarliestDeadlineFirst>()));
     
@@ -61,16 +56,43 @@ void simulator()
         if (i >= (int)algorithms.size())
             break;
 
+        // ! 2 - Selecionar modo de geração
+        int gen_mode = select_process_generation();
+        if (gen_mode == 2) // Back selected
+            continue;
+        
+        int process_count = -1; // -1 significa infinito
+        if (gen_mode == 1) { // Número específico selecionado
+            process_count = get_process_count();
+        }
+
+        if (i == 5) { // Round Robin index
+            dynamic_cast<RoundRobin*>(algorithms[i].get())->set_time_quantum(rr_quantum);
+        }
+
         // reset algoritmo especifico
         algorithms[i] -> reset();
 
-        if(i >= 6){
+        if (gen_mode == 1) { // Modo número específico
+            algorithms[i]->generate_pcb_queue(process_count);
+        } else if (i >= 6) { // Algoritmos de tempo real
             algorithms[i]->generate_pcb_queue(3);
         }
+
+        // cont generated processes(especific number)
+        int generated_processes = (gen_mode == 1 && i < 6) ? process_count : 0;
+        int processes_created = 0;
+
         while (!stop_sched) // Scheduling until CTRL + c
         {
-
-            algorithms[i]->schedule();
+            if (i < 6 && (gen_mode == 0 || processes_created < generated_processes)) {
+                algorithms[i]->schedule(); 
+                if (gen_mode == 1) {
+                    processes_created++;
+                }
+            } else {
+                algorithms[i]->schedule(); 
+            }
 
             // SchedulerStats.display_stats(); <- to-do
 
@@ -92,7 +114,17 @@ void simulator()
                 std::this_thread::sleep_for(std::chrono::seconds(1)); // just so the screen is readable
                 Scheduler::increment_current_time();
             }
+            // in especific mode, stop when processes finish
+            if (gen_mode == 1 && i < 6 && 
+                algorithms[i]->is_ready_empty() && 
+                Scheduler::get_running_process() == nullptr &&
+                processes_created >= generated_processes) {
+                std::cout << "All processes completed. Simulation ending..." << std::endl;
+                std::this_thread::sleep_for(std::chrono::seconds(3));
+                stop_sched = true;
+            }
         }
+        
         std::cout << "Simulation stopped" << std::endl;
     }
 }
