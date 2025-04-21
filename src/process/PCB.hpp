@@ -61,7 +61,7 @@ public:
 
 	// * utils
 	inline void dec_exec_time() { exec_time--; }
-	inline void reset_pid() { next_pid = 1; } // Reset pid when creating a new list/batch of processes
+	inline static void reset_pid() { next_pid = 1; } // Reset pid when creating a new list/batch of processes
 
 	// - real time
 	inline void inc_deadline_misses() { deadline_misses++; }
