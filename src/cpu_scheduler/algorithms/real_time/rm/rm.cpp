@@ -18,6 +18,11 @@ void RateMonotonic::schedule()
     if (stop_sched)
         return;
 
+    // * First things first: Update deadlines and release new task instances
+    for (auto &task : all_tasks) {
+        // Skip tasks that haven't arrived yet
+        if (current_time < task.get_arrival_time())
+            continue;
 
     // todo: fix stats exec time count down >:(
     // todo: fix greater priority processes getting deadline misses ???????
@@ -60,29 +65,39 @@ void RateMonotonic::schedule()
         }
     }
 
-    // STEP 2: Pick the task with the shortest period (highest RMS priority)
-    PCB *best_candidate = nullptr;
-    for (auto &task : all_tasks)
-    {
-        if (task.get_arrival_time() > current_time)
-            continue; // Skip this process for now
+    // * 1 - If a process is running, continue or check for preemption
+    if (running_process != nullptr) {
+        // Find if there's any higher priority task
+        PCB *highest_priority_task = nullptr;
+        
+        for (auto &task : all_tasks) {
+            // Skip tasks that aren't ready or have completed execution
+            if (task.get_arrival_time() > current_time || task.get_exec_time() <= 0 ||
+                task.get_state() != ProcessState::Ready) {
+                continue;
+            }
 
-        if (task.get_exec_time() > 0)
-        {
-            if (!best_candidate || (task.get_period() < best_candidate->get_period()))
-            {
-                best_candidate = &task;
-                task.set_state(ProcessState::Ready);
+            // ! Rate Monotonic condition - Check if this task has higher priority (shorter period)
+
+            if (!highest_priority_task || task.get_period() < highest_priority_task->get_period()) {
+                highest_priority_task = &task;
             }
         }
     }
 
-    // STEP 3: If we found a candidate and it's different from the one currently running, switch
-    if (best_candidate)
-    {
-        if (!running_process || (best_candidate->get_pid() != running_process->get_pid()))
-        {
-            running_process = std::make_unique<PCB>(*best_candidate);
+        // ! Rate Monotonic condition - Check if preemption is needed
+        if (highest_priority_task && highest_priority_task->get_period() < running_process->get_period()) {
+            // Preempt current process
+            for (auto &task : all_tasks) {
+                if (task.get_pid() == running_process->get_pid()) {
+                    task.set_exec_time(running_process->get_exec_time());
+                    task.set_state(ProcessState::Ready);
+                    break;
+                }
+            }
+
+            // Set the new highest priority task as running
+            running_process = std::make_unique<PCB>(*highest_priority_task);
             running_process->set_state(ProcessState::Running);
         }
 
@@ -91,7 +106,35 @@ void RateMonotonic::schedule()
         cpu_time++;
     }
 
+    // * 2 - If no process is currently running, select the highest priority ready task
+    PCB *highest_priority_task = nullptr;
     
+    for (auto &task : all_tasks) {
+        // Skip tasks that aren't ready or have completed execution
+        if (task.get_arrival_time() > current_time || task.get_exec_time() <= 0 ||
+            task.get_state() != ProcessState::Ready) {
+            continue;
+        }
+
+        // ! Rate monotonic condition: Select highest priority task (smallest period)
+        if (!highest_priority_task || task.get_period() < highest_priority_task->get_period()) {
+            highest_priority_task = &task;
+        }
+    }
+
+    // If we found a task to run, set it as the running process
+    if (highest_priority_task) {
+        running_process = std::make_unique<PCB>(*highest_priority_task);
+        running_process->set_state(ProcessState::Running);
+        
+        // Update the state in all_tasks
+        for (auto &task : all_tasks) {
+            if (task.get_pid() == highest_priority_task->get_pid()) {
+                task.set_state(ProcessState::Running);
+                break;
+            }
+        }
+    }
 }
 
 // convert to vector
@@ -103,7 +146,7 @@ std::vector<PCB> RateMonotonic::ready_queue_to_vector()
 void RateMonotonic::generate_pcb_queue(int n)
 {
     all_tasks = pg.generatePeriodicPCBList(n);
-    for (auto &pcb : all_tasks)
+    /*for (auto &pcb : all_tasks)
     {
         std::cout << "NAME: " << pcb.get_name()
                   << "| PERIOD: " << pcb.get_period()
@@ -113,7 +156,7 @@ void RateMonotonic::generate_pcb_queue(int n)
                   << std::endl;
     }
 
-    std::this_thread::sleep_for(std::chrono::seconds(4)); // just so the screen is readable */
+    std::this_thread::sleep_for(std::chrono::seconds(4)); // DEBUG - just so the screen is readable */
 }
 
 void RateMonotonic::reset()

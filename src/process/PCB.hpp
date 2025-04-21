@@ -22,11 +22,10 @@ private:
 	int deadline;
 	int period;
 	int deadline_misses;
-	int next_sched_time;
 
 public:
 	PCB() : state(ProcessState::New), pid(next_pid++), priority(0), exec_time(0), burst_time(0), arrival_time(0), name(""),
-			is_real_time(false), deadline(0), period(-1), deadline_misses(-1), next_sched_time(-1) {}
+			is_real_time(false), deadline(0), period(-1), deadline_misses(-1) {}
 
 	// * getters ---------------------------------------------------------
 	inline ProcessState get_state() const { return state; }
@@ -43,7 +42,6 @@ public:
 	inline int get_deadline() const { return deadline; }
 	inline int get_period() const { return period; }
 	inline int get_deadline_misses() const { return deadline_misses; }
-	inline int get_next_sched_time() const { return next_sched_time; }
 
 	// * setters ---------------------------------------------------------
 	// 'n' represents any new value for an atribute
@@ -60,7 +58,6 @@ public:
 	inline void set_deadline(int n) { deadline = n; }
 	inline void set_period(int n) { period = n; }
 	inline void set_deadline_misses(int n) { deadline_misses = n; }
-	inline void set_next_sched_time(int n) { next_sched_time = n; }
 
 	// * utils
 	inline void dec_exec_time() { exec_time--; }
