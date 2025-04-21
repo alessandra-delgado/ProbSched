@@ -77,8 +77,8 @@ std::vector<PCB> EarliestDeadlineFirst::ready_queue_to_vector()
     return all_tasks;
 }
 
-void EarliestDeadlineFirst::generate_pcb_queue(int n)
-{
+void EarliestDeadlineFirst::generate_pcb_queue(int n) {
+    if (n <= 0) n = max_processes; 
     all_tasks = pg.generatePeriodicPCBList(n);
 /*  for (auto &pcb : all_tasks)
     {
@@ -93,9 +93,9 @@ void EarliestDeadlineFirst::generate_pcb_queue(int n)
     std::this_thread::sleep_for(std::chrono::seconds(3)); // just so the screen is readable */
 }
 
+
 void EarliestDeadlineFirst::reset() {
     all_tasks.clear();
-    while(running_process){
-        running_process.reset();
-    }
+    running_process.reset();
+    Scheduler::reset();
 }

@@ -133,3 +133,77 @@ int pick_algorithm()
     screen.Loop(handler);
     return selected;
 }
+
+int select_process_generation() {
+    std::cout << "\033[H\033[J"; // clear
+    std::vector<std::string> entries = {
+        "Generate infinite number of processes",
+        "Generate specific number of processes",
+        "Back"
+    };
+
+    int selected = 0;
+
+    auto screen = ScreenInteractive::Fullscreen();
+    auto menu = Menu(&entries, &selected);
+
+
+    auto main_menu = Renderer(menu, [&]()->Element {
+        return vbox({
+            text("Select Process Generation Mode") | bold | hcenter,
+            separator(),
+            menu->Render(),
+            separator(),
+            hbox({
+                text("Current mode: "),
+                (selected == 0 ? text("Infinite") | color(Color::Green) :
+                 text("Specific number") | color(Color::Yellow))
+            })
+        }) | border | center;
+    });
+    auto handler= CatchEvent(main_menu, [&](Event event) {
+        if (event == Event::Return) {
+            screen.ExitLoopClosure()();
+            return true;
+        }
+        return false;
+    });
+    
+    screen.Loop(handler);
+    return selected;
+}
+int get_process_count() {
+    int count = 5;  // Valor padrão
+    bool valid = false;
+    std::string input;
+    
+    auto screen = ScreenInteractive::Fullscreen();
+    
+    auto component = Container::Vertical({
+        Input(&input, "Enter number of processes (1-100): "),
+        Button("Confirm", [&] {
+            try {
+                count = std::stoi(input);
+                if (count >= 1 && count <= 100) {
+                    valid = true;
+                    screen.Exit();
+                }
+            } catch (...) {
+                // Input inválido
+            }
+        })
+    });
+    auto renderer = Renderer(component, [&] {
+        return vbox({
+            text("Process Count Selection") | bold | hcenter,
+            separator(),
+            component->Render(),
+            separator(),
+            valid ? text("Will generate " + std::to_string(count) + " processes") | color(Color::Green) :
+                   text("Please enter a number between 1 and 100") | color(Color::Red)
+        }) | border | center;
+    });
+
+    screen.Loop(renderer);
+    return count;
+}

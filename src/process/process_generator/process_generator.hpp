@@ -5,6 +5,7 @@
 
 class ProcessGenerator
 {
+	int next_pid = 1;
 	private:
 	RandomGenerator rng;
 	double arrival_rate; // process arrival rate
@@ -21,4 +22,5 @@ class ProcessGenerator
 	PCB generatePCBInterArrival(int current_time);
 	std::vector<PCB> generatePCBList(int num_processes);
 	std::vector<PCB> generatePeriodicPCBList(int num_processes);
+	void reset() {next_pid = 1;}
 };
