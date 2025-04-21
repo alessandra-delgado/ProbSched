@@ -12,14 +12,17 @@
 extern std::atomic<bool> stop_sched;
 
 // scheduling logic
-void RateMonotonic::schedule() {
+void RateMonotonic::schedule()
+{
     if (stop_sched)
         return;
 
     // * 1 - Release any new tasks that have arrived at current_time
-    for (auto &task: all_tasks) {
+    for (auto &task : all_tasks)
+    {
         // Task becomes available at arrival time
-        if (current_time == task.get_arrival_time()) {
+        if (current_time == task.get_arrival_time())
+        {
             task.set_state(ProcessState::Ready);
             task.set_deadline(task.get_arrival_time() + task.get_period());
         }
@@ -33,26 +36,28 @@ void RateMonotonic::schedule() {
 
     // * 2 - Find highest priority task (smallest period)
     PCB *highest_priority_task = nullptr;
-    for (auto &task: all_tasks) {
+    for (auto &task : all_tasks)
+    {
         outfile << task.get_name() << " " << task.get_period() << std::endl;
 
         // Skip tasks that aren't ready or have completed execution
-        if (task.get_arrival_time() > current_time || task.get_exec_time() <= 0) {
+        if (task.get_arrival_time() > current_time || task.get_exec_time() <= 0)
+        {
             continue;
         }
 
-
         // ! Select highest priority task (smallest period)
-        if (highest_priority_task == nullptr || task.get_period() < highest_priority_task->get_period()) {
+        if (highest_priority_task == nullptr || task.get_period() < highest_priority_task->get_period())
+        {
             outfile << "NEW HIGHEST_PRIORITY_TASK: " << task.get_name() << std::endl;
 
             highest_priority_task = &task;
         }
     }
 
-
     // * 3 - Run the highest priority task
-    if (highest_priority_task) {
+    if (highest_priority_task)
+    {
         outfile << "SELECTED HIGHEST_PRIORITY_TASK: " << highest_priority_task->get_name() << std::endl;
         highest_priority_task->dec_exec_time();
         cpu_time++;
@@ -62,11 +67,14 @@ void RateMonotonic::schedule() {
     }
 
     // * 4 - Misses
-    for (auto &task: all_tasks) {
+    for (auto &task : all_tasks)
+    {
         // Task gets new instance at its deadline
-        if (current_time == task.get_deadline()) {
+        if (current_time == task.get_deadline())
+        {
             // Check for deadline miss
-            if (task.get_arrival_time() <= current_time && task.get_exec_time() > 0) {
+            if (task.get_arrival_time() <= current_time && task.get_exec_time() > 0)
+            {
                 outfile << "INC MISS: " << task.get_name() << std::endl;
                 task.inc_deadline_misses();
             }
@@ -78,24 +86,26 @@ void RateMonotonic::schedule() {
         }
     }
 
-
     outfile << "===============================================" << std::endl;
     outfile.close();
 }
 
-
 // convert to vector
-std::vector<PCB> RateMonotonic::ready_queue_to_vector() {
+std::vector<PCB> RateMonotonic::ready_queue_to_vector()
+{
     return all_tasks;
 }
 
-void RateMonotonic::generate_pcb_queue(int n) {
+void RateMonotonic::generate_pcb_queue(int n)
+{
     all_tasks = pg.generatePeriodicPCBList(n);
 }
 
-void RateMonotonic::reset() {
+void RateMonotonic::reset()
+{
     all_tasks.clear();
-    while (running_process) {
+    while (running_process)
+    {
         running_process.reset();
     }
 }
