@@ -17,6 +17,8 @@
 #include "algorithms/sj/preemptive/sjp.hpp"
 #include "algorithms/rr/rr.hpp"
 #include "algorithms/real_time/rm/rm.hpp"
+#include "algorithms/real_time/edf/edf.hpp"
+
 
 
 std::atomic<bool> stop_sched(false);
@@ -27,7 +29,7 @@ void handle_sigint(int sig)
 {
     stop_sched = true;
 }
-// todo: refactoring
+
 void simulator()
 {
     // add algorithms to array
@@ -39,6 +41,7 @@ void simulator()
     algorithms.push_back((std::make_unique<ShortestJobPreemptive>()));
     algorithms.push_back((std::make_unique<RoundRobin>(2))); // quantum of 2 // todo: change so user can adjust time quantum
     algorithms.push_back((std::make_unique<RateMonotonic>()));
+    algorithms.push_back((std::make_unique<EarliestDeadlineFirst>()));
     
     signal(SIGINT, handle_sigint);
     while (true)
@@ -61,8 +64,8 @@ void simulator()
         // reset algoritmo especifico
         algorithms[i] -> reset();
 
-        if(i == 6){
-            algorithms[6]->generate_pcb_queue(3);
+        if(i >= 6){
+            algorithms[i]->generate_pcb_queue(3);
         }
         while (!stop_sched) // Scheduling until CTRL + c
         {
@@ -82,7 +85,10 @@ void simulator()
             }
             else
             {
-                SchedulerStats::display_stats();
+                if(!(algorithms[i]->real_time()))
+                    SchedulerStats::display_stats(algorithms[i]->get_scheduler_name());
+                else
+                    SchedulerStats::display_stats_real_time(algorithms[i]->get_scheduler_name());
                 std::this_thread::sleep_for(std::chrono::seconds(1)); // just so the screen is readable
                 Scheduler::increment_current_time();
             }

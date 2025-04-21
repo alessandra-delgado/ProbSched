@@ -24,4 +24,7 @@ public:
 
     void set_time_quantum(int quantum) { time_quantum = quantum; }
     int get_time_quantum() const { return time_quantum; }
+    std::string get_scheduler_name() override { return "Round Robin"; }
+
+	virtual bool real_time() override { return false; }
 };

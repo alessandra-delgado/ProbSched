@@ -19,4 +19,7 @@ public:
 	void schedule() override;						   // do scheduling logic
 	void reset() override;
 	std::vector<PCB> ready_queue_to_vector() override; // convert to vector
+    std::string get_scheduler_name() override { return "Priority Scheduling (Preemptive)"; }
+
+	virtual bool real_time() override { return false; }
 };

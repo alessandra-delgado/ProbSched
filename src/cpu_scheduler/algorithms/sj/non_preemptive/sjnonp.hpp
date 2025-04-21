@@ -18,4 +18,7 @@ class ShortestJobNonPreemptive : public Scheduler{
     void schedule() override; // do scheduling logic
     void reset() override;
     std::vector<PCB> ready_queue_to_vector() override; // convert to vector
+    std::string get_scheduler_name() override { return "Shortest Job First (Non Preemptive)"; }
+
+	virtual bool real_time() override { return false; }
 };
