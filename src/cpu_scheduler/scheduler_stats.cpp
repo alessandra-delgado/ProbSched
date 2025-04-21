@@ -271,7 +271,7 @@ void SchedulerStats::display_stats(std::string title)
 
                      vbox({hbox({vbox(current_process_elements) | border | flex | size(HEIGHT, EQUAL, 13),
                                  vbox(gantt_elements) | border | flex}) |
-                               size(HEIGHT, LESS_THAN, 20), // might have to change height
+                               size(HEIGHT, LESS_THAN, 20), // todo: remove this
 
                            hbox({vbox({text("Ready Queue") | bold | center,
                                        center(vbox(table_with_border))}) |

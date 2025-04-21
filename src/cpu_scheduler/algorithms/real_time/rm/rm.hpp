@@ -11,6 +11,7 @@ private:
     std::vector<PCB> all_tasks; // real time system specific: a list of all periodic tasks to simulate instead of a ready queue
 
 public:
+    //void update_tasks();
     void schedule() override;
     void reset() override;
     std::vector<PCB> ready_queue_to_vector() override;

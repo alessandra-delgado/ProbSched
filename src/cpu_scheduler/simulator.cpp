@@ -17,6 +17,8 @@
 #include "algorithms/sj/preemptive/sjp.hpp"
 #include "algorithms/rr/rr.hpp"
 #include "algorithms/real_time/rm/rm.hpp"
+#include "algorithms/real_time/edf/edf.hpp"
+
 
 
 std::atomic<bool> stop_sched(false);
@@ -39,6 +41,7 @@ void simulator()
     algorithms.push_back((std::make_unique<ShortestJobPreemptive>()));
     algorithms.push_back((std::make_unique<RoundRobin>(2))); // quantum of 2 // todo: change so user can adjust time quantum
     algorithms.push_back((std::make_unique<RateMonotonic>()));
+    algorithms.push_back((std::make_unique<EarliestDeadlineFirst>()));
     
     signal(SIGINT, handle_sigint);
     while (true)
@@ -61,8 +64,8 @@ void simulator()
         // reset algoritmo especifico
         algorithms[i] -> reset();
 
-        if(i == 6){
-            algorithms[6]->generate_pcb_queue(3);
+        if(i >= 6){
+            algorithms[i]->generate_pcb_queue(3);
         }
         while (!stop_sched) // Scheduling until CTRL + c
         {

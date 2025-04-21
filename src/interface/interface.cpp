@@ -61,6 +61,7 @@ int pick_algorithm()
         "Shortest Job Preemptive",
         "Round Robin",
         "Rate Monotonic",
+        "Earliest Deadline First",
         "Quit"
     };
 
@@ -76,7 +77,7 @@ int pick_algorithm()
                 separator(),
                 menu->Render() | center, // center the menu itself
                 separator(),
-                bgcolor(Color::SeaGreen1, color(Color::Black, text("More algorithms coming soon."))) | center
+                bgcolor(Color::SeaGreen1, color(Color::Black, text("Update: All algorithms added. Polishing..."))) | center
                 }) | border);
         });
 
