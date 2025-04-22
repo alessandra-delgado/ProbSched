@@ -72,9 +72,12 @@ void simulator()
         algorithms[i] -> reset();
 
         if (gen_mode == 1) { // Modo número específico
+            // todo: fix to call different pcb generation function, this one calls the real time PCB generation LOLL
             algorithms[i]->generate_pcb_queue(process_count);
-        } else if (i >= 6) { // Algoritmos de tempo real
+        } else if (algorithms[i]->real_time()) { // Algoritmos de tempo real
             algorithms[i]->generate_pcb_queue(3);
+            SchedulerStats::set_cpu_utilization_bounds(algorithms[i]->ready_queue_to_vector());
+            
         }
 
         // cont generated processes(especific number)
@@ -91,8 +94,6 @@ void simulator()
             } else {
                 algorithms[i]->schedule(); 
             }
-
-            // SchedulerStats.display_stats(); <- to-do
 
             SchedulerStats::collect(Scheduler::get_current_time(),
                                     Scheduler::get_cpu_time(),
