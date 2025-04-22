@@ -42,14 +42,7 @@ public:
     virtual const PCB get_next_pcb() { return PCB(); }
 
     virtual void generate_pcb_queue(int) {}
-	virtual void reset() {
-		PCB::reset_pid();
-        reset_cpu_time();
-        clear_processes_terminated();
-        reset_schedule_new();
-        reset_processes_running();
-        reset_current_time();
-    }
+	virtual void reset() { PCB::reset_pid(); reset_cpu_time(); clear_processes_terminated(); reset_schedule_new(); reset_processes_running(); reset_current_time(); }
 	Scheduler(double lambda = 0.5, double mean_burst = 5.0, double stddev_burst = 1.5,
 		int max_priority = 10, int dl_range = 100):pg(lambda, mean_burst, stddev_burst, max_priority, dl_range) {}
 

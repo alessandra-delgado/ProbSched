@@ -29,7 +29,7 @@ void RateMonotonic::schedule()
     }
 
     std::ofstream outfile;
-    outfile.open("./test.txt", std::ios_base::app); // append instead of overwrite
+    outfile.open("./inputs/test.txt", std::ios_base::app); // append instead of overwrite
 
     outfile << "===============================================" << std::endl;
     outfile << "NEW CICLE" << std::endl;
