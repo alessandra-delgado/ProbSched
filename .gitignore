@@ -8,3 +8,5 @@ build/
 !lib/FTXUI/build/
 
 .idea/
+
+test.txt
