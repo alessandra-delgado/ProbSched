@@ -31,4 +31,5 @@ public:
     std::string get_scheduler_name() override { return "First Come First Served"; }
 	virtual bool real_time() override { return false; }
     void generate_pcb_queue(int count) override;
+    void FCFS::load_to_ready() override;
 };

@@ -6,6 +6,7 @@
 #include <chrono>
 
 #include "simulator.hpp"
+#include "load.hpp"
 #include "scheduler_stats.hpp"
 #include "../interface/interface.hpp"
 #include "algorithms/algorithms.hpp"
@@ -47,13 +48,18 @@ void simulator()
 
         // ! 2 - Selecionar modo de geração
         int gen_mode = select_process_generation();
-        if (gen_mode == 2) // Back selected
+        if (gen_mode == 3) // Back selected
             continue;
 
         int process_count = -1; // -1 significa infinito
         if (gen_mode == 1)
         { // Número específico selecionado
             process_count = get_process_count();
+        }
+        if(gen_mode == 2){
+            // Check if algorithm is real time
+            // set the vector to be the read processes
+            load(pick_file(algorithms[i]->real_time()));
         }
 
         if (i == 5)
