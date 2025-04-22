@@ -16,6 +16,7 @@ using namespace ftxui;
 
 void SchedulerStats::display_stats(std::string title)
 {
+
     // Static circular buffer to store process execution history
     static const int HISTORY_SIZE = 60;
     static std::vector<std::string> process_history(HISTORY_SIZE, "");

@@ -9,6 +9,7 @@ private:
     int time_quantum;
     int max_processes = INT_MAX;
     int current_process_start_time = 0;
+    bool random_generation = true;
 
 public:
     RoundRobin(int quantum) : Scheduler(), time_quantum(quantum) {}
@@ -29,4 +30,7 @@ public:
     int get_time_quantum() const { return time_quantum; }
     std::string get_scheduler_name() override { return "Round Robin"; }
     bool real_time() override { return false; }
+    void disable_random_generation() { random_generation = false; }
+    void enable_random_generation() { random_generation = true; }
+    
 };

@@ -31,8 +31,7 @@ void simulator()
     algorithms.push_back((std::make_unique<PriorityPreemptive>()));
     algorithms.push_back((std::make_unique<ShortestJobNonPreemptive>()));
     algorithms.push_back((std::make_unique<ShortestJobPreemptive>()));
-    int rr_quantum = 2; // quantum of 2 
-    algorithms.push_back((std::make_unique<RoundRobin>(rr_quantum))); 
+    algorithms.push_back((std::make_unique<RoundRobin>(0))); 
     algorithms.push_back((std::make_unique<RateMonotonic>()));
     algorithms.push_back((std::make_unique<EarliestDeadlineFirst>()));
     
@@ -65,7 +64,10 @@ void simulator()
         }
 
         if (i == 5) { // Round Robin index
-            dynamic_cast<RoundRobin*>(algorithms[i].get())->set_time_quantum(rr_quantum);
+            int selected_quantum = get_time_quantum();
+            dynamic_cast<RoundRobin*>(algorithms[i].get())->set_time_quantum(selected_quantum);
+
+            std::cout << "DEBUG: Time quantum set to " << selected_quantum << std::endl;
         }
 
         // reset algoritmo especifico
@@ -73,10 +75,18 @@ void simulator()
 
         if (gen_mode == 1) { // Modo número específico
             algorithms[i]->generate_pcb_queue(process_count);
-        } else if (i >= 6) { // Algoritmos de tempo real
-            algorithms[i]->generate_pcb_queue(3);
+            if (i == 5){ // Round Robin
+                dynamic_cast<RoundRobin*>(algorithms[i].get())->set_max_processes(process_count);
+                dynamic_cast<RoundRobin*>(algorithms[i].get())->disable_random_generation();
+            } else if (i >= 6) { // Algoritmos de tempo real
+                algorithms[i]->generate_pcb_queue(3);
+            }
+        }else{ // Modo infinito
+            if(i == 5){ // Round Robin
+                dynamic_cast<RoundRobin*>(algorithms[i].get())->set_max_processes(INT_MAX);
+                dynamic_cast<RoundRobin*>(algorithms[i].get())->enable_random_generation();
+            }
         }
-
         // cont generated processes(especific number)
         int generated_processes = (gen_mode == 1 && i < 6) ? process_count : 0;
         int processes_created = 0;
