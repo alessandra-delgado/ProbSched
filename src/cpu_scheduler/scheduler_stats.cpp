@@ -183,7 +183,6 @@ void SchedulerStats::display_stats(std::string title)
         gantt_elements.push_back(text("Gantt Chart of last 60 seconds") | center | bold);
 
         std::string current_block_process = "";
-        int block_start = -1;
         int block_length = 0;
         std::vector<Element> gantt_blocks;
 
@@ -208,7 +207,6 @@ void SchedulerStats::display_stats(std::string title)
         // First, identify the first process to properly initialize current_block_process
         int start_idx = (history_index - 1 + HISTORY_SIZE) % HISTORY_SIZE;
         current_block_process = process_history[start_idx];
-        block_start = 0;
         block_length = 1;
 
         for (int i = 1; i < HISTORY_SIZE; i++)
@@ -232,7 +230,6 @@ void SchedulerStats::display_stats(std::string title)
                     size(WIDTH, EQUAL, block_length));
 
                 current_block_process = proc;
-                block_start = i;
                 block_length = 1;
             }
         }
@@ -271,7 +268,7 @@ void SchedulerStats::display_stats(std::string title)
 
                      vbox({hbox({vbox(current_process_elements) | border | flex | size(HEIGHT, EQUAL, 13),
                                  vbox(gantt_elements) | border | flex}) |
-                               size(HEIGHT, LESS_THAN, 20), // might have to change height
+                               size(HEIGHT, LESS_THAN, 20), // todo: remove this
 
                            hbox({vbox({text("Ready Queue") | bold | center,
                                        center(vbox(table_with_border))}) |
@@ -429,7 +426,6 @@ void SchedulerStats::display_stats_real_time(std::string title)
         gantt_elements.push_back(text("Gantt Chart of last 60 seconds") | center | bold);
 
         std::string current_block_process = "";
-        int block_start = -1;
         int block_length = 0;
         std::vector<Element> gantt_blocks;
 
@@ -454,7 +450,6 @@ void SchedulerStats::display_stats_real_time(std::string title)
         // First, identify the first process to properly initialize current_block_process
         int start_idx = (history_index - 1 + HISTORY_SIZE) % HISTORY_SIZE;
         current_block_process = process_history[start_idx];
-        block_start = 0;
         block_length = 1;
 
         for (int i = 1; i < HISTORY_SIZE; i++)
@@ -478,7 +473,6 @@ void SchedulerStats::display_stats_real_time(std::string title)
                     size(WIDTH, EQUAL, block_length));
 
                 current_block_process = proc;
-                block_start = i;
                 block_length = 1;
             }
         }

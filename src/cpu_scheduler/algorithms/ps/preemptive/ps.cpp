@@ -38,19 +38,17 @@ void PriorityPreemptive::schedule()
         return;
 
     // Soft cap on process generation (dynamic -> uses ready queue size)
-    int queue_size = ready.size();
-    double prob = 1.0 / (1 + queue_size * 0.5);
-    if (rand() / double(RAND_MAX) < prob)
-    {
-        double e = (rng.exponential(0.5));
-        // std::cout << e << std::endl; //DEBUG
-        if (e > 1.5 && e < 4.5) // Generate a random number to verify if a new process is created
-        {
-            PCB pcb = pg.generatePCB(Scheduler::get_current_time());
-            add_pcb(pcb);
+    if (max_processes == INT_MAX) {
+        int queue_size = ready.size();
+        double prob = 1.0 / (1 + queue_size * 0.5);
+        if (rand() / double(RAND_MAX) < prob) {
+            double e = (rng.exponential(0.5));
+            if (e > 1.5 && e < 4.5) {
+                PCB pcb = pg.generatePCB(Scheduler::get_current_time());
+                add_pcb(pcb);
+            }
         }
     }
-
     // If there is a current process running
     if (running_process != nullptr)
     {
@@ -62,8 +60,10 @@ void PriorityPreemptive::schedule()
             if (pcb.get_priority() < running_process->get_priority())
             {
                 remove_pcb();              // Remove the selected pcb from ready queue
+                running_process->set_state(ProcessState::Ready);
                 add_pcb(*running_process); // Add the current in (yes, order matters)
                 running_process = std::make_unique<PCB>(pcb);
+                running_process->set_state(ProcessState::Running);
             }
         }
         // Otherwise: no effect
@@ -89,10 +89,19 @@ void PriorityPreemptive::schedule()
     }
 }
 
+void PriorityPreemptive::generate_pcb_queue(int num_processes) {
+    for (int i = 0; i < num_processes; ++i) {
+        PCB pcb = pg.generatePCB(Scheduler::get_current_time());
+        add_pcb(pcb);
+    }
+    max_processes = num_processes;
+    generated_processes = num_processes;
+}
+
 std::vector<PCB> PriorityPreemptive::ready_queue_to_vector()
 {
     std::vector<PCB> rq;
-    std::priority_queue<PCB, std::vector<PCB>, PriorityComparator> pq = ready;
+    auto pq = ready;
     while (!pq.empty())
     {
         rq.push_back(pq.top());
@@ -105,4 +114,8 @@ void PriorityPreemptive::reset() {
     while (!ready.empty()) {
         ready.pop();
     }
+    max_processes = INT_MAX;
+    generated_processes = 0;
+    running_process = nullptr;
+    Scheduler::reset();
 }

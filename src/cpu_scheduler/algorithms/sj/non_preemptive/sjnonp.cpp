@@ -36,16 +36,15 @@ void ShortestJobNonPreemptive::schedule()
     if (stop_sched)
         return;
 
-    int queue_size = ready.size();
-    double prob = 1.0 / (1 + queue_size * 0.5);
-    if (rand() / double(RAND_MAX) < prob)
-    {
-        double e = (rng.exponential(0.5));
-        // std::cout << e << std::endl; //DEBUG
-        if (e > 1.5 && e < 4.5) // Generate a random number to verify if a new process is created
-        {
-            PCB pcb = pg.generatePCB(Scheduler::get_current_time());
-            add_pcb(pcb);
+    if (max_processes == INT_MAX) {
+        int queue_size = ready.size();
+        double prob = 1.0 / (1 + queue_size * 0.5);
+        if (rand() / double(RAND_MAX) < prob) {
+            double e = (rng.exponential(0.5));
+            if (e > 1.5 && e < 4.5) {
+                PCB pcb = pg.generatePCB(Scheduler::get_current_time());
+                add_pcb(pcb);
+            }
         }
     }
     if (running_process != nullptr)
@@ -60,6 +59,10 @@ void ShortestJobNonPreemptive::schedule()
             running_process = nullptr;
             schedule_new = true;
             return;
+            if (max_processes != INT_MAX && (int)terminated_processes.size() >= max_processes) {
+                stop_sched = true;
+                return;
+            }
         }
     }
 
@@ -84,8 +87,19 @@ std::vector<PCB> ShortestJobNonPreemptive::ready_queue_to_vector()
     return rq;
 }
 
-void ShortestJobNonPreemptive::reset(){
+void ShortestJobNonPreemptive::generate_pcb_queue(int num_processes) {
+    for (int i = 0; i < num_processes; ++i) {
+        PCB pcb = pg.generatePCB(Scheduler::get_current_time());
+        add_pcb(pcb);
+    }
+    max_processes = num_processes;
+}
+
+void ShortestJobNonPreemptive::reset() {
     while (!ready.empty()) {
         ready.pop();
     }
+    max_processes = INT_MAX;
+    running_process.reset();
+    Scheduler::reset();
 }

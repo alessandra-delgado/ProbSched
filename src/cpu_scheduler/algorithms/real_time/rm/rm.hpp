@@ -1,22 +1,20 @@
 #pragma once
 #include "../../../scheduler.hpp"
 #include "../../../../process/PCB.hpp"
-
-#include <queue>
 #include <vector>
-
 
 class RateMonotonic : public Scheduler {
 private:
-    std::vector<PCB> all_tasks; // real time system specific: a list of all periodic tasks to simulate instead of a ready queue
+    std::vector<PCB> all_tasks;
+    int max_processes = 3; 
 
 public:
     void schedule() override;
     void reset() override;
     std::vector<PCB> ready_queue_to_vector() override;
-
     void generate_pcb_queue(int n) override;
-	virtual bool real_time() override { return true; }
+    
+    void set_max_processes(int max) { max_processes = max; }
+    bool real_time() override { return true; }
     std::string get_scheduler_name() override { return "Rate Monotonic"; }
-
 };

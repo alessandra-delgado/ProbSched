@@ -30,23 +30,29 @@ PCB ProcessGenerator::generatePCB(int current_time)
 PCB ProcessGenerator::generatePCBRealTime()
 {
 	PCB pcb;
+
 	int burst = std::max(1, rng.normal(burst_mean, burst_stddev));
 	pcb.set_burst_time(burst);
 	pcb.set_exec_time(burst);
 
-	while (true)
-	{
-		int candidate_period = burst * rng.uniform(5, 10);
-		if (!PCB::get_used_periods().count(candidate_period))
-		{
-			PCB::add_to_used_periods(candidate_period);
-			pcb.set_period(candidate_period);
-			break;
-		}
-	}
+	int arrival = rng.uniform(0, 10);
+	pcb.set_arrival_time(arrival);
+
+	int candidate_period;
+	do {
+		candidate_period = rng.uniform(burst + 2, burst * 4);
+	} while (PCB::get_used_periods().count(candidate_period));
+
+	PCB::add_to_used_periods(candidate_period);
+	pcb.set_period(candidate_period);
+
+	// Optional: Make deadline slightly tighter than period
+	int deadline = rng.uniform(burst + 1, candidate_period);
+	pcb.set_deadline(deadline);
 
 	pcb.set_real_time(true);
 	pcb.set_deadline_misses(0);
+
 	std::string name = "RT_Process_" + std::to_string(pcb.get_pid());
 	pcb.set_name(name);
 
@@ -96,8 +102,6 @@ std::vector<PCB> ProcessGenerator::generatePeriodicPCBList(int num_processes)
 	for (int i = 0; i < num_processes; ++i)
 	{
 		PCB pcb = generatePCBRealTime();
-		pcb.set_next_sched_time(0);
-		pcb.set_deadline(pcb.get_period());
 		pcbs.push_back(pcb);
 	}
 	return pcbs;
