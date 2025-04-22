@@ -9,7 +9,9 @@
 class PriorityPreemptive : public Scheduler
 {
 private:
-	std::priority_queue<PCB, std::vector<PCB>, PriorityComparator> ready;
+    std::priority_queue<PCB, std::vector<PCB>, PriorityComparator> ready;
+    int max_processes = INT_MAX;
+    int generated_processes = 0;
 
 public:
 	bool is_ready_empty() override;					   // verify if queue is empty
@@ -19,7 +21,9 @@ public:
 	void schedule() override;						   // do scheduling logic
 	void reset() override;
 	std::vector<PCB> ready_queue_to_vector() override; // convert to vector
-    std::string get_scheduler_name() override { return "Priority Scheduling (Preemptive)"; }
+    void generate_pcb_queue(int num_processes) override;
+	void set_max_processes(int max) { max_processes = max; }
+	std::string get_scheduler_name() override { return "Priority Scheduling (Preemptive)"; }
 
 	virtual bool real_time() override { return false; }
 };
