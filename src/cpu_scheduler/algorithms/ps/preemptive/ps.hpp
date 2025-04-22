@@ -1,4 +1,5 @@
 #pragma once
+#include <climits>
 #include "../../../scheduler.hpp"
 #include "../../../../process/PCB.hpp"
 #include "../priority_comparator.hpp"
@@ -19,6 +20,7 @@ public:
 	void remove_pcb() override;						   // remove process of higher priority from the queue
 	const PCB get_next_pcb() override;				   // get next process
 	void schedule() override;						   // do scheduling logic
+    void load_to_ready() override;
 	void reset() override;
 	std::vector<PCB> ready_queue_to_vector() override; // convert to vector
     void generate_pcb_queue(int num_processes) override;

@@ -20,5 +20,6 @@ class ProcessGenerator
 	PCB generatePCBRealTime();
 	PCB generatePCBInterArrival(int current_time);
 	std::vector<PCB> generatePCBList(int num_processes);
+	std::vector<PCB> generatePCBListInterArrival(int num_processes);
 	std::vector<PCB> generatePeriodicPCBList(int num_processes);
 };

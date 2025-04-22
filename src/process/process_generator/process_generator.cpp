@@ -94,6 +94,23 @@ std::vector<PCB> ProcessGenerator::generatePCBList(int num_processes)
 	return pcbs;
 }
 
+// generate PBC lists
+std::vector<PCB> ProcessGenerator::generatePCBListInterArrival(int num_processes)
+{
+	std::vector<PCB> pcbs;
+	int current_time = 0;
+	PCB pcb;
+	pcb.reset_pid(); // Guarantee that pid starts at 1 for every new batch of processes
+	for (int i = 0; i < num_processes; ++i)
+	{
+		pcb = generatePCBInterArrival(current_time);
+		current_time += pcb.get_arrival_time();
+		pcbs.push_back(pcb);
+	}
+
+	return pcbs;
+}
+
 // generate PBC periodics
 std::vector<PCB> ProcessGenerator::generatePeriodicPCBList(int num_processes)
 {

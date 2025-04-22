@@ -14,7 +14,6 @@
 #include "../process/process_generator/random_generator.hpp"
 
 std::atomic<bool> stop_sched(false);
-// todo: change handler to also exit program if not on sim
 
 // Handle CTRL + C
 void handle_sigint(int sig)
@@ -55,6 +54,7 @@ void simulator()
         if (gen_mode == 1)
         { // Número específico selecionado
             process_count = get_process_count();
+            algorithms[i]->generate_pcb_queue(process_count);
         }
         if(gen_mode == 2){
             // Check if algorithm is real time
@@ -74,9 +74,7 @@ void simulator()
         algorithms[i]->reset();
 
         if (gen_mode == 1)
-        { // Modo número específico
-            // todo: fix to call different pcb generation function, this one calls the real time PCB generation LOLL
-            algorithms[i]->generate_pcb_queue(process_count);
+        { // Modo número específico            
             if (i == 5)
             { // Round Robin
                 dynamic_cast<RoundRobin *>(algorithms[i].get())->set_max_processes(process_count);

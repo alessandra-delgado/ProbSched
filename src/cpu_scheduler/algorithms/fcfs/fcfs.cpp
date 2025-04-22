@@ -42,6 +42,7 @@ void FCFS::schedule()
 {
     if (stop_sched)
         return;
+    load_to_ready();
     if (max_processes == INT_MAX)
     { // Modo infinito
         int queue_size = ready.size();
@@ -82,11 +83,7 @@ void FCFS::schedule()
 
 void FCFS::generate_pcb_queue(int count)
 {
-    for (int i = 0; i < count; ++i)
-    {
-        PCB pcb = pg.generatePCB(Scheduler::get_current_time());
-        add_pcb(pcb);
-    }
+    loaded_processes = pg.generatePCBListInterArrival(count);
     max_processes = count; // Define o limite máximo
 }
 

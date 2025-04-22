@@ -1,4 +1,5 @@
 #pragma once
+#include <climits>
 #include "../../scheduler.hpp"
 #include "../../../process/PCB.hpp"
 #include <queue>
@@ -19,7 +20,9 @@ public:
     void add_pcb(PCB pcb) override;
     void remove_pcb() override;
     const PCB get_next_pcb() override;
+    void load_to_ready() override;
     void schedule() override;
+
     void reset() override;
     std::vector<PCB> ready_queue_to_vector() override;
     void generate_pcb_queue(int num_processes) override;

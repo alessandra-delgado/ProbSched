@@ -1,4 +1,3 @@
-#include "interface.hpp"
 #include <iostream>
 
 #include <fstream>
@@ -6,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include "interface.hpp"
 #include "ftxui/component/captured_mouse.hpp"
 #include "ftxui/component/component.hpp"
 #include "ftxui/component/screen_interactive.hpp"
