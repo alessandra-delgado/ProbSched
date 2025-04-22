@@ -76,7 +76,6 @@ public:
         }
 
         cpu_util_bound = sum_util;
-        size_t n = tasks.size();
         liu_ley_bound = static_cast<double>(tasks.size()) * 
                 (std::pow(2.0, 1.0 / static_cast<double>(tasks.size())) - 1.0);
 

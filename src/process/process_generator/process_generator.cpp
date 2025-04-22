@@ -35,7 +35,7 @@ PCB ProcessGenerator::generatePCBRealTime()
 	pcb.set_burst_time(burst);
 	pcb.set_exec_time(burst);
 
-	int arrival = rng.uniform(0, 10);
+	//int arrival = rng.uniform(0, 10);
 	pcb.set_arrival_time(0);
 
 	int candidate_period;

@@ -123,11 +123,8 @@ int pick_algorithm()
     auto handler = CatchEvent(main_menu, [&](Event event)
                               {
         if(event == Event::Return){
-            if (selected == 5) {  // Round Robin selected
-                rr_quantum = get_time_quantum();
-            }
             screen.ExitLoopClosure()();
-                return true;
+            return true;
         }
     return false; });
     screen.Loop(handler);

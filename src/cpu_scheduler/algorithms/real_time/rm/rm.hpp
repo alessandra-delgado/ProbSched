@@ -17,4 +17,5 @@ public:
     void set_max_processes(int max) { max_processes = max; }
     bool real_time() override { return true; }
     std::string get_scheduler_name() override { return "Rate Monotonic"; }
+
 };
