@@ -13,8 +13,6 @@
 #include "../process/process_generator/random_generator.hpp"
 
 
-
-
 std::atomic<bool> stop_sched(false);
 // todo: change handler to also exit program if not on sim
 

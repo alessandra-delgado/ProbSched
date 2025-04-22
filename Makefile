@@ -21,11 +21,13 @@ LIBS := -L$(FTXUI_BUILD) -lftxui-component -lftxui-dom -lftxui-screen
 SRCS := $(shell find $(SRC_DIR) -name *.cpp)
 OBJS := $(SRCS:%.cpp=$(BUILD_DIR)/%.o)
 
-all: run
+all: comp
 run: $(EXE_DIR)
 	./$< $(ARGS)
 
 # COMPILE =====================
+comp: $(EXE_DIR)
+
 $(EXE_DIR): $(OBJS)
 	$(CC) $^ -o $@ $(LIBS)
 

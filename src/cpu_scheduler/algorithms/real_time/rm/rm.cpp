@@ -1,9 +1,8 @@
 #include <iostream>
-#include <stdexcept>
+#include <fstream>
 #include <atomic>
 #include <iomanip>
 
-#include <thread>
 #include <chrono>
 
 #include "rm.hpp"
@@ -18,80 +17,77 @@ void RateMonotonic::schedule()
     if (stop_sched)
         return;
 
-
-    // todo: fix stats exec time count down >:(
-    // todo: fix greater priority processes getting deadline misses ???????
-    // STEP 4: Sync execution time back to the original PCB in all_tasks
-    if (running_process)
-    {
-        for (auto &task : all_tasks)
-        {
-            if (task.get_pid() == running_process->get_pid())
-            {
-                task.set_exec_time(running_process->get_exec_time());
-                if (task.get_exec_time() == 0)
-                {
-                    task.set_state(ProcessState::Ready);
-                    running_process = nullptr;
-                    schedule_new = true;
-                    return;
-                }
-            }
-        }
-    }
-
-    // STEP 1: Update tasks (handle new periods + check deadline misses)
-    for (auto &pcb : all_tasks)
-    {
-        if (current_time < pcb.get_arrival_time())
-            continue; // Do not schedule this task yet
-
-        // Deadline miss check: if we're at release time but previous instance isn't done
-        if ((current_time == pcb.get_deadline()) && (pcb.get_exec_time() > 0))
-        {
-            pcb.inc_deadline_misses();
-        }
-
-        // Periodic release: reset execution time + set next release time
-        if (current_time == pcb.get_deadline())
-        {
-            pcb.set_exec_time(pcb.get_burst_time());
-            pcb.set_deadline(current_time + pcb.get_period());
-        }
-    }
-
-    // STEP 2: Pick the task with the shortest period (highest RMS priority)
-    PCB *best_candidate = nullptr;
+    // * 1 - Release any new tasks that have arrived at current_time
     for (auto &task : all_tasks)
     {
-        if (task.get_arrival_time() > current_time)
-            continue; // Skip this process for now
-
-        if (task.get_exec_time() > 0)
+        // Task becomes available at arrival time
+        if (current_time == task.get_arrival_time())
         {
-            if (!best_candidate || (task.get_period() < best_candidate->get_period()))
-            {
-                best_candidate = &task;
-                task.set_state(ProcessState::Ready);
-            }
+            task.set_state(ProcessState::Ready);
+            task.set_deadline(task.get_arrival_time() + task.get_period());
         }
     }
 
-    // STEP 3: If we found a candidate and it's different from the one currently running, switch
-    if (best_candidate)
+    std::ofstream outfile;
+    outfile.open("./inputs/test.txt", std::ios_base::app); // append instead of overwrite
+
+    outfile << "===============================================" << std::endl;
+    outfile << "NEW CICLE" << std::endl;
+
+    // * 2 - Find highest priority task (smallest period)
+    PCB *highest_priority_task = nullptr;
+    for (auto &task : all_tasks)
     {
-        if (!running_process || (best_candidate->get_pid() != running_process->get_pid()))
+        outfile << task.get_name() << " " << task.get_period() << std::endl;
+
+        // Skip tasks that aren't ready or have completed execution
+        if (task.get_arrival_time() > current_time || task.get_exec_time() <= 0)
         {
-            running_process = std::make_unique<PCB>(*best_candidate);
-            running_process->set_state(ProcessState::Running);
+            continue;
         }
 
-        // Decrement execution time
-        running_process->dec_exec_time();
-        cpu_time++;
+        // ! Select highest priority task (smallest period)
+        if (highest_priority_task == nullptr || task.get_period() < highest_priority_task->get_period())
+        {
+            outfile << "NEW HIGHEST_PRIORITY_TASK: " << task.get_name() << std::endl;
+
+            highest_priority_task = &task;
+        }
     }
 
-    
+    // * 3 - Run the highest priority task
+    if (highest_priority_task)
+    {
+        outfile << "SELECTED HIGHEST_PRIORITY_TASK: " << highest_priority_task->get_name() << std::endl;
+        highest_priority_task->dec_exec_time();
+        cpu_time++;
+
+        // Set running process for display/logging
+        running_process = std::make_unique<PCB>(*highest_priority_task);
+    }
+
+    // * 4 - Misses
+    for (auto &task : all_tasks)
+    {
+        // Task gets new instance at its deadline
+        if (current_time == task.get_deadline())
+        {
+            // Check for deadline miss
+            if (task.get_arrival_time() <= current_time && task.get_exec_time() > 0)
+            {
+                outfile << "INC MISS: " << task.get_name() << std::endl;
+                task.inc_deadline_misses();
+            }
+
+            // Reset for next period
+            task.set_exec_time(task.get_burst_time());
+            task.set_deadline(current_time + task.get_period());
+            task.set_state(ProcessState::Ready);
+        }
+    }
+
+    outfile << "===============================================" << std::endl;
+    outfile.close();
 }
 
 // convert to vector
@@ -104,17 +100,6 @@ void RateMonotonic::generate_pcb_queue(int n)
 {
     if (n <= 0) n = max_processes;
     all_tasks = pg.generatePeriodicPCBList(n);
-    for (auto &pcb : all_tasks)
-    {
-        std::cout << "NAME: " << pcb.get_name()
-                  << "| PERIOD: " << pcb.get_period()
-                  << "| ARRIVAL TIME: " << pcb.get_arrival_time()
-                  << "| BURST TIME: " << pcb.get_burst_time()
-                  << "| EXEC TIME: " << pcb.get_exec_time()
-                  << std::endl;
-    }
-
-    std::this_thread::sleep_for(std::chrono::seconds(4)); // just so the screen is readable */
 }
 
 void RateMonotonic::reset()

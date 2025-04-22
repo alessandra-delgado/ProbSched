@@ -59,7 +59,7 @@ void ShortestJobNonPreemptive::schedule()
             running_process = nullptr;
             schedule_new = true;
             return;
-            if (max_processes != INT_MAX && terminated_processes.size() >= max_processes) {
+            if (max_processes != INT_MAX && (int)terminated_processes.size() >= max_processes) {
                 stop_sched = true;
                 return;
             }

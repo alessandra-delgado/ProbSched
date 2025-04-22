@@ -36,26 +36,20 @@ public:
 	// Here, functions are made pure virtual functions,
 	// which forces the implementation of the following functions
 	// in each scheduling algorithm (derived classes).
-	virtual bool is_ready_empty() {};
-	virtual void add_pcb(PCB pcb) {};
-	virtual void remove_pcb() {};
-	virtual const PCB get_next_pcb() {};
-	virtual void schedule() {};
-	virtual std::vector<PCB> ready_queue_to_vector() {};
-	virtual std::string get_scheduler_name() = 0;
+	virtual bool is_ready_empty() { return false; }
+    virtual void add_pcb(PCB pcb) { pcb = PCB();}
+    virtual void remove_pcb() {}
+    virtual const PCB get_next_pcb() { return PCB(); }
 
-	virtual bool real_time() = 0;
-	virtual void generate_pcb_queue(int num_processes) {}
-	virtual void reset() {
-        reset_cpu_time();
-        reset_current_time();
-        reset_processes_running();
-        reset_schedule_new();
-        clear_processes_terminated();
-        pg.reset();  // Reset do gerador de processos
-    }
+    virtual void generate_pcb_queue(int) {}
+	virtual void reset() { PCB::reset_pid(); reset_cpu_time(); clear_processes_terminated(); reset_schedule_new(); reset_processes_running(); reset_current_time(); }
 	Scheduler(double lambda = 0.5, double mean_burst = 5.0, double stddev_burst = 1.5,
 		int max_priority = 10, int dl_range = 100):pg(lambda, mean_burst, stddev_burst, max_priority, dl_range) {}
+
+    virtual std::vector<PCB> ready_queue_to_vector() = 0;
+    virtual void schedule() = 0;
+    virtual bool real_time() = 0;
+    virtual std::string get_scheduler_name() = 0;
 
     virtual ~Scheduler() = default;
 	 

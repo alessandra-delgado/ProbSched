@@ -36,8 +36,6 @@ void ShortestJobPreemptive::schedule()
     if (stop_sched)
         return;
 
-    int queue_size = ready.size();
-    double prob = 1.0 / (1 + queue_size * 0.5);
     if (max_processes == INT_MAX) {
         int queue_size = ready.size();
         double prob = 1.0 / (1 + queue_size * 0.5);
