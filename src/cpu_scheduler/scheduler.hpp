@@ -20,13 +20,13 @@ public:
 
 	inline static void set_current_time(int t) { current_time = t; }
 	inline static int get_current_time() { return current_time; }
+	inline static void reset_current_time() { current_time = 0; }
 
 	inline static bool to_schedule() { return schedule_new; }
 	inline static void reset_schedule_new() { schedule_new = false; } 
 
 	inline static int get_cpu_time() { return cpu_time; }
 	inline static void increment_current_time() { current_time++; }
-	inline static void reset_current_time() { current_time = 0; }
 	inline static std::unique_ptr<PCB>& get_running_process() { return running_process; }
 	inline static std::vector<PCB> get_terminated_processes() { return terminated_processes; }
 	inline static void reset_cpu_time(){ cpu_time = 0;}

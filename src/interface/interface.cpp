@@ -9,11 +9,13 @@
 #include "ftxui/component/component.hpp"
 #include "ftxui/component/screen_interactive.hpp"
 #include "ftxui/component/component_base.hpp"
+#include "../cpu_scheduler/scheduler.hpp"       
+#include "../cpu_scheduler/scheduler_stats.hpp" 
 
 using namespace ftxui;
 int main_menu()
 {
-    std::cout << "\033[H\033[J"; // clear
+    reset_program_state();
     std::vector<std::string> menu_entries = {
         "Start Simulation",
         "About",
@@ -88,7 +90,7 @@ int get_time_quantum() {
 
 int pick_algorithm()
 {
-    std::cout << "\033[H\033[J"; // clear
+    reset_program_state();
     std::vector<std::string> entries = {
         "First Come First Served",
         "Priority Scheduling Non-Preemptive",
@@ -132,7 +134,7 @@ int pick_algorithm()
 }
 
 int select_process_generation() {
-    std::cout << "\033[H\033[J"; // clear
+    reset_program_state();
     std::vector<std::string> entries = {
         "Generate infinite number of processes",
         "Generate specific number of processes",
@@ -203,4 +205,17 @@ int get_process_count() {
 
     screen.Loop(renderer);
     return count;
+}
+
+void reset_program_state(){
+    std::cout << "\033[H\033[J";
+
+    Scheduler::reset_cpu_time();
+    Scheduler::reset_current_time();
+    Scheduler::reset_processes_running();
+    Scheduler::reset_schedule_new();
+    Scheduler::clear_processes_terminated();
+
+    SchedulerStats::reset_stats();
+    PCB::reset_pid();
 }
