@@ -31,4 +31,10 @@ public:
     std::string get_scheduler_name() override { return "First Come First Served"; }
 	virtual bool real_time() override { return false; }
     void generate_pcb_queue(int count) override;
+
+    int get_generated_processes() const override { return generated_processes; }
+    void set_max_processes(int max) override { max_processes = max; }
+    void enable_random_generation() override {}
+    void disable_random_generation() override {}
+
 };

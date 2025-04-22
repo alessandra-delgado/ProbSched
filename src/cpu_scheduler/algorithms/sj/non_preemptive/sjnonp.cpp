@@ -88,6 +88,7 @@ std::vector<PCB> ShortestJobNonPreemptive::ready_queue_to_vector()
 }
 
 void ShortestJobNonPreemptive::generate_pcb_queue(int num_processes) {
+    generated_processes = num_processes;
     for (int i = 0; i < num_processes; ++i) {
         PCB pcb = pg.generatePCB(Scheduler::get_current_time());
         add_pcb(pcb);

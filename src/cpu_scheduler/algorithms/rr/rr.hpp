@@ -10,6 +10,7 @@ private:
     int max_processes = INT_MAX;
     int current_process_start_time = 0;
     bool random_generation = true;
+    int generated_processes = 0;
 
 public:
     RoundRobin(int quantum) : Scheduler(), time_quantum(quantum) {}
@@ -23,14 +24,15 @@ public:
     void reset() override;
     std::vector<PCB> ready_queue_to_vector() override;
     void generate_pcb_queue(int num_processes) override;
-    int generated_processes = 0;
     
-    void set_max_processes(int max) { max_processes = max; }
     void set_time_quantum(int quantum) { time_quantum = quantum; }
     int get_time_quantum() const { return time_quantum; }
     std::string get_scheduler_name() override { return "Round Robin"; }
     bool real_time() override { return false; }
-    void disable_random_generation() { random_generation = false; }
-    void enable_random_generation() { random_generation = true; }
+
+    int get_generated_processes() const override { return generated_processes; }
+    void set_max_processes(int max) override { max_processes = max; }
+    void enable_random_generation() override { random_generation = true; }
+    void disable_random_generation() override { random_generation = false; }
     
 };

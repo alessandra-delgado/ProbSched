@@ -11,11 +11,25 @@
 
 extern std::atomic<bool> stop_sched;
 
+
 // scheduling logic
 void EarliestDeadlineFirst::schedule()
 {
     if (stop_sched)
         return;
+
+
+    // infinit mode
+    if (infinite_generation && all_tasks.size() < static_cast<size_t>(max_processes)) {
+        double prob = 0.3;
+        if (rand() / double(RAND_MAX) < prob) {
+            PCB new_task = pg.generatePCBRealTime();
+            new_task.set_deadline(new_task.get_arrival_time() + new_task.get_period()); 
+            new_task.set_state(ProcessState::Ready);
+            all_tasks.push_back(new_task);
+            generated_processes++;
+        }
+    }
 
     // * 1 - Release any new tasks that have arrived at current_time
     for (auto &task : all_tasks)
@@ -97,7 +111,9 @@ std::vector<PCB> EarliestDeadlineFirst::ready_queue_to_vector()
 }
 
 void EarliestDeadlineFirst::generate_pcb_queue(int n) {
-    if (n <= 0) n = max_processes; 
+    if (infinite_generation){return;}
+    generated_processes = n;
+    PCB::reset_pid();
     all_tasks = pg.generatePeriodicPCBList(n);
 }
 

@@ -53,6 +53,11 @@ public:
 
     virtual ~Scheduler() = default;
 	
+	virtual void set_max_processes(int max) = 0;
+    virtual void enable_random_generation() = 0;
+    virtual void disable_random_generation() = 0;
+	virtual void enable_infinite_generation() {}
+    virtual void disable_infinite_generation() {}
+    virtual int get_generated_processes() const = 0;
 	 
-	
 };

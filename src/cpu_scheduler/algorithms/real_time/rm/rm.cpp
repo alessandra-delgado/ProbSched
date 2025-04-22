@@ -17,6 +17,17 @@ void RateMonotonic::schedule()
     if (stop_sched)
         return;
 
+    if (infinite_generation && all_tasks.size() < max_processes) {
+        double prob = 1.0 / (1 + all_tasks.size() * 0.5);
+        if (rand() / double(RAND_MAX) < prob) {
+            double e = (rng.exponential(0.5));
+            if (e > 1.5 && e < 4.5) {
+                PCB new_task = pg.generatePCBRealTime();
+                new_task.set_deadline(new_task.get_arrival_time() + new_task.get_period());
+                all_tasks.push_back(new_task);
+            }
+        }
+    }
     // * 1 - Release any new tasks that have arrived at current_time
     for (auto &task : all_tasks)
     {
@@ -98,8 +109,18 @@ std::vector<PCB> RateMonotonic::ready_queue_to_vector()
 
 void RateMonotonic::generate_pcb_queue(int n)
 {
+    if (infinite_generation) { return; }
     if (n <= 0) n = max_processes;
-    all_tasks = pg.generatePeriodicPCBList(n);
+
+    PCB::reset_pid();
+    all_tasks.clear();
+    generated_processes = n;
+
+    for (int i = 0; i < n; ++i) {
+        PCB new_task = pg.generatePCBRealTime();
+        new_task.set_deadline(new_task.get_arrival_time() + new_task.get_period());
+        all_tasks.push_back(new_task);
+    }
 }
 
 void RateMonotonic::reset()

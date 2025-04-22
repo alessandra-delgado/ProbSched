@@ -10,6 +10,7 @@ private:
     std::priority_queue<PCB, std::vector<PCB>, BurstTimeComparator> ready;
     int max_processes = INT_MAX;
     int generated_processes = 0;
+    bool random_generation = false;
 
 public:
     bool is_ready_empty() override;
@@ -24,4 +25,8 @@ public:
     void set_max_processes(int max) { max_processes = max; }
     std::string get_scheduler_name() override { return "Shortest Job First (Preemptive)"; }
     bool real_time() override { return false; }
+
+    void enable_random_generation() override { random_generation = true; }
+    void disable_random_generation() override { random_generation = false; }
+    int get_generated_processes() const override { return generated_processes; }
 };

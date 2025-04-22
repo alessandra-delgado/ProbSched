@@ -47,8 +47,7 @@ PCB ProcessGenerator::generatePCBRealTime()
 	pcb.set_period(candidate_period);
 
 	// Optional: Make deadline slightly tighter than period
-	int deadline = rng.uniform(burst + 1, candidate_period);
-	pcb.set_deadline(deadline);
+	pcb.set_deadline(rng.uniform(burst + 1, candidate_period));
 
 	pcb.set_real_time(true);
 	pcb.set_deadline_misses(0);
@@ -98,6 +97,7 @@ std::vector<PCB> ProcessGenerator::generatePCBList(int num_processes)
 std::vector<PCB> ProcessGenerator::generatePeriodicPCBList(int num_processes)
 {
 	std::vector<PCB> pcbs;
+	PCB::reset_pid();
 
 	for (int i = 0; i < num_processes; ++i)
 	{

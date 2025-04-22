@@ -39,7 +39,7 @@ void simulator()
     while (true)
     {
          reset_program_state();
-    stop_sched = false;
+        stop_sched = false;
 
         // ! 1 - Escolher um algoritmo, tipo de geração de processo...
         int i = pick_algorithm();
@@ -68,17 +68,12 @@ void simulator()
 
         if (gen_mode == 1) { // Modo número específico
             algorithms[i]->generate_pcb_queue(process_count);
-            if (i == 5){ // Round Robin
-                dynamic_cast<RoundRobin*>(algorithms[i].get())->set_max_processes(process_count);
-                dynamic_cast<RoundRobin*>(algorithms[i].get())->disable_random_generation();
-            } else if (i >= 6) { // Algoritmos de tempo real
-                algorithms[i]->generate_pcb_queue(3);
-            }
+            algorithms[i]->set_max_processes(process_count);
+            algorithms[i]->disable_random_generation();
+
         }else{ // Modo infinito
-            if(i == 5){ // Round Robin
-                dynamic_cast<RoundRobin*>(algorithms[i].get())->set_max_processes(INT_MAX);
-                dynamic_cast<RoundRobin*>(algorithms[i].get())->enable_random_generation();
-            }
+            algorithms[i]->set_max_processes(INT_MAX);
+            algorithms[i]->enable_random_generation();
         }
         // cont generated processes(especific number)
         int generated_processes = (gen_mode == 1 && i < 6) ? process_count : 0;
@@ -93,6 +88,16 @@ void simulator()
                 }
             } else {
                 algorithms[i]->schedule(); 
+            }
+
+            // real time algorithms
+            if (gen_mode == 1 && i >= 6) {
+                if (algorithms[i]->get_terminated_processes().size() >= 
+                    algorithms[i]->get_generated_processes() &&
+                    algorithms[i]->is_ready_empty() &&
+                    Scheduler::get_running_process() == nullptr) {
+                    stop_sched = true;
+                }
             }
 
             // SchedulerStats.display_stats(); <- to-do
