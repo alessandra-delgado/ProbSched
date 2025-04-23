@@ -118,6 +118,7 @@ void simulator()
             algorithms[i]->schedule(); // ! Counted the amount of processes created in schedule if needed!
             // todo: So far, all changes in scheduling logic were only made in fcfs, please update on other schedulers if needed...
 
+            // todo: change all schedulers to use infinite_mode variable instead
             // todo: adjust this "max process" or whatever
             SchedulerStats::collect(Scheduler::get_current_time(),
                                     Scheduler::get_cpu_time(),
