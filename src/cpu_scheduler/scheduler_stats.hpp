@@ -25,9 +25,15 @@ private:
     inline static std::vector<PCB> terminated_processes; // get amount of completed processes with size()
     inline static std::vector<PCB> ready_queue;
 
+    // Static circular buffer to store process execution history
+    static const int HISTORY_SIZE = 60;
+    static std::vector<std::string> process_history;
+    static int history_index;
+    
     // For real time
     inline static double cpu_util_bound = 0.0;
     inline static double liu_ley_bound = 0.0;
+
 
 public:
     static void collect(
@@ -57,6 +63,10 @@ public:
         deadline_misses = 0;
         terminated_processes.clear();
         ready_queue.clear();
+
+        process_history.clear();
+        process_history.resize(HISTORY_SIZE, "");
+        history_index = 0;
     }
 
     // For real time
