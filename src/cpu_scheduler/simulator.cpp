@@ -54,6 +54,7 @@ void simulator()
 
         // ! 3 - Reset algorithm before applying settings
         algorithms[i]->reset();
+        Scheduler::set_infinite_mode(false);
 
         // ! 4 - Applying settings ------------------------------------------------------------------------------------
         // * Apply round robbin's time quantum before other any changes ***********************************************
@@ -76,7 +77,7 @@ void simulator()
                 SchedulerStats::set_cpu_utilization_bounds(algorithms[i]->ready_queue_to_vector());
             }
             else{
-                Scheduler::set_infinite_mode();
+                Scheduler::set_infinite_mode(true);
             }
         }
         // * GEN MODE 1: Generate a list of processes to be sent to the ready queue ***********************************
@@ -140,7 +141,7 @@ void simulator()
                 Scheduler::increment_current_time();
             }
             // When all processes are done executing in GEN MODE 1
-            if (gen_mode == 1 && (!algorithms[i]->real_time()) && algorithms[i]->is_ready_empty() && Scheduler::get_running_process() == nullptr && Scheduler::get_loaded_processes_size() == 0)
+            if ((gen_mode == 1 || gen_mode == 2)&& (!algorithms[i]->real_time()) && algorithms[i]->is_ready_empty() && Scheduler::get_running_process() == nullptr && Scheduler::get_loaded_processes_size() == 0)
             {
                 std::cout << "All processes completed. Simulation ending..." << std::endl;
                 std::this_thread::sleep_for(std::chrono::seconds(3));

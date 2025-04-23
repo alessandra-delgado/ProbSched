@@ -43,7 +43,7 @@ void FCFS::schedule()
     if (stop_sched)
         return;
 
-    if (max_processes == INT_MAX)
+    if (infinite_mode)
     { // Modo infinito
         int queue_size = ready.size();
         double prob = 1.0 / (1 + queue_size * 0.5);
@@ -86,7 +86,6 @@ void FCFS::schedule()
 void FCFS::generate_pcb_queue(int count)
 {
     loaded_processes = pg.generatePCBListInterArrival(count);
-    max_processes = count; // Define o limite máximo
 }
 
 std::vector<PCB> FCFS::ready_queue_to_vector()
@@ -106,7 +105,6 @@ void FCFS::reset()
     {
         ready.pop();
     }
-    max_processes = INT_MAX; // ! - SHOULD BE IN SCHEDULER!!!!!
     generated_processes = 0;
     running_process = nullptr;
 }

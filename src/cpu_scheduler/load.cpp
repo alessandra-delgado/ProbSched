@@ -19,6 +19,7 @@ void load(std::string file)
         pcb.set_name(name);
         pcb.set_arrival_time(arrival);
         pcb.set_burst_time(burst);
+        pcb.set_exec_time(burst);
         pcb.set_period(period);
 
         processes.push_back(pcb);
