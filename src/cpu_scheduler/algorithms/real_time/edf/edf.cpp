@@ -23,8 +23,20 @@ void EarliestDeadlineFirst::schedule()
         // Task becomes available at arrival time
         if (current_time == task.get_arrival_time())
         {
+            // check for deadline miss
+            if (task.get_arrival_time() <= current_time && task.get_exec_time() > 0)
+                task.inc_deadline_misses();
+
+            
+            if (task.get_exec_time() <= 0) {
+                task.set_completion_time(current_time);
+                terminated_processes.push_back(task);
+            }
+
+            //reset 
+            task.set_exec_time(task.get_burst_time());
+            task.set_deadline(current_time + task.get_period());
             task.set_state(ProcessState::Ready);
-            task.set_deadline(task.get_arrival_time() + task.get_period());
         }
     }
 
@@ -62,8 +74,16 @@ void EarliestDeadlineFirst::schedule()
         highest_priority_task->dec_exec_time();
         cpu_time++;
 
-        // Set running process for display/logging
-        running_process = std::make_unique<PCB>(*highest_priority_task);
+        if (highest_priority_task->get_exec_time() <= 0) {
+            highest_priority_task->set_completion_time(current_time);
+            highest_priority_task->set_state(ProcessState::Terminated);
+            terminated_processes.push_back(*highest_priority_task);
+            running_process = nullptr;
+        }
+        else {
+            // Set running process for display/logging
+            running_process = std::make_unique<PCB>(*highest_priority_task);
+        }
     }
 
     // * 4 - Misses
