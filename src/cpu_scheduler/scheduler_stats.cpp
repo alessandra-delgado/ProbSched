@@ -14,12 +14,20 @@
 
 using namespace ftxui;
 
-const int SchedulerStats::HISTORY_SIZE;
-std::vector<std::string> SchedulerStats::process_history(SchedulerStats::HISTORY_SIZE, "");
-int SchedulerStats::history_index = 0;
+
 
 void SchedulerStats::display_stats(std::string title)
 {
+    // Static circular buffer to store process execution history
+    static const int HISTORY_SIZE = 60;
+    static std::vector<std::string> process_history(HISTORY_SIZE, "");
+    static int history_index = 0;
+
+    if (reset_graph_history){
+        std::fill(process_history.begin(), process_history.end(), "");
+        history_index = 0;
+        reset_graph_history = false;
+    }
 
     // Record current running process in history
     const auto &running_process = Scheduler::get_running_process();
@@ -296,6 +304,16 @@ void SchedulerStats::display_stats(std::string title)
 
 void SchedulerStats::display_stats_real_time(std::string title)
 {
+    static const int HISTORY_SIZE = 60;
+    static std::vector<std::string> process_history(HISTORY_SIZE, "");
+    static int history_index = 0;
+    
+    if (reset_graph_history) {
+        std::fill(process_history.begin(), process_history.end(), "");
+        history_index = 0;
+        reset_graph_history = false;
+    }
+
     // Record current running process in history
     const auto &running_process = Scheduler::get_running_process();
     if (running_process)
