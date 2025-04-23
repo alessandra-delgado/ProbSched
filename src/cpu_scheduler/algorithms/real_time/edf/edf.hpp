@@ -14,6 +14,7 @@ public:
     std::vector<PCB> ready_queue_to_vector() override;
     void generate_pcb_queue(int n) override;
     
+    void load_to_ready() override;
     void set_max_processes(int max) { max_processes = max; }
     bool real_time() override { return true; }
     std::string get_scheduler_name() override { return "Earliest Deadline First"; }

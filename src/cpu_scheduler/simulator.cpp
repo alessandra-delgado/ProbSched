@@ -106,7 +106,7 @@ void simulator()
         if (gen_mode == 2)
         {
             // Check if algorithm is real time (in function) & load the processes from the file
-            load(pick_file(algorithms[i]->real_time()));
+            load(pick_file(algorithms[i]->real_time()), algorithms[i]->real_time());
         }
 
         // ! 4 - Schedule loop
