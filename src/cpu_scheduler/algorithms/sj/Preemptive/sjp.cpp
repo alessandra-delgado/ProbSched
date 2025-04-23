@@ -113,7 +113,6 @@ std::vector<PCB> ShortestJobPreemptive::ready_queue_to_vector()
     return rq;
 }
 
-
 void ShortestJobPreemptive::reset() {
     while (!ready.empty()) {
         ready.pop();
@@ -122,4 +121,19 @@ void ShortestJobPreemptive::reset() {
     generated_processes = 0;
     running_process = nullptr;
     Scheduler::reset();
+}
+
+void ShortestJobPreemptive::load_to_ready()
+{
+    if (loaded_processes.empty())
+        return;
+
+    for (int i = 0; i < (int)loaded_processes.size(); i++)
+    {
+        if(loaded_processes[i].get_arrival_time() == current_time){
+            add_pcb(Scheduler::loaded_processes[i]);
+            loaded_processes.erase(loaded_processes.begin()+i);
+        }
+        // fingers crossed this works smoothly :')
+    }
 }

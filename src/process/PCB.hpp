@@ -45,6 +45,7 @@ public:
 
 	// * setters ---------------------------------------------------------
 	// 'n' represents any new value for an atribute
+	inline void set_pid(int n) { pid = n; }
 	inline void set_state(ProcessState n) { state = n; }
 	inline void set_priority(int n) { priority = n; }
 	inline void set_exec_time(int n) { exec_time = n; }

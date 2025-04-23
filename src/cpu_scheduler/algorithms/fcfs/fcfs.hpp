@@ -1,4 +1,5 @@
 #pragma once
+#include <climits>
 #include "../../scheduler.hpp"
 #include "../../../process/PCB.hpp"
 
@@ -17,7 +18,6 @@ class FCFS : public Scheduler
 {
 private:
     std::priority_queue<PCB, std::vector<PCB>, ArrivalTimeComparator> ready;
-    int max_processes = INT_MAX;
     int generated_processes = 0;
 
 public:
@@ -25,6 +25,7 @@ public:
     void add_pcb(PCB pcb) override;
     void remove_pcb() override;
     const PCB get_next_pcb() override;
+    void load_to_ready() override;
     void schedule() override;
     void reset() override;
     std::vector<PCB> ready_queue_to_vector() override;

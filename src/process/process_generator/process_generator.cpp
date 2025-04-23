@@ -35,8 +35,8 @@ PCB ProcessGenerator::generatePCBRealTime()
 	pcb.set_burst_time(burst);
 	pcb.set_exec_time(burst);
 
-	int arrival = rng.uniform(0, 10);
-	pcb.set_arrival_time(arrival);
+	//int arrival = rng.uniform(0, 10);
+	pcb.set_arrival_time(0);
 
 	int candidate_period;
 	do {
@@ -67,7 +67,7 @@ PCB ProcessGenerator::generatePCBInterArrival(int current_time)
 	int burst = rng.normal(burst_mean, burst_stddev);
 
 	pcb.set_arrival_time(arrival);
-	pcb.set_burst_time(burst);
+	pcb.set_burst_time(burst);	
 	pcb.set_exec_time(burst);
 	pcb.set_priority(rng.uniform(1, max_priority));
 	pcb.set_deadline(arrival + rng.uniform(1, deadline_range));
@@ -88,6 +88,23 @@ std::vector<PCB> ProcessGenerator::generatePCBList(int num_processes)
 	{
 		pcb = generatePCB(current_time);
 		current_time = pcb.get_arrival_time();
+		pcbs.push_back(pcb);
+	}
+
+	return pcbs;
+}
+
+// generate PBC lists
+std::vector<PCB> ProcessGenerator::generatePCBListInterArrival(int num_processes)
+{
+	std::vector<PCB> pcbs;
+	int current_time = 0;
+	PCB pcb;
+	pcb.reset_pid(); // Guarantee that pid starts at 1 for every new batch of processes
+	for (int i = 0; i < num_processes; ++i)
+	{
+		pcb = generatePCBInterArrival(current_time);
+		current_time += pcb.get_arrival_time();
 		pcbs.push_back(pcb);
 	}
 
