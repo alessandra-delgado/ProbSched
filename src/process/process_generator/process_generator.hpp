@@ -14,6 +14,7 @@ class ProcessGenerator
 	int max_priority;
 	
 	public:
+	ProcessGenerator();
 	ProcessGenerator(double lambda, double mean_burst, double stddev_burst, int max_priority, int dl_range = 100);
 	
 	PCB generatePCB(int current_time);

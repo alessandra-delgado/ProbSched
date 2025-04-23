@@ -15,7 +15,7 @@ private:
 public:
     RoundRobin(int quantum) : Scheduler(), time_quantum(quantum) {}
 
-    
+    int get_ready_size() { return ready.size(); }
     bool is_ready_empty() override;
     void add_pcb(PCB pcb) override;
     void remove_pcb() override;

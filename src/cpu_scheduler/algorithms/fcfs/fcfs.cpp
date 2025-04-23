@@ -43,21 +43,7 @@ void FCFS::schedule()
     if (stop_sched)
         return;
 
-    if (infinite_mode)
-    { // Modo infinito
-        int queue_size = ready.size();
-        double prob = 1.0 / (1 + queue_size * 0.5);
-        if (rand() / double(RAND_MAX) < prob)
-        {
-            double e = (rng.exponential(0.5));
-            if (e > 1.5 && e < 4.5)
-            {
-                PCB pcb = pg.generatePCB(Scheduler::get_current_time());
-                add_pcb(pcb);
-                created_processes++; // todo: <- this was the only thing added i think -- REMOVE IF NEEDED!
-            }
-        }
-    }
+    
     if (running_process != nullptr) // If there's a process running (pointer not null)
     {
 

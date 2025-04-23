@@ -45,7 +45,7 @@ void RoundRobin::schedule()
     if (stop_sched)
         return;
 
-    if (random_generation && max_processes == INT_MAX) {
+    /* if (random_generation && max_processes == INT_MAX) {
         int queue_size = ready.size();
         double prob = 1.0 / (1 + queue_size * 0.5);
         if (rand() / double(RAND_MAX) < prob) {
@@ -55,7 +55,7 @@ void RoundRobin::schedule()
                 add_pcb(pcb);
             }
         }
-    }
+    } */
 
     if (running_process != nullptr)
     {
@@ -70,7 +70,7 @@ void RoundRobin::schedule()
             schedule_new = true;
 
             if (max_processes != INT_MAX && 
-                terminated_processes.size() >= max_processes) {
+                (int) terminated_processes.size() >= max_processes) {
                 stop_sched = true;
                 return;
             }

@@ -21,6 +21,7 @@ protected:
 	static inline bool infinite_mode = false;
 
 public:
+	inline static RandomGenerator get_rng() { return rng; }
 	inline static void set_current_time(int t) { current_time = t; }
 	inline static int get_current_time() { return current_time; }
 	inline static void reset_current_time() { current_time = 0; }
@@ -28,6 +29,7 @@ public:
 	inline static bool to_schedule() { return schedule_new; }
 	inline static void reset_schedule_new() { schedule_new = false; }
 
+	inline static void inc_created_processes() { created_processes++; }
 	inline static int get_cpu_time() { return cpu_time; }
 	inline static void increment_current_time() { current_time++; }
 	inline static std::unique_ptr<PCB> &get_running_process() { return running_process; }
@@ -37,17 +39,19 @@ public:
 	inline static void reset_processes_running() { running_process.reset(); }
 	inline static void set_loaded_processes(std::vector<PCB> p) { loaded_processes = p; }
 	inline static int get_loaded_processes_size() { return loaded_processes.size(); }
+	virtual PCB generatePCB(double current_time) { return pg.generatePCB(current_time); }
 
-	inline static void set_infinite_mode(bool b) {infinite_mode = b;}
+	inline static void set_infinite_mode(bool b) { infinite_mode = b; }
 
 	// Here, functions are made pure virtual functions,
 	// which forces the implementation of the following functions
 	// in each scheduling algorithm (derived classes).
+	virtual int get_ready_size() { return 0; }
 	virtual bool is_ready_empty() { return false; }
 	virtual void add_pcb(PCB pcb) { pcb = PCB(); }
 	virtual void remove_pcb() {}
 	virtual const PCB get_next_pcb() { return PCB(); }
-    virtual void load_to_ready() {};
+	virtual void load_to_ready() {};
 
 	virtual void generate_pcb_queue(int) {}
 	virtual void reset()

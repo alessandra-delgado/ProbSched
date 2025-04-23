@@ -16,7 +16,7 @@
 std::atomic<bool> stop_sched(false);
 
 // Handle CTRL + C
-void handle_sigint(int sig)
+void handle_sigint(int)
 {
     stop_sched = true;
 }
@@ -76,7 +76,8 @@ void simulator()
                 algorithms[i]->generate_pcb_queue(3);
                 SchedulerStats::set_cpu_utilization_bounds(algorithms[i]->ready_queue_to_vector());
             }
-            else{
+            else
+            {
                 Scheduler::set_infinite_mode(true);
             }
         }
@@ -112,19 +113,32 @@ void simulator()
         // ! 4 - Schedule loop
         while (!stop_sched) // Scheduling until CTRL + c
         {
-            if(gen_mode == 1 || gen_mode == 2)
+            if (gen_mode == 0)
+            {
+                int queue_size = algorithms[i]->get_ready_size();
+                double prob = 1.0 / (1 + queue_size * 0.5);
+                if (rand() / double(RAND_MAX) < prob)
+                {
+                    double e = (Scheduler::get_rng().exponential(0.5));
+                    if (e > 1.5 && e < 4.5)
+                    {
+                        PCB pcb = algorithms[i]->generatePCB(Scheduler::get_current_time());
+                        algorithms[i]->add_pcb(pcb);
+                        Scheduler::inc_created_processes();
+                    }
+                }
+            }
+            if (gen_mode == 1 || gen_mode == 2)
                 algorithms[i]->load_to_ready();
 
-            algorithms[i]->schedule(); // ! Counted the amount of processes created in schedule if needed!
-            // todo: So far, all changes in scheduling logic were only made in fcfs, please update on other schedulers if needed...
+            algorithms[i]->schedule(); // ! Count the amount of processes created in schedule if needed!
 
-            // todo: change all schedulers to use infinite_mode variable instead
-            // todo: adjust this "max process" or whatever
             SchedulerStats::collect(Scheduler::get_current_time(),
                                     Scheduler::get_cpu_time(),
                                     algorithms[i]->ready_queue_to_vector(),
                                     Scheduler::get_terminated_processes());
 
+            // For instant context switch (no overhead)
             if (Scheduler::to_schedule())
             {
                 Scheduler::reset_schedule_new();
@@ -149,6 +163,6 @@ void simulator()
                 stop_sched = true;
             }
         }
-        // // might delete this -> std::cout << "Simulation stopped" << std::endl; 
+        // // might delete this -> std::cout << "Simulation stopped" << std::endl;
     }
 }

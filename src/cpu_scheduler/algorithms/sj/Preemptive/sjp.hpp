@@ -11,10 +11,11 @@ class ShortestJobPreemptive : public Scheduler
 {
 private:
     std::priority_queue<PCB, std::vector<PCB>, BurstTimeComparator> ready;
-    int max_processes = INT_MAX;
     int generated_processes = 0;
 
 public:
+    int get_ready_size() { return ready.size(); }
+
     bool is_ready_empty() override;
     void add_pcb(PCB pcb) override;
     void remove_pcb() override;
@@ -26,7 +27,6 @@ public:
     std::vector<PCB> ready_queue_to_vector() override;
     void generate_pcb_queue(int num_processes) override;
 
-    void set_max_processes(int max) { max_processes = max; }
     std::string get_scheduler_name() override { return "Shortest Job First (Preemptive)"; }
     bool real_time() override { return false; }
 };

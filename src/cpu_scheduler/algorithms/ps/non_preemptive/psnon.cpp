@@ -41,17 +41,7 @@ void NonPreemptivePriority::schedule()
 {
     if (stop_sched)
         return;
-    if (max_processes == INT_MAX) {
-        int queue_size = ready.size();
-        double prob = 1.0 / (1 + queue_size * 0.5);
-        if (rand() / double(RAND_MAX) < prob) {
-            double e = (rng.exponential(0.5));
-            if (e > 1.5 && e < 4.5) {
-                PCB pcb = pg.generatePCB(Scheduler::get_current_time());
-                add_pcb(pcb);
-            }
-        }
-    }
+    
     if (running_process != nullptr)
     {
         running_process->dec_exec_time();
@@ -80,7 +70,6 @@ void NonPreemptivePriority::generate_pcb_queue(int num_processes) {
         PCB pcb = pg.generatePCB(Scheduler::get_current_time());
         add_pcb(pcb);
     }
-    max_processes = num_processes;
     generated_processes = num_processes;
 }
 
@@ -102,7 +91,6 @@ void NonPreemptivePriority::reset() {
     while (!ready.empty()) {
         ready.pop();
     }
-    max_processes = INT_MAX;
     generated_processes = 0;
     running_process = nullptr;
     Scheduler::reset();

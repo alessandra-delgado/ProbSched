@@ -21,6 +21,7 @@ private:
     int generated_processes = 0;
 
 public:
+    int get_ready_size() { return ready.size(); }
     bool is_ready_empty() override;
     void add_pcb(PCB pcb) override;
     void remove_pcb() override;
@@ -30,6 +31,6 @@ public:
     void reset() override;
     std::vector<PCB> ready_queue_to_vector() override;
     std::string get_scheduler_name() override { return "First Come First Served"; }
-	virtual bool real_time() override { return false; }
+    virtual bool real_time() override { return false; }
     void generate_pcb_queue(int count) override;
 };
