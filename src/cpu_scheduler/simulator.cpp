@@ -37,86 +37,92 @@ void simulator()
     signal(SIGINT, handle_sigint);
     while (true)
     {
-         reset_program_state();
-    stop_sched = false;
+        reset_program_state();
+        stop_sched = false;
 
-        // ! 1 - Escolher um algoritmo, tipo de geração de processo...
+        // ! 1 - Select an algorithm
         int i = pick_algorithm();
         if (i >= (int)algorithms.size())
             break;
 
-        // ! 2 - Selecionar modo de geração
+        // ! 2 - Select generation mode
         int gen_mode = select_process_generation();
         if (gen_mode == 3) // Back selected
             continue;
 
         int process_count = -1; // -1 significa infinito
-        if (gen_mode == 1)
-        { // Número específico selecionado
-            process_count = get_process_count();
-            algorithms[i]->generate_pcb_queue(process_count);
-        }
-        if(gen_mode == 2){
-            // Check if algorithm is real time
-            // set the vector to be the read processes
-            load(pick_file(algorithms[i]->real_time()));
-        }
 
+        // ! 3 - Reset algorithm before applying settings
+        algorithms[i]->reset();
+
+        // ! 4 - Applying settings ------------------------------------------------------------------------------------
+        // * Apply round robbin's time quantum before other any changes ***********************************************
         if (i == 5)
         { // Round Robin index
             int selected_quantum = get_time_quantum();
             dynamic_cast<RoundRobin *>(algorithms[i].get())->set_time_quantum(selected_quantum);
-
-            std::cout << "DEBUG: Time quantum set to " << selected_quantum << std::endl;
         }
-
-        // reset algoritmo especifico
-        algorithms[i]->reset();
-
-        if (gen_mode == 1)
-        { // Modo número específico            
-            if (i == 5)
-            { // Round Robin
-                dynamic_cast<RoundRobin *>(algorithms[i].get())->set_max_processes(process_count);
-                dynamic_cast<RoundRobin *>(algorithms[i].get())->disable_random_generation();
-            }
-            else if (algorithms[i]->real_time())
-            { // Algoritmos de tempo real
-                algorithms[i]->generate_pcb_queue(3);
-                SchedulerStats::set_cpu_utilization_bounds(algorithms[i]->ready_queue_to_vector());
-            }
-        }
-        else
-        { // Modo infinito
+        // * GEN MODE 0: infinite process generation ******************************************************************
+        if (gen_mode == 0)
+        {
             if (i == 5)
             { // Round Robin
                 dynamic_cast<RoundRobin *>(algorithms[i].get())->set_max_processes(INT_MAX);
-                dynamic_cast<RoundRobin *>(algorithms[i].get())->enable_random_generation();
+                dynamic_cast<RoundRobin *>(algorithms[i].get())->enable_random_generation(); // ? why complicate..?
+            }
+            if (algorithms[i]->real_time())
+            {
+                algorithms[i]->generate_pcb_queue(3);
+                SchedulerStats::set_cpu_utilization_bounds(algorithms[i]->ready_queue_to_vector());
+            }
+            else{
+                Scheduler::set_infinite_mode();
             }
         }
-        // cont generated processes(especific number)
-        int generated_processes = (gen_mode == 1 && i < 6) ? process_count : 0;
-        int processes_created = 0;
-
-        while (!stop_sched) // Scheduling until CTRL + c
+        // * GEN MODE 1: Generate a list of processes to be sent to the ready queue ***********************************
+        if (gen_mode == 1)
         {
-            if (i < 6 && (gen_mode == 0 || processes_created < generated_processes))
+            process_count = get_process_count();
+            if (algorithms[i]->real_time())
             {
-                algorithms[i]->schedule();
-                if (gen_mode == 1)
-                {
-                    processes_created++;
-                }
+                algorithms[i]->generate_pcb_queue(process_count);
+                SchedulerStats::set_cpu_utilization_bounds(algorithms[i]->ready_queue_to_vector());
             }
             else
             {
-                algorithms[i]->schedule();
+                if (i == 5) // Catch round robin
+                {
+                    dynamic_cast<RoundRobin *>(algorithms[i].get())->set_max_processes(process_count);
+                    dynamic_cast<RoundRobin *>(algorithms[i].get())->disable_random_generation();
+                }
+                else
+                {
+                    algorithms[i]->generate_pcb_queue(process_count);
+                }
             }
+        }
+        // * GEN MODE 2: Load processes from a file *******************************************************************
+        if (gen_mode == 2)
+        {
+            // Check if algorithm is real time (in function) & load the processes from the file
+            load(pick_file(algorithms[i]->real_time()));
+        }
 
+        // ! 4 - Schedule loop
+        while (!stop_sched) // Scheduling until CTRL + c
+        {
+            if(gen_mode == 1 || gen_mode == 2)
+                algorithms[i]->load_to_ready();
+
+            algorithms[i]->schedule(); // ! Counted the amount of processes created in schedule if needed!
+            // todo: So far, all changes in scheduling logic were only made in fcfs, please update on other schedulers if needed...
+
+            // todo: adjust this "max process" or whatever
             SchedulerStats::collect(Scheduler::get_current_time(),
                                     Scheduler::get_cpu_time(),
                                     algorithms[i]->ready_queue_to_vector(),
                                     Scheduler::get_terminated_processes());
+
             if (Scheduler::to_schedule())
             {
                 Scheduler::reset_schedule_new();
@@ -124,25 +130,23 @@ void simulator()
             }
             else
             {
+                // Display stats for real time algorithms
                 if (!(algorithms[i]->real_time()))
                     SchedulerStats::display_stats(algorithms[i]->get_scheduler_name());
-                else
+                else // Diplsay stats for general algorithms
                     SchedulerStats::display_stats_real_time(algorithms[i]->get_scheduler_name());
+
                 std::this_thread::sleep_for(std::chrono::seconds(1)); // just so the screen is readable
                 Scheduler::increment_current_time();
             }
-            // in especific mode, stop when processes finish
-            if (gen_mode == 1 && i < 6 &&
-                algorithms[i]->is_ready_empty() &&
-                Scheduler::get_running_process() == nullptr &&
-                processes_created >= generated_processes)
+            // When all processes are done executing in GEN MODE 1
+            if (gen_mode == 1 && (!algorithms[i]->real_time()) && algorithms[i]->is_ready_empty() && Scheduler::get_running_process() == nullptr && Scheduler::get_loaded_processes_size() == 0)
             {
                 std::cout << "All processes completed. Simulation ending..." << std::endl;
                 std::this_thread::sleep_for(std::chrono::seconds(3));
                 stop_sched = true;
             }
         }
-
-        std::cout << "Simulation stopped" << std::endl;
+        // // might delete this -> std::cout << "Simulation stopped" << std::endl; 
     }
 }

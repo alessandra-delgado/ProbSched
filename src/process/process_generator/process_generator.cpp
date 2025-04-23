@@ -67,7 +67,7 @@ PCB ProcessGenerator::generatePCBInterArrival(int current_time)
 	int burst = rng.normal(burst_mean, burst_stddev);
 
 	pcb.set_arrival_time(arrival);
-	pcb.set_burst_time(burst);
+	pcb.set_burst_time(burst);	
 	pcb.set_exec_time(burst);
 	pcb.set_priority(rng.uniform(1, max_priority));
 	pcb.set_deadline(arrival + rng.uniform(1, deadline_range));

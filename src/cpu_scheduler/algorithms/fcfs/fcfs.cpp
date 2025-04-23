@@ -42,7 +42,7 @@ void FCFS::schedule()
 {
     if (stop_sched)
         return;
-    load_to_ready();
+
     if (max_processes == INT_MAX)
     { // Modo infinito
         int queue_size = ready.size();
@@ -54,6 +54,7 @@ void FCFS::schedule()
             {
                 PCB pcb = pg.generatePCB(Scheduler::get_current_time());
                 add_pcb(pcb);
+                created_processes++; // todo: <- this was the only thing added i think -- REMOVE IF NEEDED!
             }
         }
     }
@@ -68,6 +69,7 @@ void FCFS::schedule()
             running_process->set_completion_time(current_time);
             terminated_processes.push_back(*running_process);
             running_process = nullptr;
+            schedule_new = true;
             return; // choose process on the same instant
         }
     }
@@ -104,7 +106,7 @@ void FCFS::reset()
     {
         ready.pop();
     }
-    max_processes = INT_MAX;
+    max_processes = INT_MAX; // ! - SHOULD BE IN SCHEDULER!!!!!
     generated_processes = 0;
     running_process = nullptr;
 }
@@ -114,12 +116,16 @@ void FCFS::load_to_ready()
     if (loaded_processes.empty())
         return;
 
-    for (int i = 0; i < (int)loaded_processes.size(); i++)
+    for (int i = 0; i < (int)loaded_processes.size(); )
     {
-        if(loaded_processes[i].get_arrival_time() == current_time){
-            add_pcb(Scheduler::loaded_processes[i]);
-            loaded_processes.erase(loaded_processes.begin()+i);
+        if (loaded_processes[i].get_arrival_time() == current_time)
+        {
+            add_pcb(loaded_processes[i]);
+            loaded_processes.erase(loaded_processes.begin() + i);
         }
-        // fingers crossed this works smoothly :')
+        else
+        {
+            ++i;
+        }
     }
 }

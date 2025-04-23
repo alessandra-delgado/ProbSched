@@ -18,7 +18,6 @@ class FCFS : public Scheduler
 {
 private:
     std::priority_queue<PCB, std::vector<PCB>, ArrivalTimeComparator> ready;
-    int max_processes = INT_MAX;
     int generated_processes = 0;
 
 public:

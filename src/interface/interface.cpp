@@ -146,7 +146,9 @@ int select_process_generation()
                                              menu->Render(),
                                              separator(),
                                              hbox({text("Current mode: "),
-                                                   (selected == 0 ? text("Infinite") | color(Color::Green) : text("Specific number") | color(Color::Yellow))})}) |
+                                                   (selected == 0 ? text("Infinite") | color(Color::Green) : text("Specific number") | color(Color::Yellow))}),
+                                             separator(),
+                                             text("Warning: If you pick 'infinite' on any real time algorithm, the maximum number of processes generated will be of 3.") | bgcolor(Color::Red) | color(Color::Black) | center}) |
                                        border | center; });
     auto handler = CatchEvent(main_menu, [&](Event event)
                               {
@@ -193,27 +195,28 @@ int get_process_count()
 
 std::string pick_file(bool real_time)
 {
-    std::string path = "inputs/" + real_time ? "real_time" : "general";
+    std::string s = real_time ? "real_time" : "general";
+    std::string path = "./inputs/" + s + "/";
     std::string file = ""; // Valor padrão
     bool valid = false;
     std::string input;
 
     auto screen = ScreenInteractive::Fullscreen();
 
-    auto component = Container::Vertical({Input(&input, "Enter file name: "),
+    auto input_component = Input(&input, "Enter file name:");
+    input_component->TakeFocus();
+
+    auto component = Container::Vertical({input_component,
                                           Button("Confirm", [&]
                                                  {
-            try {
-                file = path + input;
-                std::ifstream f(file.c_str());
-                if(f.good())
-                    valid = true;
-                    screen.Exit();
-            } catch (...) {
-                // Input inválido
-            } })});
+        file = path + "/" + input; // maybe path + "/" + input?
+        std::ifstream f(file);
+        if (f.is_open()) {
+            valid = true;
+            screen.Exit();
+        } })});
     auto renderer = Renderer(component, [&]
-                             { return vbox({text("Process Count Selection") | bold | hcenter,
+                             { return vbox({text("Select from a file") | bold | hcenter,
                                             separator(),
                                             component->Render(),
                                             separator(),

@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include <climits>
 #include "../process/PCB.hpp"
 #include "../process/process_generator/process_generator.hpp"
 
@@ -16,6 +17,8 @@ protected:
 	static inline std::unique_ptr<PCB> running_process;
 	static inline bool schedule_new = false;
 	static inline std::vector<PCB> loaded_processes;
+	static inline int created_processes = 0; // added recently might have to remove, seems useless
+	static inline int max_processes = -1;
 
 public:
 	inline static void set_current_time(int t) { current_time = t; }
@@ -33,6 +36,8 @@ public:
 	inline static void clear_processes_terminated() { terminated_processes.clear(); }
 	inline static void reset_processes_running() { running_process.reset(); }
 	inline static void set_loaded_processes(std::vector<PCB> p) { loaded_processes = p; }
+	inline static int get_loaded_processes_size() { return loaded_processes.size(); }
+	inline static void set_infinite_mode() { max_processes = INT_MAX; }
 
 	// Here, functions are made pure virtual functions,
 	// which forces the implementation of the following functions
@@ -42,7 +47,6 @@ public:
 	virtual void remove_pcb() {}
 	virtual const PCB get_next_pcb() { return PCB(); }
     virtual void load_to_ready() {};
-
 
 	virtual void generate_pcb_queue(int) {}
 	virtual void reset()
