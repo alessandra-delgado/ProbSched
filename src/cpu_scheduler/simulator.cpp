@@ -95,6 +95,7 @@ void simulator()
                 {
                     dynamic_cast<RoundRobin *>(algorithms[i].get())->set_max_processes(process_count);
                     dynamic_cast<RoundRobin *>(algorithms[i].get())->disable_random_generation();
+                    dynamic_cast<RoundRobin *>(algorithms[i].get())->generate_pcb_queue(process_count);
                 }
                 else
                 {
