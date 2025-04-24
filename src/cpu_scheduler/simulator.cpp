@@ -47,10 +47,11 @@ void simulator()
 
         // ! 2 - Select generation mode
         int gen_mode = select_process_generation();
-        if (gen_mode == 3) // Back selected
+        if (gen_mode == 4) // Back selected
             continue;
 
         int process_count = -1; // -1 significa infinito
+        int execution_time_limit = -1; // -1 significa sem limite de tempo
 
         // ! 3 - Reset algorithm before applying settings
         algorithms[i]->reset();
@@ -110,7 +111,19 @@ void simulator()
             load(pick_file(algorithms[i]->real_time()));
         }
 
-        // ! 4 - Schedule loop
+        // * GEN MODE 3: Run for specific execution time *******************************************************************
+        if (gen_mode == 3){
+            execution_time_limit = get_execution_time();
+            if (!algorithms[i]->real_time()){
+                Scheduler::set_infinite_mode(true); 
+            }else{
+                // real time algorithms , generat 3 processes
+                algorithms[i]->generate_pcb_queue(3);
+                SchedulerStats::set_cpu_utilization_bounds(algorithms[i]->ready_queue_to_vector());
+            }
+        }
+
+        // ! 5 - Schedule loop
         while (!stop_sched) // Scheduling until CTRL + c
         {
             if(gen_mode == 1 || gen_mode == 2)
@@ -141,6 +154,12 @@ void simulator()
 
                 std::this_thread::sleep_for(std::chrono::seconds(1)); // just so the screen is readable
                 Scheduler::increment_current_time();
+            }
+
+            if (gen_mode == 3 && Scheduler::get_current_time() >= execution_time_limit){
+                std::cout << "Execution time limit reached. Simulation ending..." << std::endl;
+                std::this_thread::sleep_for(std::chrono::seconds(3));
+                stop_sched = true;
             }
             // When all processes are done executing in GEN MODE 1 or 2
             if ((gen_mode == 1 || gen_mode == 2) && (!algorithms[i]->real_time()) && algorithms[i]->is_ready_empty() && Scheduler::get_running_process() == nullptr && Scheduler::get_loaded_processes_size() == 0)
