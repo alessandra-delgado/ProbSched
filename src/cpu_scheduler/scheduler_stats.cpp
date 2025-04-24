@@ -407,21 +407,8 @@ void SchedulerStats::display_stats_real_time(std::string title)
             hbox({text("CPU Utilization: "),
                   text(ss.str()) | color(util_color)}));
 
-        // Show the average waiting time
-        current_process_elements.push_back(
-            hbox({text("Average Waiting Time: "),
-                  text(std::to_string(average_waiting_time)) | color(Color::Yellow)}));
-
-        // Show the average turnaround time
-        current_process_elements.push_back(
-            hbox({text("Average Turnaround Time: "),
-                  text(std::to_string(average_turnaround_time)) | color(Color::Yellow)}));
-
-        // Show throughput
-        current_process_elements.push_back(
-            hbox({text("Throughput: "),
-                  text(std::to_string(throughput)) | color(Color::Yellow)}));
-
+        // todo: add response time and deadline miss ratio!
+        
         // Show cpu util bounds
         current_process_elements.push_back(
             hbox({text("CPU utilization Bound: "),

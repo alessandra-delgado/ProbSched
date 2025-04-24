@@ -16,7 +16,10 @@ void EarliestDeadlineFirst::schedule()
 {
     if (stop_sched)
         return;
-
+    if (running_process)
+    {
+        cpu_time++;
+    }
     // * 1 - Release any new tasks that have arrived at current_time
     for (auto &task : all_tasks)
     {
@@ -41,7 +44,7 @@ void EarliestDeadlineFirst::schedule()
         outfile << task.get_name() << " " << task.get_deadline() << std::endl;
 
         // Skip tasks that aren't ready or have completed execution
-        if (task.get_arrival_time() > current_time || task.get_exec_time() <= 0)
+        if (task.get_arrival_time() > current_time || task.get_exec_time() < 0)
         {
             continue;
         }
@@ -69,6 +72,11 @@ void EarliestDeadlineFirst::schedule()
     // * 4 - Misses
     for (auto &task : all_tasks)
     {
+        if (running_process && (task.get_pid() == running_process->get_pid() && task.get_exec_time() < 0))
+        {
+            schedule_new = true;
+            running_process = nullptr;
+        }
         // Task gets new instance at its deadline
         if (current_time == task.get_deadline())
         {
@@ -96,8 +104,10 @@ std::vector<PCB> EarliestDeadlineFirst::ready_queue_to_vector()
     return all_tasks;
 }
 
-void EarliestDeadlineFirst::generate_pcb_queue(int n) {
-    if (n <= 0) n = max_processes; 
+void EarliestDeadlineFirst::generate_pcb_queue(int n)
+{
+    if (n <= 0)
+        n = max_processes;
     all_tasks = pg.generatePeriodicPCBList(n);
 }
 
@@ -115,9 +125,10 @@ void EarliestDeadlineFirst::load_to_ready()
 
     for (int i = 0; i < (int)loaded_processes.size(); i++)
     {
-        if(loaded_processes[i].get_arrival_time() == current_time){
+        if (loaded_processes[i].get_arrival_time() == current_time)
+        {
             all_tasks.push_back(loaded_processes[i]);
-            loaded_processes.erase(loaded_processes.begin()+i);
+            loaded_processes.erase(loaded_processes.begin() + i);
         }
         // fingers crossed this works smoothly :')
     }
