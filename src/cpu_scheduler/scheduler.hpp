@@ -21,7 +21,7 @@ protected:
 	static inline bool infinite_mode = false;
 
 public:
-	inline static RandomGenerator get_rng() { return rng; }
+	inline static double get_epsilon() { return rng.exponential(0.5); }
 	inline static void set_current_time(int t) { current_time = t; }
 	inline static int get_current_time() { return current_time; }
 	inline static void reset_current_time() { current_time = 0; }
@@ -39,7 +39,7 @@ public:
 	inline static void reset_processes_running() { running_process.reset(); }
 	inline static void set_loaded_processes(std::vector<PCB> p) { loaded_processes = p; }
 	inline static int get_loaded_processes_size() { return loaded_processes.size(); }
-	virtual PCB generatePCB(double current_time) { return pg.generatePCB(current_time); }
+	virtual PCB genPCB(double current_time) { return pg.generatePCB(current_time); }
 
 	inline static void set_infinite_mode(bool b) { infinite_mode = b; }
 

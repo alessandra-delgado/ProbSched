@@ -13,6 +13,7 @@
 #include "../process/process_generator/process_generator.hpp"
 #include "../process/process_generator/random_generator.hpp"
 
+#include <fstream>
 std::atomic<bool> stop_sched(false);
 
 // Handle CTRL + C
@@ -47,6 +48,7 @@ void simulator()
 
         // ! 2 - Select generation mode
         int gen_mode = select_process_generation();
+
         if (gen_mode == 3) // Back selected
             continue;
 
@@ -110,24 +112,32 @@ void simulator()
             load(pick_file(algorithms[i]->real_time()), algorithms[i]->real_time());
         }
 
+        std::ofstream outfile;
         // ! 4 - Schedule loop
         while (!stop_sched) // Scheduling until CTRL + c
         {
             if (gen_mode == 0)
             {
+                outfile.open("./epsilon.txt", std::ios_base::app); // append instead of overwrite
+
+                outfile << "===============================================" << std::endl;
                 int queue_size = algorithms[i]->get_ready_size();
                 double prob = 1.0 / (1 + queue_size * 0.5);
                 if (rand() / double(RAND_MAX) < prob)
                 {
-                    double e = (Scheduler::get_rng().exponential(0.5));
+                    double e = Scheduler::get_epsilon();
+                    outfile << "e: " << e << std::endl;
+
                     if (e > 1.5 && e < 4.5)
                     {
-                        PCB pcb = algorithms[i]->generatePCB(Scheduler::get_current_time());
+                        PCB pcb = algorithms[i]->genPCB(Scheduler::get_current_time());
                         algorithms[i]->add_pcb(pcb);
                         Scheduler::inc_created_processes();
                     }
                 }
             }
+            outfile << "===============================================" << std::endl;
+            outfile.close();
             if (gen_mode == 1 || gen_mode == 2)
                 algorithms[i]->load_to_ready();
 
