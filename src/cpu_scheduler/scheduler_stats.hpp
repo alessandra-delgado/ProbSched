@@ -24,10 +24,13 @@ private:
 
     inline static std::vector<PCB> terminated_processes; // get amount of completed processes with size()
     inline static std::vector<PCB> ready_queue;
-
+    
     // For real time
     inline static double cpu_util_bound = 0.0;
     inline static double liu_ley_bound = 0.0;
+
+    inline static bool reset_graph_history = false;
+
 
 public:
     static void collect(
@@ -57,6 +60,8 @@ public:
         deadline_misses = 0;
         terminated_processes.clear();
         ready_queue.clear();
+
+        reset_graph_history = true;
     }
 
     // For real time
