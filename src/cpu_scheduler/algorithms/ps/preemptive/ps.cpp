@@ -37,18 +37,6 @@ void PriorityPreemptive::schedule()
     if (stop_sched)
         return;
 
-    // Soft cap on process generation (dynamic -> uses ready queue size)
-    if (max_processes == INT_MAX) {
-        int queue_size = ready.size();
-        double prob = 1.0 / (1 + queue_size * 0.5);
-        if (rand() / double(RAND_MAX) < prob) {
-            double e = (rng.exponential(0.5));
-            if (e > 1.5 && e < 4.5) {
-                PCB pcb = pg.generatePCB(Scheduler::get_current_time());
-                add_pcb(pcb);
-            }
-        }
-    }
     // If there is a current process running
     if (running_process != nullptr)
     {
@@ -94,7 +82,6 @@ void PriorityPreemptive::generate_pcb_queue(int num_processes) {
         PCB pcb = pg.generatePCB(Scheduler::get_current_time());
         add_pcb(pcb);
     }
-    max_processes = num_processes;
     generated_processes = num_processes;
 }
 
@@ -114,8 +101,22 @@ void PriorityPreemptive::reset() {
     while (!ready.empty()) {
         ready.pop();
     }
-    max_processes = INT_MAX;
     generated_processes = 0;
     running_process = nullptr;
     Scheduler::reset();
+}
+
+void PriorityPreemptive::load_to_ready()
+{
+    if (loaded_processes.empty())
+        return;
+
+    for (int i = 0; i < (int)loaded_processes.size(); i++)
+    {
+        if(loaded_processes[i].get_arrival_time() == current_time){
+            add_pcb(Scheduler::loaded_processes[i]);
+            loaded_processes.erase(loaded_processes.begin()+i);
+        }
+        // fingers crossed this works smoothly :')
+    }
 }

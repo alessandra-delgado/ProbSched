@@ -330,7 +330,9 @@ void SchedulerStats::display_stats_real_time(std::string title)
         // Add headers for ready queue
         table_content.push_back({text("Process Name") | bold | color(Color::Blue),
                                  text("Period (Priority)") | bold | color(Color::Blue),
+                                 text("Arrival Time") | bold | color(Color::Blue),
                                  text("Burst Time") | bold | color(Color::Blue),
+                                 text("Next Deadline") | bold | color(Color::Blue),
                                  text("Deadline Misses") | bold | color(Color::Blue)});
 
         const size_t MAX_DISPLAY_PROCESSES = 15;
@@ -342,31 +344,37 @@ void SchedulerStats::display_stats_real_time(std::string title)
             const auto &pcb = ready_queue[i];
             table_content.push_back({text(pcb.get_name()) | color(Color::Green),
                                      text(std::to_string(pcb.get_period())),
+                                     text(std::to_string(pcb.get_arrival_time())),
                                      text(std::to_string(pcb.get_burst_time())),
+                                     text(std::to_string(pcb.get_deadline())),
                                      text(std::to_string(pcb.get_deadline_misses())) | color(Color::Red)});
         }
 
         for (const auto &row : table_content)
         {
             table_rows.push_back(hbox({text("│ "),
-                                       row[0] | size(WIDTH, EQUAL, 20),
+                                       row[0] | size(WIDTH, EQUAL, 15),
                                        text(" │ "),
                                        row[1] | size(WIDTH, EQUAL, 20),
                                        text(" │ "),
-                                       row[2] | size(WIDTH, EQUAL, 20),
+                                       row[2] | size(WIDTH, EQUAL, 15),
                                        text(" │ "),
-                                       row[3] | size(WIDTH, EQUAL, 20),
+                                       row[3] | size(WIDTH, EQUAL, 15),
+                                       text(" │ "),
+                                       row[4] | size(WIDTH, EQUAL, 15),
+                                       text(" │ "),
+                                       row[5] | size(WIDTH, EQUAL, 20),
                                        text(" │")}));
 
             if (&row == &table_content[0])
             {
-                table_rows.push_back(text("├──────────────────────┼──────────────────────┼──────────────────────┼──────────────────────┤"));
+                table_rows.push_back(text("├─────────────────┼──────────────────────┼─────────────────┼─────────────────┼─────────────────┼──────────────────────┤"));
             }
         }
 
-        table_with_border.push_back(text("┌──────────────────────┬──────────────────────┬──────────────────────┬──────────────────────┐"));
+        table_with_border.push_back(text( "┌─────────────────┬──────────────────────┬─────────────────┬─────────────────┬─────────────────┬──────────────────────┐"));
         table_with_border.insert(table_with_border.end(), table_rows.begin(), table_rows.end());
-        table_with_border.push_back(text("└──────────────────────┴──────────────────────┴──────────────────────┴──────────────────────┘"));
+        table_with_border.push_back(text( "└─────────────────┴──────────────────────┴─────────────────┴─────────────────┴─────────────────┴──────────────────────┘"));
 
         if (hidden_processes > 0)
         {
@@ -405,7 +413,7 @@ void SchedulerStats::display_stats_real_time(std::string title)
                                                                         : Color::Red;
 
         current_process_elements.push_back(
-            hbox({text("CPU utilization: "),
+            hbox({text("CPU Utilization: "),
                   text(ss.str()) | color(util_color)}));
 
         // Show the average waiting time
@@ -422,6 +430,14 @@ void SchedulerStats::display_stats_real_time(std::string title)
         current_process_elements.push_back(
             hbox({text("Throughput: "),
                   text(std::to_string(throughput)) | color(Color::Yellow)}));
+
+        // Show cpu util bounds
+        current_process_elements.push_back(
+            hbox({text("CPU utilization Bound: "),
+                  text(std::to_string(cpu_util_bound))}));
+        current_process_elements.push_back(
+            hbox((text("Liu & Leyland Bound: ")),
+                 text(std::to_string(liu_ley_bound))));
 
         // Create Gantt chart elements
         gantt_elements.push_back(text("Gantt Chart of last 60 seconds") | center | bold);
@@ -510,11 +526,11 @@ void SchedulerStats::display_stats_real_time(std::string title)
         return vbox({hbox({text("Scheduler Statistics - " + title) | bold | center | flex, text("  ")}) |
                          color(Color::White) | bgcolor(Color::Blue),
 
-                     vbox({hbox({vbox(current_process_elements) | border | flex| size(HEIGHT, EQUAL, 12),
+                     vbox({hbox({vbox(current_process_elements) | border | flex | size(HEIGHT, EQUAL, 14),
                                  vbox(gantt_elements) | border | flex}) |
-                               size(HEIGHT, LESS_THAN, 20), // might have to change height
+                               size(HEIGHT, LESS_THAN, 23), // might have to change height
 
-                           hbox({vbox({text("Ready Queue") | bold | center,
+                           hbox({vbox({text("Tasks") | bold | center,
                                        center(vbox(table_with_border))}) |
                                  flex}) |
                                border,

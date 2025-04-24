@@ -43,17 +43,7 @@ void FCFS::schedule()
     if (stop_sched)
         return;
 
-    if (max_processes == INT_MAX) { // Modo infinito
-        int queue_size = ready.size();
-        double prob = 1.0 / (1 + queue_size * 0.5);
-        if (rand() / double(RAND_MAX) < prob) {
-            double e = (rng.exponential(0.5));
-            if (e > 1.5 && e < 4.5) {
-                PCB pcb = pg.generatePCB(Scheduler::get_current_time());
-                add_pcb(pcb);
-            }
-        }
-    }
+    
     if (running_process != nullptr) // If there's a process running (pointer not null)
     {
 
@@ -65,7 +55,8 @@ void FCFS::schedule()
             running_process->set_completion_time(current_time);
             terminated_processes.push_back(*running_process);
             running_process = nullptr;
-            return;              // choose process on the same instant
+            schedule_new = true;
+            return; // choose process on the same instant
         }
     }
 
@@ -78,12 +69,9 @@ void FCFS::schedule()
     }
 }
 
-void FCFS::generate_pcb_queue(int count) {
-    for (int i = 0; i < count; ++i) {
-        PCB pcb = pg.generatePCB(Scheduler::get_current_time());
-        add_pcb(pcb);
-    }
-    max_processes = count; // Define o limite máximo
+void FCFS::generate_pcb_queue(int count)
+{
+    loaded_processes = pg.generatePCBListInterArrival(count);
 }
 
 std::vector<PCB> FCFS::ready_queue_to_vector()
@@ -97,11 +85,31 @@ std::vector<PCB> FCFS::ready_queue_to_vector()
     }
     return rq;
 }
-void FCFS::reset() {
-    while (!ready.empty()) {
+void FCFS::reset()
+{
+    while (!ready.empty())
+    {
         ready.pop();
     }
-    max_processes = INT_MAX;
     generated_processes = 0;
     running_process = nullptr;
+}
+
+void FCFS::load_to_ready()
+{
+    if (loaded_processes.empty())
+        return;
+
+    for (int i = 0; i < (int)loaded_processes.size(); )
+    {
+        if (loaded_processes[i].get_arrival_time() == current_time)
+        {
+            add_pcb(loaded_processes[i]);
+            loaded_processes.erase(loaded_processes.begin() + i);
+        }
+        else
+        {
+            ++i;
+        }
+    }
 }
