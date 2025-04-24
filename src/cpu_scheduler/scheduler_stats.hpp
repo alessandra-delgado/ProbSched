@@ -8,7 +8,7 @@ private:
     // For intermediate calculations
     inline static int total_turnaround_time = 0;
     inline static int total_waiting_time = 0;
-    inline static int total_response_time = 0; // ? might do it later
+    inline static int total_response_time = 0; // todo: add response time to RT stats
     inline static int total_utilization_time = 0;
 
     inline static int current_time = 0;
@@ -29,7 +29,11 @@ private:
     inline static double cpu_util_bound = 0.0;
     inline static double liu_ley_bound = 0.0;
 
-    inline static bool reset_graph_history = false;
+    // Static circular buffer to store process execution history
+    static const int HISTORY_SIZE = 60;
+    static inline std::vector<std::string> process_history;
+    static inline int history_index = 0;
+
 
 
 public:
@@ -61,7 +65,8 @@ public:
         terminated_processes.clear();
         ready_queue.clear();
 
-        reset_graph_history = true;
+        process_history = std::vector<std::string>(HISTORY_SIZE, "");
+        history_index = 0;
     }
 
     // For real time
