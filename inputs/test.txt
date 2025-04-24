@@ -7865,3 +7865,1903 @@ RT_Process_2 14
 RT_Process_3 19
 SELECTED HIGHEST_PRIORITY_TASK: RT_Process_1
 ===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+INC MISS: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+INC MISS: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+INC MISS: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+INC MISS: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+INC MISS: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+INC MISS: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+NEW HIGHEST_PRIORITY_TASK: etal
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: etal
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+NEW HIGHEST_PRIORITY_TASK: pah
+SELECTED HIGHEST_PRIORITY_TASK: pah
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: cenas
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================
+===============================================
+NEW CICLE
+cenas 30
+NEW HIGHEST_PRIORITY_TASK: cenas
+processo1 4
+NEW HIGHEST_PRIORITY_TASK: processo1
+etal 10
+pah 19
+SELECTED HIGHEST_PRIORITY_TASK: processo1
+===============================================

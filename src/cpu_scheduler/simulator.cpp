@@ -118,9 +118,6 @@ void simulator()
         {
             if (gen_mode == 0)
             {
-                outfile.open("./epsilon.txt", std::ios_base::app); // append instead of overwrite
-
-                outfile << "===============================================" << std::endl;
                 int queue_size = algorithms[i]->get_ready_size();
                 double prob = 1.0 / (1 + queue_size * 0.5);
                 if (rand() / double(RAND_MAX) < prob)
@@ -136,8 +133,6 @@ void simulator()
                     }
                 }
             }
-            outfile << "===============================================" << std::endl;
-            outfile.close();
             if (gen_mode == 1 || gen_mode == 2)
                 algorithms[i]->load_to_ready();
 

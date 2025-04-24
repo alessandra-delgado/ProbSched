@@ -4,7 +4,6 @@
 
 void load(std::string file, bool real_time)
 {
-    // todo i actually need to check if its real time or not i forgot xDD
     std::ifstream infile(file);
     std::vector<PCB> processes;
     PCB pcb;
