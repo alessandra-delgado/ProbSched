@@ -14,14 +14,10 @@
 
 using namespace ftxui;
 
+
+
 void SchedulerStats::display_stats(std::string title)
 {
-
-    // Static circular buffer to store process execution history
-    static const int HISTORY_SIZE = 60;
-    static std::vector<std::string> process_history(HISTORY_SIZE, "");
-    static int history_index = 0;
-
     // Record current running process in history
     const auto &running_process = Scheduler::get_running_process();
     if (running_process)
@@ -297,11 +293,6 @@ void SchedulerStats::display_stats(std::string title)
 
 void SchedulerStats::display_stats_real_time(std::string title)
 {
-    // Static circular buffer to store process execution history
-    static const int HISTORY_SIZE = 60;
-    static std::vector<std::string> process_history(HISTORY_SIZE, "");
-    static int history_index = 0;
-
     // Record current running process in history
     const auto &running_process = Scheduler::get_running_process();
     if (running_process)
@@ -416,21 +407,8 @@ void SchedulerStats::display_stats_real_time(std::string title)
             hbox({text("CPU Utilization: "),
                   text(ss.str()) | color(util_color)}));
 
-        // Show the average waiting time
-        current_process_elements.push_back(
-            hbox({text("Average Waiting Time: "),
-                  text(std::to_string(average_waiting_time)) | color(Color::Yellow)}));
-
-        // Show the average turnaround time
-        current_process_elements.push_back(
-            hbox({text("Average Turnaround Time: "),
-                  text(std::to_string(average_turnaround_time)) | color(Color::Yellow)}));
-
-        // Show throughput
-        current_process_elements.push_back(
-            hbox({text("Throughput: "),
-                  text(std::to_string(throughput)) | color(Color::Yellow)}));
-
+        // todo: add response time and deadline miss ratio!
+        
         // Show cpu util bounds
         current_process_elements.push_back(
             hbox({text("CPU utilization Bound: "),
@@ -602,30 +580,30 @@ void SchedulerStats::updateWaitingTime(int current_time)
     }
 }
 
-void SchedulerStats::updateTurnaroundTime(const std::vector<PCB> &terminated_processes)
-{
+void SchedulerStats::updateTurnaroundTime(const std::vector<PCB>& terminated) {
     total_turnaround_time = 0;
-    total_completed_processes = terminated_processes.size();
-
-    for (const auto &pcb : terminated_processes)
-    {
-        int turnaround_time = pcb.get_completion_time() - pcb.get_arrival_time();
-        total_turnaround_time += turnaround_time;
+    total_completed_processes = terminated.size();
+    
+    for (const auto& pcb : terminated) {
+        if (pcb.get_state() == ProcessState::Terminated) {
+            int turnaround = pcb.get_completion_time() - pcb.get_arrival_time();
+            total_turnaround_time += turnaround;
+        }
     }
-
-    if (total_completed_processes > 0)
-    {
-        average_turnaround_time = static_cast<float>(total_turnaround_time) / total_completed_processes;
-    }
-    else
-    {
-        average_turnaround_time = 0.0;
-    }
+    
+    average_turnaround_time = total_completed_processes > 0 
+        ? static_cast<float>(total_turnaround_time) / total_completed_processes 
+        : 0.0f;
 }
 
 void SchedulerStats::updateThroughput(int current_time)
 {
-    throughput = static_cast<float>(total_completed_processes) / current_time;
+    if (current_time > 0) {
+        // Calcula processos por 100 unidades de tempo 
+        throughput = static_cast<float>(total_completed_processes) / (current_time / 100.0f);
+    } else {
+        throughput = 0.0f;
+    }
 }
 
 void SchedulerStats::updateDeadlineMisses(const std::vector<PCB> &terminated_processes)

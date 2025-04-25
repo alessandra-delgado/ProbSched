@@ -1,5 +1,6 @@
 #include "process_generator.hpp"
 
+#include <fstream>
 ProcessGenerator::ProcessGenerator(double lambda, double mean_burst, double stddev_burst, int max_prio, int dl_range)
 {
 	arrival_rate = lambda;
@@ -35,11 +36,12 @@ PCB ProcessGenerator::generatePCBRealTime()
 	pcb.set_burst_time(burst);
 	pcb.set_exec_time(burst);
 
-	//int arrival = rng.uniform(0, 10);
+	// int arrival = rng.uniform(0, 10);
 	pcb.set_arrival_time(0);
 
 	int candidate_period;
-	do {
+	do
+	{
 		candidate_period = rng.uniform(burst + 2, burst * 4);
 	} while (PCB::get_used_periods().count(candidate_period));
 
@@ -59,18 +61,32 @@ PCB ProcessGenerator::generatePCBRealTime()
 	return pcb;
 }
 
-
 PCB ProcessGenerator::generatePCBInterArrival(int current_time)
 {
 	PCB pcb; // new PCB
-	int arrival = current_time + static_cast<int>(rng.exponential(1.0 / arrival_rate));
+	// todo: remodel this with poisson? (it's what was asked after all...)
+	double r = rng.uniform(0.0, 1.0);
+	int interarrival;
+	if (r < 0.7)
+	{					  // 70% chance of processes arriving very close together
+		interarrival = 0; // Same time
+	}
+	else if (r < 0.9)
+	{ // 20% chance of small gap
+		interarrival = 1;
+	}
+	else
+	{ // 10% chance of slightly larger gap
+		interarrival = 1 + static_cast<int>(rng.exponential(0.5));
+	}
+	// Update current time
+	current_time += interarrival;
 	int burst = rng.normal(burst_mean, burst_stddev);
 
-	pcb.set_arrival_time(arrival);
-	pcb.set_burst_time(burst);	
+	pcb.set_arrival_time(current_time);
+	pcb.set_burst_time(burst);
 	pcb.set_exec_time(burst);
 	pcb.set_priority(rng.uniform(1, max_priority));
-	pcb.set_deadline(arrival + rng.uniform(1, deadline_range));
 	std::string name = "Process_" + std::to_string(pcb.get_pid());
 	pcb.set_name(name);
 
@@ -104,8 +120,20 @@ std::vector<PCB> ProcessGenerator::generatePCBListInterArrival(int num_processes
 	for (int i = 0; i < num_processes; ++i)
 	{
 		pcb = generatePCBInterArrival(current_time);
-		current_time += pcb.get_arrival_time();
+		std::ofstream outfile;
+		outfile.open("./test.txt", std::ios_base::app); // append instead of overwrite
+
+		// Update the current time to be the last arrival time
+		current_time = pcb.get_arrival_time();
 		pcbs.push_back(pcb);
+		double mean_interarrival = 10.0; // Adjust based on your needs
+		int interarrival = std::max(1, static_cast<int>(rng.exponential(1.0 / mean_interarrival)));
+
+		// Update the time
+		current_time += interarrival;
+
+		outfile << pcb.get_arrival_time() << std::endl;
+		outfile.close();
 	}
 
 	return pcbs;

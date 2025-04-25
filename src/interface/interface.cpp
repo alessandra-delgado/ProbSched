@@ -133,6 +133,7 @@ int select_process_generation()
         "Generate infinite number of processes",
         "Generate specific number of processes",
         "Load processes from file",
+        "Run for specific execution time",
         "Back"};
 
     int selected = 0;
@@ -227,6 +228,38 @@ std::string pick_file(bool real_time)
     return file;
 }
 
+int get_execution_time(){
+    int time = 30;
+    bool valid = false;
+    std::string input;
+
+    auto screen = ScreenInteractive::Fullscreen();
+
+    auto component = Container::Vertical({
+        Input(&input, "Enter execution time (10-1000): "),
+        Button("Confirm", [&] {
+            time = std::stoi(input);
+            if (time >= 10 && time <= 1000){
+                valid = true;
+                screen.Exit();
+            }
+        })
+    });
+
+    auto renderer = Renderer(component, [&] {
+        return vbox({
+            text("Execution Time Selected") | bold | hcenter,
+            separator(),
+            component->Render(),
+            separator(),
+            valid ? text("Will run for " + std::to_string(time) + " time units") | color(Color::Green) : text("Please enter a number between 10 and 1000") | color(Color::Red)
+        }) | border | center;
+    });
+
+    screen.Loop(renderer);
+    return time;
+}
+
 void reset_program_state()
 {
     std::cout << "\033[H\033[J";
@@ -236,7 +269,7 @@ void reset_program_state()
     Scheduler::reset_processes_running();
     Scheduler::reset_schedule_new();
     Scheduler::clear_processes_terminated();
-
+    Scheduler::set_infinite_mode(false);
     SchedulerStats::reset_stats();
     PCB::reset_pid();
 }
