@@ -133,7 +133,7 @@ void simulator()
                 double prob = 1.0 / (1 + queue_size * 0.5);
                 if (rand() / double(RAND_MAX) < prob)
                 {
-                    double e = Scheduler::get_epsilon();
+                    double e = ProcessGenerator::get_epsilon();
                     
                     if (e > 1.5 && e < 4.5)
                     {

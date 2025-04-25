@@ -19,6 +19,7 @@ int main_menu()
     reset_program_state();
     std::vector<std::string> menu_entries = {
         "Start Simulation",
+        "Settings",
         "About",
         "Quit"};
 
@@ -30,12 +31,13 @@ int main_menu()
     auto main_menu = Renderer(menu, [&]
                               {
                                   return vbox({
-                                             text("===== ProbSched - OS 24/25 =====") | bold | hcenter, // center title text
+                                             text("====== ProbSched - OS 24/25 ======") | bold | hcenter, // center title text
                                              separator(),
                                              menu->Render() | center, // center the menu itself
                                              separator(),
                                              selected == 0   ? text("Start the CPU scheduler")
-                                             : selected == 1 ? text("About ProbSched")
+                                             : selected == 1 ? text("Change process generation settings")
+                                             : selected == 2 ? text("About ProbSched")
                                                              : text("That's a self explanatory option") // exit selected
                                          }) |
                                          border | center; // center the vbox and add a border
@@ -52,6 +54,25 @@ int main_menu()
     screen.Loop(handler);
     return selected;
 }
+
+void settings()
+{
+    // * Change of plans -> process generation has the static atributes so then schedulers can use those values, and the user can update them at any time.
+    // * Goal: separate process generation from scheduler atributes!
+    // ! Note: remove rng from scheduler and put it in process generation because its literally not being used, only for epsilon...
+    // ! Second note: remove process generation from scheduler -> refactor a lotta files ( awww :/ )
+
+    // With these changes, we will then be able to:
+    // 1 - Dynamic/Run time generation    -- does not use distributions, only coin throwing
+    //    ~ Change rates for epsilon -> more processes being generated frequently or not
+
+    // 2 - Generate a list of X processes -- uses distributions
+    //    ~ Change burst mean
+    //    ~ Change burst std dev
+    //    ~ Change arrival rate
+    //    ~ Change max priority
+}
+
 int get_time_quantum()
 {
     std::cout << "\033[H\033[J"; // clear
@@ -97,7 +118,7 @@ int pick_algorithm()
         "Round Robin",
         "Rate Monotonic",
         "Earliest Deadline First",
-        "Quit"};
+        "Return to Main Menu"};
 
     int selected = 0;
     static int rr_quantum = 2; // default value
@@ -228,33 +249,30 @@ std::string pick_file(bool real_time)
     return file;
 }
 
-int get_execution_time(){
+int get_execution_time()
+{
     int time = 30;
     bool valid = false;
     std::string input;
 
     auto screen = ScreenInteractive::Fullscreen();
 
-    auto component = Container::Vertical({
-        Input(&input, "Enter execution time (10-1000): "),
-        Button("Confirm", [&] {
+    auto component = Container::Vertical({Input(&input, "Enter execution time (10-1000): "),
+                                          Button("Confirm", [&]
+                                                 {
             time = std::stoi(input);
             if (time >= 10 && time <= 1000){
                 valid = true;
                 screen.Exit();
-            }
-        })
-    });
+            } })});
 
-    auto renderer = Renderer(component, [&] {
-        return vbox({
-            text("Execution Time Selected") | bold | hcenter,
-            separator(),
-            component->Render(),
-            separator(),
-            valid ? text("Will run for " + std::to_string(time) + " time units") | color(Color::Green) : text("Please enter a number between 10 and 1000") | color(Color::Red)
-        }) | border | center;
-    });
+    auto renderer = Renderer(component, [&]
+                             { return vbox({text("Execution Time Selected") | bold | hcenter,
+                                            separator(),
+                                            component->Render(),
+                                            separator(),
+                                            valid ? text("Will run for " + std::to_string(time) + " time units") | color(Color::Green) : text("Please enter a number between 10 and 1000") | color(Color::Red)}) |
+                                      border | center; });
 
     screen.Loop(renderer);
     return time;

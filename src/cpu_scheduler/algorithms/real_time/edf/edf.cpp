@@ -108,7 +108,7 @@ void EarliestDeadlineFirst::generate_pcb_queue(int n)
 {
     if (n <= 0)
         n = max_processes;
-    all_tasks = pg.generatePeriodicPCBList(n);
+    all_tasks = ProcessGenerator::generatePeriodicPCBList(n);
 }
 
 void EarliestDeadlineFirst::reset()

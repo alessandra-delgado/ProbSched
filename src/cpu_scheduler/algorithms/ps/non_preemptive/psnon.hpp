@@ -14,7 +14,7 @@ private:
 	int generated_processes = 0;
 
 public:
-PCB genPCB(double current_time) override { return Scheduler::pg.generatePCB(current_time); }
+PCB genPCB(double current_time) override { return ProcessGenerator::generatePCB(current_time); }
 
 	int get_ready_size() { return ready.size(); }
 	bool is_ready_empty() override;	   // verify if queue is empty

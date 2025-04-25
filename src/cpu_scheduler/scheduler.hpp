@@ -9,8 +9,7 @@
 class Scheduler
 {
 protected:
-	ProcessGenerator pg;
-	static inline RandomGenerator rng;
+
 	static inline int current_time = 0;
 	static inline int cpu_time = 0;
 	static inline std::vector<PCB> terminated_processes;
@@ -21,7 +20,6 @@ protected:
 	static inline bool infinite_mode = false;
 
 public:
-	inline static double get_epsilon() { return rng.exponential(0.5); }
 	inline static void set_current_time(int t) { current_time = t; }
 	inline static int get_current_time() { return current_time; }
 	inline static void reset_current_time() { current_time = 0; }
@@ -41,7 +39,7 @@ public:
 	inline static void reset_processes_running() { running_process.reset(); }
 	inline static void set_loaded_processes(std::vector<PCB> p) { loaded_processes = p; }
 	inline static int get_loaded_processes_size() { return loaded_processes.size(); }
-	virtual PCB genPCB(double current_time) { return pg.generatePCB(current_time); }
+	virtual PCB genPCB(double current_time) { return ProcessGenerator::generatePCB(current_time); }
 
 	inline static void set_infinite_mode(bool b) { infinite_mode = b; }
 	inline static bool get_infinite_mode() { return infinite_mode; }
@@ -67,9 +65,7 @@ public:
 		reset_processes_running();
 		reset_current_time();
 	}
-	Scheduler(double lambda = 4.0, double mean_burst = 5.0, double stddev_burst = 1.5,
-			  int max_priority = 10, int dl_range = 100) : pg(lambda, mean_burst, stddev_burst, max_priority, dl_range) {}
-
+	
 	virtual std::vector<PCB> ready_queue_to_vector() = 0;
 	virtual void schedule() = 0;
 	virtual bool real_time() = 0;

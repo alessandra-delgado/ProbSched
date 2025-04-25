@@ -5,6 +5,7 @@
 
 #include "fcfs.hpp"
 #include "../../scheduler_stats.hpp"
+#include "../../../process/process_generator/process_generator.hpp"
 
 extern std::atomic<bool> stop_sched;
 bool FCFS::is_ready_empty()
@@ -71,7 +72,7 @@ void FCFS::schedule()
 
 void FCFS::generate_pcb_queue(int count)
 {
-    loaded_processes = pg.generatePCBListInterArrival(count);
+    loaded_processes = ProcessGenerator::generatePCBListInterArrival(count);
 }
 
 std::vector<PCB> FCFS::ready_queue_to_vector()
