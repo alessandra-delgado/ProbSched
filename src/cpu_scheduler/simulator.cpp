@@ -171,11 +171,11 @@ void simulator()
                 Scheduler::increment_current_time();
             }
             // When all processes are done executing in GEN MODE 1 or 2
-            if (((gen_mode == 1 || gen_mode == 2) && 
-                    (!algorithms[i]->real_time()) && 
-                    algorithms[i]->is_ready_empty() && 
-                    Scheduler::get_running_process() == nullptr && 
-                    Scheduler::get_loaded_processes_size() == 0)
+            if (((gen_mode == 1 || gen_mode == 2) 
+                    && (!algorithms[i]->real_time()) 
+                    && algorithms[i]->is_ready_empty()
+                    && Scheduler::get_running_process() == nullptr
+                    && Scheduler::get_loaded_processes_size() == 0)
                 || (gen_mode == 3 && Scheduler::get_current_time() >= execution_time_limit))
             {
                 std::cout << "All processes completed. Simulation ending..." << std::endl;
