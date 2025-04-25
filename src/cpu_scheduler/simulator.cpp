@@ -56,7 +56,6 @@ void simulator()
 
         // ! 3 - Reset algorithm before applying settings
         algorithms[i]->reset();
-        Scheduler::set_infinite_mode(false);
 
         // ! 4 - Applying settings ------------------------------------------------------------------------------------
         // * Apply round robbin's time quantum before other any changes ***********************************************
@@ -113,19 +112,17 @@ void simulator()
             load(pick_file(algorithms[i]->real_time()), algorithms[i]->real_time());
         }
 
-        std::ofstream outfile;
         // ! 4 - Schedule loop
         while (!stop_sched) // Scheduling until CTRL + c
         {
-            if (gen_mode == 0)
+            if (Scheduler::get_infinite_mode())
             {
                 int queue_size = algorithms[i]->get_ready_size();
                 double prob = 1.0 / (1 + queue_size * 0.5);
                 if (rand() / double(RAND_MAX) < prob)
                 {
                     double e = Scheduler::get_epsilon();
-                    outfile << "e: " << e << std::endl;
-
+                    
                     if (e > 1.5 && e < 4.5)
                     {
                         PCB pcb = algorithms[i]->genPCB(Scheduler::get_current_time());

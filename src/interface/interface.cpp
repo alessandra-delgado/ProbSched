@@ -236,7 +236,7 @@ void reset_program_state()
     Scheduler::reset_processes_running();
     Scheduler::reset_schedule_new();
     Scheduler::clear_processes_terminated();
-
+    Scheduler::set_infinite_mode(false);
     SchedulerStats::reset_stats();
     PCB::reset_pid();
 }

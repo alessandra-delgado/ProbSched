@@ -42,6 +42,8 @@ public:
 	virtual PCB genPCB(double current_time) { return pg.generatePCB(current_time); }
 
 	inline static void set_infinite_mode(bool b) { infinite_mode = b; }
+	inline static bool get_infinite_mode() { return infinite_mode; }
+
 
 	// Here, functions are made pure virtual functions,
 	// which forces the implementation of the following functions
@@ -63,7 +65,7 @@ public:
 		reset_processes_running();
 		reset_current_time();
 	}
-	Scheduler(double lambda = 0.5, double mean_burst = 5.0, double stddev_burst = 1.5,
+	Scheduler(double lambda = 4.0, double mean_burst = 5.0, double stddev_burst = 1.5,
 			  int max_priority = 10, int dl_range = 100) : pg(lambda, mean_burst, stddev_burst, max_priority, dl_range) {}
 
 	virtual std::vector<PCB> ready_queue_to_vector() = 0;
