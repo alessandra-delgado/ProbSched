@@ -29,6 +29,8 @@ public:
 	inline static bool to_schedule() { return schedule_new; }
 	inline static void reset_schedule_new() { schedule_new = false; }
 
+	inline static void reset_loaded_processes() { loaded_processes = std::vector<PCB>();}
+
 	inline static void inc_created_processes() { created_processes++; }
 	inline static int get_cpu_time() { return cpu_time; }
 	inline static void increment_current_time() { current_time++; }
