@@ -7,7 +7,7 @@ class ProcessGenerator
 {
 private:
 	static inline RandomGenerator rng;
-	inline static double gen_rate = 1.8; // For sim run-time: ~0.5-> really crowded; ~1.5->biiig interarrival
+	inline static double gen_rate = 0.8; // For sim run-time: ~0.5-> really crowded; ~1.5->biiig interarrival
 	inline static double arrival_rate = 4.0; // process arrival rate
 	inline static double burst_mean = 5.0;
 	inline static double burst_stddev = 1.5;
@@ -31,7 +31,6 @@ public:
 		burst_stddev = 1.5;
 		max_priority = 10;
 	}
-
 	static inline void set_gen_rate(double n) { gen_rate = n; }
 	static inline void set_arrival_rate(double n) { arrival_rate = n; }
 	static inline void set_burst_mean(double n) { burst_mean = n; }

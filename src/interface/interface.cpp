@@ -26,29 +26,29 @@ int main_menu(bool ignore_first_click = false)
         "About",
         "Quit"};
 
-    int selected = 0; 
-
+    int selected = 0;
 
     auto menu = Menu(&menu_entries, &selected);
-    
-    auto main_menu = Renderer(menu, [&]
-        {
-            return vbox({
-                text("====== ProbSched - OS 24/25 ======") | bold | hcenter, // center title text
-                separator(),
-                menu->Render() | center, // center the menu itself
-                separator(),
-                selected == 0   ? text("Start the CPU scheduler")
-                : selected == 1 ? text("Change process generation settings")
-                : selected == 2 ? text("About ProbSched")
-                : text("That's a self explanatory option") // exit selected
-            }) |
-            border | center; // center the vbox and add a border
-        });
-        
-        bool first_click_ignored = !ignore_first_click;
 
-        auto handler = CatchEvent(main_menu, [&](Event event) {
+    auto main_menu = Renderer(menu, [&]
+                              {
+                                  return vbox({
+                                             text("====== ProbSched - OS 24/25 ======") | bold | hcenter, // center title text
+                                             separator(),
+                                             menu->Render() | center, // center the menu itself
+                                             separator(),
+                                             selected == 0   ? text("Start the CPU scheduler")
+                                             : selected == 1 ? text("Change process generation settings")
+                                             : selected == 2 ? text("About ProbSched")
+                                                             : text("That's a self explanatory option") // exit selected
+                                         }) |
+                                         border | center; // center the vbox and add a border
+                              });
+
+    bool first_click_ignored = !ignore_first_click;
+
+    auto handler = CatchEvent(main_menu, [&](Event event)
+                              {
             // Keyboard Enter key
             if (event == Event::Return) {
                 screen.ExitLoopClosure()();  // Exit the loop after selection
@@ -67,24 +67,22 @@ int main_menu(bool ignore_first_click = false)
                 return true;
             }
             
-            return false;
-        });
-        
-        screen.Loop(handler);
-        
-        return selected;
-    }
-    
-    
-    void settings()
-    {
+            return false; });
+
+    screen.Loop(handler);
+
+    return selected;
+}
+
+void settings()
+{
     // * Change of plans -> process generation has the static atributes so then schedulers can use those values, and the user can update them at any time.
     // * Goal: separate process generation from scheduler atributes!
-    
+
     // With these changes, we will then be able to:
     // 1 - Dynamic/Run time generation    -- does not use distributions, only coin throwing
     //    ~ Change rates for epsilon -> more processes being generated frequently or not
-    
+
     // 2 - Generate a list of X processes -- uses distributions
     // For inter arrival - use poisson or exponential distribution?
     //    ~ Change arrival rate
@@ -93,8 +91,10 @@ int main_menu(bool ignore_first_click = false)
     //    ~ Change burst std dev (if normal)
     // For priority      - use uniform or weighted random sampling?
     //    ~ Change max priority
-    
+
     auto screen = ScreenInteractive::FullscreenPrimaryScreen();
+
+    std::string gen_rate_str = std::to_string(ProcessGenerator::get_gen_rate());
 
     std::string arrival_rate_str = std::to_string(ProcessGenerator::get_arrival_rate());
     std::string burst_mean_str = std::to_string(ProcessGenerator::get_burst_mean());
@@ -102,9 +102,6 @@ int main_menu(bool ignore_first_click = false)
     std::string max_priority_str = std::to_string(ProcessGenerator::get_max_priority());
 
     // Create radiobutton options
-    std::vector<std::string> mode_options = {"Dynamic Generation", "Pre-generated List"};
-    int mode_index = 0;
-
     std::vector<std::string> arrival_options = {"Poisson", "Exponential"};
     int arrival_index = 0;
 
@@ -116,13 +113,12 @@ int main_menu(bool ignore_first_click = false)
 
     // Create components ------------------------------------------------------------------
     // todo: dynamic generation opts ^^
-
-    auto mode_radio = Radiobox(&mode_options, &mode_index);
+    auto gen_rate_input = Input(&gen_rate_str, "") | size(WIDTH, EQUAL, 15);
     // For distribution parameters
-    auto arrival_rate_input = Input(&arrival_rate_str, "");
-    auto burst_mean_input = Input(&burst_mean_str, "");
-    auto burst_stddev_input = Input(&burst_stddev_str, "");
-    auto max_priority_input = Input(&max_priority_str, "");
+    auto arrival_rate_input = Input(&arrival_rate_str, "") | size(WIDTH, EQUAL, 15);
+    auto burst_mean_input = Input(&burst_mean_str, "") | size(WIDTH, EQUAL, 15);
+    auto burst_stddev_input = Input(&burst_stddev_str, "") | size(WIDTH, EQUAL, 15);
+    auto max_priority_input = Input(&max_priority_str, "") | size(WIDTH, EQUAL, 15);
 
     // For distribution modes
     auto arrival_radio = Radiobox(&arrival_options, &arrival_index);
@@ -133,6 +129,7 @@ int main_menu(bool ignore_first_click = false)
     auto apply_button = Button(&button_label, [&]
                                {
         try{
+            ProcessGenerator::set_gen_rate(std::stod(gen_rate_str));
             ProcessGenerator::set_arrival_rate(std::stod(arrival_rate_str));
             ProcessGenerator::set_burst_mean(std::stod(burst_mean_str));
             ProcessGenerator::set_burst_stddev(std::stod(burst_stddev_str));
@@ -159,7 +156,7 @@ int main_menu(bool ignore_first_click = false)
                                {
         ProcessGenerator::set_default_settings();
 
-
+        gen_rate_str = std::to_string(ProcessGenerator::get_gen_rate());
         arrival_rate_str = std::to_string(ProcessGenerator::get_arrival_rate());
         burst_mean_str = std::to_string(ProcessGenerator::get_burst_mean());
         burst_stddev_str = std::to_string(ProcessGenerator::get_burst_stddev());
@@ -169,33 +166,43 @@ int main_menu(bool ignore_first_click = false)
     std::vector<Component> tabs;
 
     // Dynamic generation tab
-    Components dynamic_components;
-    auto dynamic_tab = Container::Vertical(dynamic_components);
+    auto dynamic_container = Container::Vertical({
+        Renderer([] { return text("Dynamic") | bold; }),
+        Renderer([] { return text("Arrival Rate:"); }),
+        gen_rate_input
+    });
 
-    // Pre-generated tab
-    Components pregen_components;
-    // Arrival
-    pregen_components.push_back(Renderer([]
-                                         { return text("Arrival Time Distribution: ") | bold; }));
-    pregen_components.push_back(arrival_radio);
-    pregen_components.push_back(arrival_rate_input);
+    auto pregen_container = Container::Vertical({
+        Renderer([]{ return text("Arrival Time Distribution: ") | bold; }),
+        arrival_radio,
+        arrival_rate_input
+    });
+
+    auto arrival_container = Container::Horizontal({
+        dynamic_container,
+        pregen_container,
+    });
+
+
     // Burst
-    pregen_components.push_back(Renderer([]
-                                         { return text("Burst Time Distribution: ") | bold; }));
-    pregen_components.push_back(burst_radio);
-    pregen_components.push_back(burst_mean_input);
-    pregen_components.push_back(burst_stddev_input);
+    auto burst = Container::Vertical({
+        Renderer([]{ return text("Burst Time Distribution: ") | bold; }),
+        burst_radio,
+        burst_mean_input,
+        burst_stddev_input
+    });
+    
     // Priority
-    pregen_components.push_back(Renderer([]
-                                         { return color(Color::Blue, text("Priority Distribution:")) | bold; }));
-    pregen_components.push_back(priority_radio);
-    pregen_components.push_back(max_priority_input);
+    auto priority = Container::Vertical({
+        Renderer([]{ return text("Priority Distribution:") | bold; }),
+        priority_radio,
+        max_priority_input
+    });
 
-    auto pregen_tab = Container::Vertical(pregen_components);
-
-    tabs.push_back(dynamic_tab);
-    tabs.push_back(pregen_tab);
-
+    auto general_container = Container::Horizontal({
+        burst,
+        priority
+    });
     // Button container
     auto button_container = Container::Horizontal({reset_button,
                                                    apply_button,
@@ -205,64 +212,99 @@ int main_menu(bool ignore_first_click = false)
     Components main_components;
     main_components.push_back(Renderer([]
                                        { return text("ProbSched Settings") | bold; }));
-    main_components.push_back(mode_radio);
-    main_components.push_back(Container::Tab(tabs, &mode_index));
+    main_components.push_back(arrival_container);
+    main_components.push_back(general_container);
     main_components.push_back(button_container);
 
     auto main_container = Container::Vertical(main_components);
 
-    auto renderer = Renderer(main_container, [&]
-                             {
-        auto make_label = [](const std::string& label, Component& component){
+    auto renderer = Renderer(main_container, [&] {
+        auto make_label = [](const std::string& label, Component& component) {
             return hbox({
                 text(label) | size(WIDTH, EQUAL, 15),
                 component->Render()
             });
         };
 
+        // Theme colors
+        Color title_color = Color::BlueLight;
+        Color header_color = Color::Cyan;
+        Color border_color = Color::GrayLight;
+
+        // Arrival times: dynamic and pregen
+        Element arrival;
+        Elements arrival_times;
+        arrival_times.push_back(text("Process Arrival Configuration") | bold | color(title_color) | center);
+        arrival_times.push_back(separator() | color(header_color));
+        arrival_times.push_back(hbox({
+            vbox({
+                text("Dynamic Generation") | bold | color(header_color),
+                separator(),
+                make_label("Arrival Rate: ", gen_rate_input),
+                filler(),
+            }) | flex,
+            separator() | color(border_color),
+            vbox({
+                text("Pre-generated Distribution") | bold | color(header_color),
+                separator(),
+                arrival_radio->Render(),
+                make_label("Arrival Rate: ", arrival_rate_input),
+                filler(),
+            }) | flex
+        }));
+        
+        arrival = vbox(arrival_times) | border;
+        
+        // Other parameters
         Element content;
-        if (mode_index == 0){
-            Elements elements;
-            elements.push_back(text("Dynamic Generation Settings:") | bold);
-            content = vbox(elements);
-        }
-        else{
-            Elements elements;
-            elements.push_back(text("Arrival Time Distribution:") | bold);
-            elements.push_back(arrival_radio->Render());
-            elements.push_back(make_label("Arrival Rate: ", arrival_rate_input));
-            elements.push_back(separator());
+        Elements elements;
+        
+        // Only show StdDev when Normal distribution is selected
+        Element std_dev_box = burst_index == 1 
+            ? hbox({make_label("Burst StdDev: ", burst_stddev_input)}) 
+            : hbox({});
             
-            elements.push_back(text("Burst Time Distribution:") | bold);
-            elements.push_back(burst_radio->Render());
-            elements.push_back(make_label("Burst Mean: ", burst_mean_input));
-            if (burst_index == 1) {
-                elements.push_back(make_label("Burst StdDev: ", burst_stddev_input));
-            }
-            elements.push_back(separator());
-            elements.push_back(text("Priority Distribution:") | bold);
-            elements.push_back(priority_radio->Render());
-            elements.push_back(make_label("Max Priority: ", max_priority_input));
+        elements.push_back(hbox({
+            vbox({
+                text("Burst Time Configuration") | bold | color(title_color) | center,
+                separator() | color(header_color),
+                burst_radio->Render() | bold,
+                make_label("Burst Mean: ", burst_mean_input),
+                std_dev_box,
+                filler(),
+            }) | flex | border,
             
-            content = vbox(elements);
-        }
+            vbox({
+                text("Priority Configuration") | bold | color(title_color) | center,
+                separator() | color(header_color),
+                priority_radio->Render() | bold,
+                make_label("Max Priority: ", max_priority_input),
+                filler(),
+            }) | flex | border
+        }));
+        
+        content = vbox(elements);
+
+        // Button styles
+        auto styled_button = [&](Element button, Color c) {
+            return button | color(c) | bold;
+        };
 
         return vbox({
-            text("ProbSched Settings") | bold | center,
-            separator(),
-            mode_radio->Render(),
-            separator(),
-            content,
-            separator(),
+            text("ProbSched Settings") | bold | color(Color::Blue) | center | size(HEIGHT, GREATER_THAN, 1),
+            separator() | color(Color::Blue),
+            arrival | flex,
+            content | flex,
+            separator() | color(Color::Blue),
             hbox({
-                reset_button->Render(),
-                filler(),
-                apply_button->Render(),
-                filler(),
-                back_button->Render(),
+                styled_button(reset_button->Render(), Color::Red),
+                filler() | size(WIDTH, EQUAL, 2),
+                styled_button(apply_button->Render(), Color::Green),
+                filler() | size(WIDTH, EQUAL, 2),
+                styled_button(back_button->Render(), Color::Yellow),
             }) | center
-        }) | border | center | size(WIDTH, EQUAL, 200); });
-
+        }) | border | size(WIDTH, LESS_THAN, 120) | center  ; 
+    });
     screen.Loop(renderer);
 
     return;
