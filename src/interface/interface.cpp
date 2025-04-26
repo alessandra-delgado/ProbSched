@@ -95,29 +95,40 @@ void settings()
     auto screen = ScreenInteractive::FullscreenPrimaryScreen();
 
     std::string gen_rate_str = std::to_string(ProcessGenerator::get_gen_rate());
-
     std::string arrival_rate_str = std::to_string(ProcessGenerator::get_arrival_rate());
+    std::string max_arrival_gap_str = std::to_string(ProcessGenerator::get_max_arrival_gap());
+
+    std::string burst_lambda_str = std::to_string(ProcessGenerator::get_burst_lambda());
     std::string burst_mean_str = std::to_string(ProcessGenerator::get_burst_mean());
     std::string burst_stddev_str = std::to_string(ProcessGenerator::get_burst_stddev());
+    std::string max_burst_str = std::to_string(ProcessGenerator::get_max_burst());
+
+
     std::string max_priority_str = std::to_string(ProcessGenerator::get_max_priority());
 
     // Create radiobutton options
     std::vector<std::string> arrival_options = {"Poisson", "Exponential"};
-    int arrival_index = 0;
+    int arrival_index = ProcessGenerator::get_use_poisson() ? 0 : 1;
 
     std::vector<std::string> burst_options = {"Exponential", "Normal"};
-    int burst_index = 0;
+    int burst_index = ProcessGenerator::get_use_exponential() ? 0 : 1;
 
     std::vector<std::string> priority_options = {"Uniform", "Weighted"};
-    int priority_index = 0;
+    int priority_index = ProcessGenerator::get_use_uniform() ? 0 : 1;
+    
 
     // Create components ------------------------------------------------------------------
-    // todo: dynamic generation opts ^^
+    // todo: dynamic generation opts ^^??
     auto gen_rate_input = Input(&gen_rate_str, "") | size(WIDTH, EQUAL, 15);
     // For distribution parameters
     auto arrival_rate_input = Input(&arrival_rate_str, "") | size(WIDTH, EQUAL, 15);
+    auto max_arrival_gap_input = Input(&max_arrival_gap_str, "") | size(WIDTH, EQUAL, 15);
+
+    auto burst_lambda_input = Input(&burst_lambda_str, "") | size(WIDTH, EQUAL, 15);
     auto burst_mean_input = Input(&burst_mean_str, "") | size(WIDTH, EQUAL, 15);
     auto burst_stddev_input = Input(&burst_stddev_str, "") | size(WIDTH, EQUAL, 15);
+    auto max_burst_input = Input(&burst_stddev_str, "") | size(WIDTH, EQUAL, 15);
+
     auto max_priority_input = Input(&max_priority_str, "") | size(WIDTH, EQUAL, 15);
 
     // For distribution modes
@@ -131,8 +142,13 @@ void settings()
         try{
             ProcessGenerator::set_gen_rate(std::stod(gen_rate_str));
             ProcessGenerator::set_arrival_rate(std::stod(arrival_rate_str));
+            ProcessGenerator::set_max_arrival_gap(std::stoi(max_arrival_gap_str));
+
+            ProcessGenerator::set_burst_lambda(std::stoi(burst_lambda_str));
             ProcessGenerator::set_burst_mean(std::stod(burst_mean_str));
             ProcessGenerator::set_burst_stddev(std::stod(burst_stddev_str));
+            ProcessGenerator::set_max_burst(std::stoi(max_burst_str));
+
             ProcessGenerator::set_max_priority(std::stod(max_priority_str));
         }
         catch(...){
@@ -158,9 +174,16 @@ void settings()
 
         gen_rate_str = std::to_string(ProcessGenerator::get_gen_rate());
         arrival_rate_str = std::to_string(ProcessGenerator::get_arrival_rate());
+        max_arrival_gap_str = std::to_string(ProcessGenerator::get_max_arrival_gap());
+        burst_lambda_str = std::to_string(ProcessGenerator::get_burst_lambda());
         burst_mean_str = std::to_string(ProcessGenerator::get_burst_mean());
         burst_stddev_str = std::to_string(ProcessGenerator::get_burst_stddev());
+        max_burst_str = std::to_string(ProcessGenerator::get_max_burst());
         max_priority_str = std::to_string(ProcessGenerator::get_max_priority());
+
+        arrival_index = ProcessGenerator::get_use_poisson() ? 0 : 1;
+        burst_index = ProcessGenerator::get_use_exponential() ? 0 : 1;
+        priority_index = ProcessGenerator::get_use_uniform() ? 0 : 1;
         return true; });
 
     std::vector<Component> tabs;
@@ -175,7 +198,8 @@ void settings()
     auto pregen_container = Container::Vertical({
         Renderer([]{ return text("Arrival Time Distribution: ") | bold; }),
         arrival_radio,
-        arrival_rate_input
+        arrival_rate_input,
+        max_arrival_gap_input
     });
 
     auto arrival_container = Container::Horizontal({
@@ -188,8 +212,10 @@ void settings()
     auto burst = Container::Vertical({
         Renderer([]{ return text("Burst Time Distribution: ") | bold; }),
         burst_radio,
+        burst_lambda_input,
         burst_mean_input,
-        burst_stddev_input
+        burst_stddev_input,
+        max_burst_input
     });
     
     // Priority
@@ -221,7 +247,7 @@ void settings()
     auto renderer = Renderer(main_container, [&] {
         auto make_label = [](const std::string& label, Component& component) {
             return hbox({
-                text(label) | size(WIDTH, EQUAL, 15),
+                text(label) | size(WIDTH, EQUAL, 18),
                 component->Render()
             });
         };
@@ -234,6 +260,14 @@ void settings()
         // Arrival times: dynamic and pregen
         Element arrival;
         Elements arrival_times;
+        Element arrival_pregen_box = arrival_index == 0
+            ? vbox({
+                // Poisson
+            })
+            : vbox({
+                // Exponential
+                make_label("Max arrival gap: ", max_arrival_gap_input)
+            });
         arrival_times.push_back(text("Process Arrival Configuration") | bold | color(title_color) | center);
         arrival_times.push_back(separator() | color(header_color));
         arrival_times.push_back(hbox({
@@ -242,15 +276,16 @@ void settings()
                 separator(),
                 make_label("Arrival Rate: ", gen_rate_input),
                 filler(),
-            }) | flex,
+            }) | size(WIDTH, EQUAL, 30) | size(HEIGHT, EQUAL, 7) | flex,
             separator() | color(border_color),
             vbox({
                 text("Pre-generated Distribution") | bold | color(header_color),
                 separator(),
                 arrival_radio->Render(),
                 make_label("Arrival Rate: ", arrival_rate_input),
+                arrival_pregen_box,
                 filler(),
-            }) | flex
+            }) | size(WIDTH, EQUAL, 30) | size(HEIGHT, EQUAL, 7) | flex
         }));
         
         arrival = vbox(arrival_times) | border;
@@ -258,29 +293,43 @@ void settings()
         // Other parameters
         Element content;
         Elements elements;
-        
         // Only show StdDev when Normal distribution is selected
-        Element std_dev_box = burst_index == 1 
-            ? hbox({make_label("Burst StdDev: ", burst_stddev_input)}) 
-            : hbox({});
-            
+        Element burst_box = burst_index == 0 
+            ? vbox({
+                // Exponential
+                make_label("Burst lambda: ", burst_lambda_input),
+                make_label("Max burst: ", max_burst_input)
+            }) 
+            : vbox({
+                // Normal
+                make_label("Burst mean: ", burst_mean_input),
+                make_label("Burst std dev: ", burst_stddev_input)
+            });
+        Element priority_box = priority_index == 0
+            ? vbox({
+                // Uniform
+                make_label("Max priority: ", max_priority_input)
+            })
+            : vbox({
+                // Weighted
+            })
+            ;
         elements.push_back(hbox({
             vbox({
                 text("Burst Time Configuration") | bold | color(title_color) | center,
                 separator() | color(header_color),
                 burst_radio->Render() | bold,
-                make_label("Burst Mean: ", burst_mean_input),
-                std_dev_box,
+                burst_box,
                 filler(),
-            }) | flex | border,
+            }) | size(WIDTH, EQUAL, 30) | flex | border,
             
             vbox({
                 text("Priority Configuration") | bold | color(title_color) | center,
                 separator() | color(header_color),
                 priority_radio->Render() | bold,
-                make_label("Max Priority: ", max_priority_input),
+                priority_box,
                 filler(),
-            }) | flex | border
+            }) | size(WIDTH, EQUAL, 30) | flex | border
         }));
         
         content = vbox(elements);
@@ -293,8 +342,9 @@ void settings()
         return vbox({
             text("ProbSched Settings") | bold | color(Color::Blue) | center | size(HEIGHT, GREATER_THAN, 1),
             separator() | color(Color::Blue),
-            arrival | flex,
+            arrival | flex | size(HEIGHT, EQUAL, 10),
             content | flex,
+            text("Other options coming soon? :)") | center | color(Color::LightGreen), 
             separator() | color(Color::Blue),
             hbox({
                 styled_button(reset_button->Render(), Color::Red),
@@ -303,7 +353,7 @@ void settings()
                 filler() | size(WIDTH, EQUAL, 2),
                 styled_button(back_button->Render(), Color::Yellow),
             }) | center
-        }) | border | size(WIDTH, LESS_THAN, 120) | center  ; 
+        }) | size(WIDTH, EQUAL, 60) | size(HEIGHT, EQUAL, 30) | border | center ; 
     });
     screen.Loop(renderer);
 
