@@ -253,12 +253,12 @@ void SchedulerStats::display_stats(std::string title)
         gantt_elements.push_back(hbox(gantt_row) | flex);
 
         gantt_elements.push_back(
-            hbox({text("") | flex,
-                  text("-60s"),
+            hbox({text(""),
+                  text("-60s")| flex,
                   text("") | flex,
-                  text("-30s"),
+                  text("-30s")| flex,
                   text("") | flex,
-                  text("Now")}));
+                  text("Now")})| size(WIDTH, EQUAL, 60)) ;
 
         return vbox({hbox({text("Scheduler Statistics - " + title) | bold | center | flex, text("  ")}) |
                          color(Color::White) | bgcolor(Color::Blue),
@@ -494,18 +494,18 @@ void SchedulerStats::display_stats_real_time(std::string title)
         gantt_elements.push_back(hbox(gantt_row) | flex);
 
         gantt_elements.push_back(
-            hbox({text("") | flex,
-                  text("-60s"),
+            hbox({text(""),
+                  text("-60s")| flex,
                   text("") | flex,
-                  text("-30s"),
+                  text("-30s")| flex,
                   text("") | flex,
-                  text("Now")}));
+                  text("Now")})| size(WIDTH, EQUAL, 60)) ;
 
         return vbox({hbox({text("Scheduler Statistics - " + title) | bold | center | flex, text("  ")}) |
                          color(Color::White) | bgcolor(Color::Blue),
 
                      vbox({hbox({vbox(current_process_elements) | border | flex | size(HEIGHT, EQUAL, 14),
-                                 vbox(gantt_elements) | border | flex}) |
+                                 vbox(gantt_elements) | border | flex | hcenter}) |
                                size(HEIGHT, LESS_THAN, 23), // might have to change height
 
                            hbox({vbox({text("Tasks") | bold | center,
