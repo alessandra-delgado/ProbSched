@@ -162,12 +162,12 @@ std::vector<PCB> ProcessGenerator::generatePCBListInterArrival(int num_processes
 				pcbs.push_back(pcb);
 				amount--;
 				num_processes--;
+				std::ofstream outfile;
+				outfile.open("./test.txt", std::ios_base::app); // append instead of overwrite
+				outfile << "id: " << pcb.get_pid() << " | priority: " << pcb.get_priority() << " | arrival: " << pcb.get_arrival_time() << " | burst: " << pcb.get_burst_time() << std::endl;
+				outfile.close();
 			}
 			current_time++;
-			std::ofstream outfile;
-			outfile.open("./test.txt", std::ios_base::app); // append instead of overwrite
-			outfile << "id: " << pcb.get_pid() << " | priority: " << pcb.get_priority() << " | arrival: " << pcb.get_arrival_time() << " | burst: " << pcb.get_burst_time() << std::endl;
-			outfile.close();
 		}
 	}
 	else
@@ -179,7 +179,7 @@ std::vector<PCB> ProcessGenerator::generatePCBListInterArrival(int num_processes
 			pcb = generatePCBInterArrival(current_time + arrival);
 			pcbs.push_back(pcb);
 			// Update the time
-			current_time += arrival;
+			current_time = arrival;
 			// Debugging --------------------------------------------------------------------------------------------------
 			std::ofstream outfile;
 			outfile.open("./test.txt", std::ios_base::app); // append instead of overwrite

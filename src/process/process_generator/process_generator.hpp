@@ -10,17 +10,17 @@ private:
 	// Arrival times
 	inline static double gen_rate = 0.8;	 // For sim run-time: ~0.5-> really crowded; ~1.5->biiig interarrival
 	inline static double arrival_rate = 0.5; // process arrival rate/lambda
-	inline static int max_arrival_gap = 5; // specifically for exponential
+	inline static int max_arrival_gap = 5;	 // specifically for exponential
 
 	// Burst
-	inline static int burst_lambda = 0.4; // Exponential
-	inline static double burst_mean = 5.0; // Normal
+	inline static double burst_lambda = 0.4; // Exponential
+	inline static int max_burst = 10;		 // Exponential
+	inline static double burst_mean = 5.0;	 // Normal
 	inline static double burst_stddev = 1.5; // Normal
-	inline static int max_burst = 10;
 
 	// Priorities
 	inline static std::vector<double> weights; // well, weighted
-	inline static int max_priority = 10; // uniform
+	inline static int max_priority = 10;	   // Uniform and Weighted
 
 	// todo: for edf?
 	inline static int deadline_range = 100; // ??
@@ -58,7 +58,7 @@ public:
 		for (int i = 1; i <= max_priority; ++i)
 		{
 			// Lower numbers are more likely (higher weight for low priority numbers)
-			weights.push_back(0.55 / i);
+			weights.push_back(0.30 / i);
 		}
 	}
 	static inline void set_gen_rate(double n) { gen_rate = n; }
@@ -67,8 +67,8 @@ public:
 
 	static inline void set_burst_mean(double n) { burst_mean = n; }
 	static inline void set_burst_stddev(double n) { burst_stddev = n; }
-	static inline void set_burst_lambda(int n) { burst_lambda = n; }
-	static inline void set_max_burst(double n) { max_burst = n; }
+	static inline void set_burst_lambda(double n) { burst_lambda = n; }
+	static inline void set_max_burst(int n) { max_burst = n; }
 
 	static inline void set_max_priority(int n) { max_priority = n; }
 
@@ -83,15 +83,14 @@ public:
 
 	static inline double get_burst_mean() { return burst_mean; }
 	static inline double get_burst_stddev() { return burst_stddev; }
-	static inline int get_burst_lambda() { return burst_lambda; }
+	static inline double get_burst_lambda() { return burst_lambda; }
 	static inline int get_max_burst() { return max_burst; }
 
 	static inline int get_max_priority() { return max_priority; }
 
-	static inline bool get_use_poisson() {return use_poisson;}
-	static inline bool get_use_exponential() {return use_exponential;}
-	static inline bool get_use_uniform() {return use_uniform;}
-	
+	static inline bool get_use_poisson() { return use_poisson; }
+	static inline bool get_use_exponential() { return use_exponential; }
+	static inline bool get_use_uniform() { return use_uniform; }
 
 	static int generate_amount_at_tick();
 	static int generate_arrival();

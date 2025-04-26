@@ -38,8 +38,8 @@ void simulator()
     signal(SIGINT, handle_sigint);
     while (true)
     {
-        reset_program_state();
         stop_sched = false;
+        reset_program_state();
 
         // ! 1 - Select an algorithm
         int i = pick_algorithm();

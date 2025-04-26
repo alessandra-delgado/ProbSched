@@ -127,7 +127,7 @@ void settings()
     auto burst_lambda_input = Input(&burst_lambda_str, "") | size(WIDTH, EQUAL, 15);
     auto burst_mean_input = Input(&burst_mean_str, "") | size(WIDTH, EQUAL, 15);
     auto burst_stddev_input = Input(&burst_stddev_str, "") | size(WIDTH, EQUAL, 15);
-    auto max_burst_input = Input(&burst_stddev_str, "") | size(WIDTH, EQUAL, 15);
+    auto max_burst_input = Input(&max_burst_str, "") | size(WIDTH, EQUAL, 15);
 
     auto max_priority_input = Input(&max_priority_str, "") | size(WIDTH, EQUAL, 15);
 
@@ -144,7 +144,7 @@ void settings()
             ProcessGenerator::set_arrival_rate(std::stod(arrival_rate_str));
             ProcessGenerator::set_max_arrival_gap(std::stoi(max_arrival_gap_str));
 
-            ProcessGenerator::set_burst_lambda(std::stoi(burst_lambda_str));
+            ProcessGenerator::set_burst_lambda(std::stod(burst_lambda_str));
             ProcessGenerator::set_burst_mean(std::stod(burst_mean_str));
             ProcessGenerator::set_burst_stddev(std::stod(burst_stddev_str));
             ProcessGenerator::set_max_burst(std::stoi(max_burst_str));
@@ -308,7 +308,6 @@ void settings()
         Element priority_box = priority_index == 0
             ? vbox({
                 // Uniform
-                make_label("Max priority: ", max_priority_input)
             })
             : vbox({
                 // Weighted
@@ -328,6 +327,7 @@ void settings()
                 separator() | color(header_color),
                 priority_radio->Render() | bold,
                 priority_box,
+                make_label("Max priority: ", max_priority_input),
                 filler(),
             }) | size(WIDTH, EQUAL, 30) | flex | border
         }));

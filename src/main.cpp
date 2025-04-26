@@ -1,9 +1,11 @@
 #include <iostream>
 #include "cpu_scheduler/simulator.hpp"
-#include "interface/interface.hpp"
+#include "process/process_generator/process_generator.hpp"
 
+#include "interface/interface.hpp"
 int main()
 {
+	ProcessGenerator::set_default_settings(); // Guarantees weights are set before the simulation starts
 	int opt = 0;
 	bool ignore_next_click = false;
 	do
