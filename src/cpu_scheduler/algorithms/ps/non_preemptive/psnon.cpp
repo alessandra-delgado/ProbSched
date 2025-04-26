@@ -5,6 +5,8 @@
 
 #include "psnon.hpp"
 #include "../../../scheduler_stats.hpp"
+#include "../../../../process/process_generator/process_generator.hpp"
+
 
 extern std::atomic<bool> stop_sched;
 
@@ -67,7 +69,7 @@ void NonPreemptivePriority::schedule()
 
 void NonPreemptivePriority::generate_pcb_queue(int num_processes) {
     for (int i = 0; i < num_processes; ++i) {
-        PCB pcb = pg.generatePCB(Scheduler::get_current_time());
+        PCB pcb = ProcessGenerator::generatePCB(Scheduler::get_current_time());
         add_pcb(pcb);
     }
     generated_processes = num_processes;

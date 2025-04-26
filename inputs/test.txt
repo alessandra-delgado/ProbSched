@@ -8700,3 +8700,73 @@ RT_Process_2 15
 NEW HIGHEST_PRIORITY_TASK: RT_Process_2
 SELECTED HIGHEST_PRIORITY_TASK: RT_Process_2
 ===============================================
+===============================================
+NEW CICLE
+RT_Process_1 7
+NEW HIGHEST_PRIORITY_TASK: RT_Process_1
+RT_Process_2 24
+SELECTED HIGHEST_PRIORITY_TASK: RT_Process_1
+===============================================
+===============================================
+NEW CICLE
+RT_Process_1 7
+NEW HIGHEST_PRIORITY_TASK: RT_Process_1
+RT_Process_2 24
+SELECTED HIGHEST_PRIORITY_TASK: RT_Process_1
+===============================================
+===============================================
+NEW CICLE
+RT_Process_1 7
+NEW HIGHEST_PRIORITY_TASK: RT_Process_1
+RT_Process_2 24
+SELECTED HIGHEST_PRIORITY_TASK: RT_Process_1
+===============================================
+===============================================
+NEW CICLE
+RT_Process_1 7
+NEW HIGHEST_PRIORITY_TASK: RT_Process_1
+RT_Process_2 24
+SELECTED HIGHEST_PRIORITY_TASK: RT_Process_1
+===============================================
+===============================================
+NEW CICLE
+RT_Process_1 7
+NEW HIGHEST_PRIORITY_TASK: RT_Process_1
+RT_Process_2 24
+SELECTED HIGHEST_PRIORITY_TASK: RT_Process_1
+===============================================
+===============================================
+NEW CICLE
+RT_Process_1 7
+RT_Process_2 24
+NEW HIGHEST_PRIORITY_TASK: RT_Process_2
+SELECTED HIGHEST_PRIORITY_TASK: RT_Process_2
+===============================================
+===============================================
+NEW CICLE
+RT_Process_1 7
+RT_Process_2 24
+NEW HIGHEST_PRIORITY_TASK: RT_Process_2
+SELECTED HIGHEST_PRIORITY_TASK: RT_Process_2
+===============================================
+===============================================
+NEW CICLE
+RT_Process_1 7
+RT_Process_2 24
+NEW HIGHEST_PRIORITY_TASK: RT_Process_2
+SELECTED HIGHEST_PRIORITY_TASK: RT_Process_2
+===============================================
+===============================================
+NEW CICLE
+RT_Process_1 7
+RT_Process_2 24
+NEW HIGHEST_PRIORITY_TASK: RT_Process_2
+SELECTED HIGHEST_PRIORITY_TASK: RT_Process_2
+===============================================
+===============================================
+NEW CICLE
+RT_Process_1 7
+NEW HIGHEST_PRIORITY_TASK: RT_Process_1
+RT_Process_2 24
+SELECTED HIGHEST_PRIORITY_TASK: RT_Process_1
+===============================================

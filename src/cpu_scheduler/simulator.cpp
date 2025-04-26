@@ -38,8 +38,8 @@ void simulator()
     signal(SIGINT, handle_sigint);
     while (true)
     {
-        reset_program_state();
         stop_sched = false;
+        reset_program_state();
 
         // ! 1 - Select an algorithm
         int i = pick_algorithm();
@@ -131,10 +131,10 @@ void simulator()
             {
                 int queue_size = algorithms[i]->get_ready_size();
                 double prob = 1.0 / (1 + queue_size * 0.5);
-                if (rand() / double(RAND_MAX) < prob)
+                if ((ProcessGenerator::get_soft_limit() && (rand() / double(RAND_MAX) < prob)) || !ProcessGenerator::get_soft_limit())
                 {
-                    double e = Scheduler::get_epsilon();
-                    
+                    double e = ProcessGenerator::get_epsilon();
+
                     if (e > 1.5 && e < 4.5)
                     {
                         PCB pcb = algorithms[i]->genPCB(Scheduler::get_current_time());

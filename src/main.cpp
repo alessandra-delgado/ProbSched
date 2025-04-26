@@ -1,18 +1,30 @@
 #include <iostream>
 #include "cpu_scheduler/simulator.hpp"
-#include "interface/interface.hpp"
+#include "process/process_generator/process_generator.hpp"
 
-int main() {
-	switch(main_menu()){
+#include "interface/interface.hpp"
+int main()
+{
+	ProcessGenerator::set_default_settings(); // Guarantees weights are set before the simulation starts
+	int opt = 0;
+	bool ignore_next_click = false;
+	do
+	{
+		opt = main_menu(ignore_next_click);
+		switch (opt)
+		{
 		case 0:
 			simulator();
 			break;
 		case 1:
-			std::cout << "no about yet" << std::endl;
+			settings();
+			ignore_next_click = true;
 			break;
 		case 2:
-			// exited
+			std::cout << "no about yet" << std::endl;
+		default:
 			break;
-	}
+		}
+	} while (opt != 3); // exited
 	return 0;
 }
