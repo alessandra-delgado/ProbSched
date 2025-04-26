@@ -112,7 +112,7 @@ void SchedulerStats::display_stats(std::string title)
 
             if (&row == &terminated_table_content[0])
             {
-                terminated_table_rows.push_back(text("├─────────────────┼────────────────┤"));
+                terminated_table_rows.push_back(text("├─────────────────┼─────────────────┤"));
             }
         }
 
