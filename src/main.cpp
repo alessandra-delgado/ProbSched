@@ -9,7 +9,7 @@ int main()
 	int opt = 0;
 	bool ignore_next_click = false;
 	do
-	{	
+	{
 		opt = main_menu(ignore_next_click);
 		switch (opt)
 		{
@@ -22,13 +22,9 @@ int main()
 			break;
 		case 2:
 			std::cout << "no about yet" << std::endl;
-			// exited
 		default:
-
 			break;
 		}
-	}
-	while(opt != 3);
+	} while (opt != 3); // exited
 	return 0;
 }
-

@@ -136,6 +136,13 @@ void settings()
     auto burst_radio = Radiobox(&burst_options, &burst_index);
     auto priority_radio = Radiobox(&priority_options, &priority_index);
 
+    std::vector<std::string> toggle_ready_entries = {
+        "Soft",
+        "Off"
+    };
+    int toggle_ready_selected = 0;
+    Component toggle_ready = Toggle(&toggle_ready_entries, &toggle_ready_selected);
+
     std::string button_label = "Apply Settings";
     auto apply_button = Button(&button_label, [&]
                                {
@@ -155,6 +162,7 @@ void settings()
             // Handle conversion errors
         }
 
+        ProcessGenerator::set_soft_limit(toggle_ready_selected == 0);
         ProcessGenerator::set_use_poisson(arrival_index == 0);
         ProcessGenerator::set_use_exponential(burst_index == 0);
         ProcessGenerator::set_use_uniform(priority_index == 0);
@@ -181,6 +189,7 @@ void settings()
         max_burst_str = std::to_string(ProcessGenerator::get_max_burst());
         max_priority_str = std::to_string(ProcessGenerator::get_max_priority());
 
+        toggle_ready_selected = ProcessGenerator::get_soft_limit() ? 0 : 1;
         arrival_index = ProcessGenerator::get_use_poisson() ? 0 : 1;
         burst_index = ProcessGenerator::get_use_exponential() ? 0 : 1;
         priority_index = ProcessGenerator::get_use_uniform() ? 0 : 1;
@@ -192,7 +201,8 @@ void settings()
     auto dynamic_container = Container::Vertical({
         Renderer([] { return text("Dynamic") | bold; }),
         Renderer([] { return text("Arrival Rate:"); }),
-        gen_rate_input
+        gen_rate_input,
+        toggle_ready
     });
 
     auto pregen_container = Container::Vertical({
@@ -247,7 +257,7 @@ void settings()
     auto renderer = Renderer(main_container, [&] {
         auto make_label = [](const std::string& label, Component& component) {
             return hbox({
-                text(label) | size(WIDTH, EQUAL, 18),
+                text(label) | size(WIDTH, EQUAL, 25),
                 component->Render()
             });
         };
@@ -266,26 +276,27 @@ void settings()
             })
             : vbox({
                 // Exponential
-                make_label("Max arrival gap: ", max_arrival_gap_input)
+                make_label(" * Max arrival gap: ", max_arrival_gap_input)
             });
         arrival_times.push_back(text("Process Arrival Configuration") | bold | color(title_color) | center);
         arrival_times.push_back(separator() | color(header_color));
         arrival_times.push_back(hbox({
             vbox({
-                text("Dynamic Generation") | bold | color(header_color),
+                text("Dynamic Generation") | bold | color(header_color) | hcenter,
                 separator(),
-                make_label("Arrival Rate: ", gen_rate_input),
+                make_label(" * Arrival Rate: ", gen_rate_input),
+                make_label(" * Limit ready queue: ", toggle_ready),
                 filler(),
-            }) | size(WIDTH, EQUAL, 30) | size(HEIGHT, EQUAL, 7) | flex,
+            }) | size(WIDTH, EQUAL, 40) | size(HEIGHT, EQUAL, 7) | flex,
             separator() | color(border_color),
             vbox({
-                text("Pre-generated Distribution") | bold | color(header_color),
+                text("Pre-generated Distribution") | bold | color(header_color) | hcenter,
                 separator(),
                 arrival_radio->Render(),
-                make_label("Arrival Rate: ", arrival_rate_input),
+                make_label(" * Arrival Rate: ", arrival_rate_input),
                 arrival_pregen_box,
                 filler(),
-            }) | size(WIDTH, EQUAL, 30) | size(HEIGHT, EQUAL, 7) | flex
+            }) | size(WIDTH, EQUAL, 40) | size(HEIGHT, EQUAL, 7) | flex
         }));
         
         arrival = vbox(arrival_times) | border;
@@ -297,13 +308,13 @@ void settings()
         Element burst_box = burst_index == 0 
             ? vbox({
                 // Exponential
-                make_label("Burst lambda: ", burst_lambda_input),
-                make_label("Max burst: ", max_burst_input)
+                make_label(" * Burst lambda: ", burst_lambda_input),
+                make_label(" * Max burst: ", max_burst_input)
             }) 
             : vbox({
                 // Normal
-                make_label("Burst mean: ", burst_mean_input),
-                make_label("Burst std dev: ", burst_stddev_input)
+                make_label(" * Burst mean: ", burst_mean_input),
+                make_label(" * Burst std dev: ", burst_stddev_input)
             });
         Element priority_box = priority_index == 0
             ? vbox({
@@ -315,35 +326,35 @@ void settings()
             ;
         elements.push_back(hbox({
             vbox({
-                text("Burst Time Configuration") | bold | color(title_color) | center,
+                text("Burst Time Configuration") | bold | color(header_color) | center,
                 separator() | color(header_color),
                 burst_radio->Render() | bold,
                 burst_box,
                 filler(),
-            }) | size(WIDTH, EQUAL, 30) | flex | border,
-            
+            }) | size(WIDTH, EQUAL, 30) | border ,
+            filler() | size(WIDTH, EQUAL, 5),
             vbox({
-                text("Priority Configuration") | bold | color(title_color) | center,
+                text("Priority Configuration") | bold | color(header_color) | center,
                 separator() | color(header_color),
                 priority_radio->Render() | bold,
                 priority_box,
-                make_label("Max priority: ", max_priority_input),
+                make_label(" * Max priority: ", max_priority_input),
                 filler(),
-            }) | size(WIDTH, EQUAL, 30) | flex | border
+            }) | size(WIDTH, EQUAL, 30) | border
         }));
         
         content = vbox(elements);
 
         // Button styles
         auto styled_button = [&](Element button, Color c) {
-            return button | color(c) | bold;
+            return button | color(c) | bold | size(WIDTH, EQUAL, 16) ;
         };
 
         return vbox({
             text("ProbSched Settings") | bold | color(Color::Blue) | center | size(HEIGHT, GREATER_THAN, 1),
             separator() | color(Color::Blue),
             arrival | flex | size(HEIGHT, EQUAL, 10),
-            content | flex,
+            content | hcenter | flex,
             text("Other options coming soon? :)") | center | color(Color::LightGreen), 
             separator() | color(Color::Blue),
             hbox({
@@ -353,7 +364,7 @@ void settings()
                 filler() | size(WIDTH, EQUAL, 2),
                 styled_button(back_button->Render(), Color::Yellow),
             }) | center
-        }) | size(WIDTH, EQUAL, 60) | size(HEIGHT, EQUAL, 30) | border | center ; 
+        }) | size(HEIGHT, EQUAL, 30) | border | center ; 
     });
     screen.Loop(renderer);
 
@@ -418,9 +429,10 @@ int pick_algorithm()
                                                     separator(),
                                                     menu->Render() | center, // center the menu itself
                                                     separator(),
-                                                    selected == 5 ? text("Current time quantum: " + std::to_string(rr_quantum)) : text(""),
-                                                    bgcolor(Color::SeaGreen1, color(Color::Black, text("Update: All algorithms added. Polishing..."))) | center}) |
-                                              border); });
+                                                    selected == 5 ? text("Current time quantum: " + std::to_string(rr_quantum))
+                                                    : selected == 8 ? text("Yes, that does exactly as it says.") | color(Color::GrayDark)
+                                                    : text(""),
+                                                }) | border); });
 
     // Handler for enter key
     auto handler = CatchEvent(main_menu, [&](Event event)

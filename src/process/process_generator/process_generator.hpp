@@ -7,6 +7,7 @@ class ProcessGenerator
 {
 private:
 	static inline RandomGenerator rng;
+	inline static bool soft_limit_ready_queue = true;
 	// Arrival times
 	inline static double gen_rate = 0.8;	 // For sim run-time: ~0.5-> really crowded; ~1.5->biiig interarrival
 	inline static double arrival_rate = 0.5; // process arrival rate/lambda
@@ -36,6 +37,7 @@ public:
 	inline static double get_epsilon() { return rng.exponential(gen_rate); }
 	static inline void set_default_settings()
 	{
+		soft_limit_ready_queue = true;
 		set_default_weights();
 		gen_rate = 0.8;
 		arrival_rate = 0.5;
@@ -61,6 +63,7 @@ public:
 			weights.push_back(0.30 / i);
 		}
 	}
+	static inline void set_soft_limit(bool n) { soft_limit_ready_queue = n;}
 	static inline void set_gen_rate(double n) { gen_rate = n; }
 	static inline void set_arrival_rate(double n) { arrival_rate = n; }
 	static inline void set_max_arrival_gap(int n) { max_arrival_gap = n; }
@@ -77,6 +80,8 @@ public:
 	static inline void set_use_exponential(bool b) { use_exponential = b; }
 
 	// Getters
+	static inline bool get_soft_limit() { return soft_limit_ready_queue; }
+
 	static inline double get_gen_rate() { return gen_rate; }
 	static inline double get_arrival_rate() { return arrival_rate; }
 	static inline int get_max_arrival_gap() { return max_arrival_gap; }
