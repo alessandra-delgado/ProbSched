@@ -7,6 +7,7 @@ class ProcessGenerator
 {
 private:
 	static inline RandomGenerator rng;
+	inline static double gen_rate = 1.8; // For sim run-time: ~0.5-> really crowded; ~1.5->biiig interarrival
 	inline static double arrival_rate = 4.0; // process arrival rate
 	inline static double burst_mean = 5.0;
 	inline static double burst_stddev = 1.5;
@@ -21,14 +22,17 @@ private:
 public:
 	ProcessGenerator();
 	ProcessGenerator(double lambda, double mean_burst, double stddev_burst, int max_prio, int dl_range);
-	inline static double get_epsilon() { return rng.exponential(0.5); }
+	inline static double get_epsilon() { return rng.exponential(gen_rate); }
 	static inline void set_default_settings()
 	{
+		gen_rate = 0.8;
 		arrival_rate = 4.0;
 		burst_mean = 5.0;
 		burst_stddev = 1.5;
 		max_priority = 10;
 	}
+
+	static inline void set_gen_rate(double n) { gen_rate = n; }
 	static inline void set_arrival_rate(double n) { arrival_rate = n; }
 	static inline void set_burst_mean(double n) { burst_mean = n; }
 	static inline void set_burst_stddev(double n) { burst_stddev = n; }
@@ -37,9 +41,10 @@ public:
 	static inline void set_use_poisson(bool b) { use_poisson = b; }
 	static inline void set_use_uniform(bool b) { use_uniform = b; }
 	static inline void set_use_exponential(bool b) { use_exponential = b; }
-
-
+	
+	
 	// Getters
+	static inline double get_gen_rate() { return gen_rate; }
 	static inline double get_arrival_rate() { return arrival_rate; }
 	static inline double get_burst_mean() { return burst_mean; }
 	static inline double get_burst_stddev() { return burst_stddev; }
