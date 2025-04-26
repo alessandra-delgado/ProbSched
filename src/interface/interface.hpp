@@ -1,6 +1,6 @@
 #pragma once
 
-int main_menu();
+int main_menu(bool);
 void settings();
 int pick_algorithm();
 int get_time_quantum();

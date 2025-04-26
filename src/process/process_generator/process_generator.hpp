@@ -11,7 +11,12 @@ private:
 	inline static double burst_mean = 5.0;
 	inline static double burst_stddev = 1.5;
 	inline static int max_priority = 10;
-	inline static int deadline_range = 100;
+	inline static int deadline_range = 100; // ??
+
+	// Distributions
+	static inline bool use_poisson = true;
+	static inline bool use_uniform = true;
+	static inline bool use_exponential = true;
 
 public:
 	ProcessGenerator();
@@ -24,6 +29,22 @@ public:
 		burst_stddev = 1.5;
 		max_priority = 10;
 	}
+	static inline void set_arrival_rate(double n) { arrival_rate = n; }
+	static inline void set_burst_mean(double n) { burst_mean = n; }
+	static inline void set_burst_stddev(double n) { burst_stddev = n; }
+	static inline void set_max_priority(int n) { max_priority = n; }
+
+	static inline void set_use_poisson(bool b) { use_poisson = b; }
+	static inline void set_use_uniform(bool b) { use_uniform = b; }
+	static inline void set_use_exponential(bool b) { use_exponential = b; }
+
+
+	// Getters
+	static inline double get_arrival_rate() { return arrival_rate; }
+	static inline double get_burst_mean() { return burst_mean; }
+	static inline double get_burst_stddev() { return burst_stddev; }
+	static inline int get_max_priority() { return max_priority; }
+
 	static PCB generatePCB(int current_time);
 	static PCB generatePCBRealTime();
 	static PCB generatePCBInterArrival(int current_time);

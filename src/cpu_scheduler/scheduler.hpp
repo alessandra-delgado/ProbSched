@@ -9,7 +9,7 @@
 class Scheduler
 {
 protected:
-
+	// todo: perhaps change these to unsigned long long ints
 	static inline int current_time = 0;
 	static inline int cpu_time = 0;
 	static inline std::vector<PCB> terminated_processes;
