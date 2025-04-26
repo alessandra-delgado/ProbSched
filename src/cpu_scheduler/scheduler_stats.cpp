@@ -107,7 +107,7 @@ void SchedulerStats::display_stats(std::string title)
             terminated_table_rows.push_back(hbox({text("│ "),
                                                   row[0] | size(WIDTH, EQUAL, 15),
                                                   text(" │ "),
-                                                  row[1] | size(WIDTH, EQUAL, 14),
+                                                  row[1] | size(WIDTH, EQUAL, 15),
                                                   text(" │")}));
 
             if (&row == &terminated_table_content[0])
@@ -116,9 +116,9 @@ void SchedulerStats::display_stats(std::string title)
             }
         }
 
-        terminated_table_with_border.push_back(text("┌─────────────────┬────────────────┐"));
+        terminated_table_with_border.push_back(text("┌─────────────────┬─────────────────┐"));
         terminated_table_with_border.insert(terminated_table_with_border.end(), terminated_table_rows.begin(), terminated_table_rows.end());
-        terminated_table_with_border.push_back(text("└─────────────────┴────────────────┘"));
+        terminated_table_with_border.push_back(text("└─────────────────┴─────────────────┘"));
 
         if (hidden_terminated > 0)
         {
