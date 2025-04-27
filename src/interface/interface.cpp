@@ -430,6 +430,7 @@ int pick_algorithm()
                                                     menu->Render() | center, // center the menu itself
                                                     separator(),
                                                     selected == 5 ? text("Current time quantum: " + std::to_string(rr_quantum))
+                                                    : selected == 4 ? text("Better known as SRTF.")
                                                     : selected == 8 ? text("Yes, that does exactly as it says.") | color(Color::GrayDark)
                                                     : text(""),
                                                 }) | border); });

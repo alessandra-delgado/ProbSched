@@ -117,12 +117,16 @@ void ShortestJobPreemptive::load_to_ready()
     if (loaded_processes.empty())
         return;
 
-    for (int i = 0; i < (int)loaded_processes.size(); i++)
+    for (int i = 0; i < (int)loaded_processes.size(); )
     {
-        if(loaded_processes[i].get_arrival_time() == current_time){
-            add_pcb(Scheduler::loaded_processes[i]);
-            loaded_processes.erase(loaded_processes.begin()+i);
+        if (loaded_processes[i].get_arrival_time() == current_time)
+        {
+            add_pcb(loaded_processes[i]);
+            loaded_processes.erase(loaded_processes.begin() + i);
         }
-        // fingers crossed this works smoothly :')
+        else
+        {
+            ++i;
+        }
     }
 }

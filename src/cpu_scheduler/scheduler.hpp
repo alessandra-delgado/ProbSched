@@ -58,6 +58,7 @@ public:
 	virtual void generate_pcb_queue(int) {}
 	virtual void reset()
 	{
+		reset_loaded_processes();
 		PCB::reset_pid();
 		reset_cpu_time();
 		clear_processes_terminated();

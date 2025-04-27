@@ -14,7 +14,89 @@
 
 using namespace ftxui;
 
+void SchedulerStats::display_final_stats(std::string title)
+{
+    // Prepare the screen for interactive rendering
+    auto screen = ScreenInteractive::Fullscreen();
 
+    // Create the render function with prettier formatting
+    auto render_stats = [&]() -> Element 
+    {
+        // Helper function to create consistent labels
+        auto make_stat_row = [](const std::string& label, const std::string& value, Color value_color = Color::White) {
+            return hbox({
+                text(label + ": ") | size(WIDTH, EQUAL, 28) | color(Color::GrayLight),
+                text(value) | color(value_color)
+            });
+        };
+
+        Elements stats_elements;
+        // Calculate CPU utilization
+        float cpu_util = (Scheduler::get_current_time() > 0)
+                          ? ((float)SchedulerStats::total_utilization_time / Scheduler::get_current_time()) * 100.0
+                          : 0;
+
+        std::stringstream ss;
+        ss << std::fixed << std::setprecision(2) << cpu_util << "%";
+
+        Color util_color = cpu_util > 70 ? Color::Green : cpu_util > 30 ? Color::Yellow : Color::Red;
+
+        // Add statistics with consistent formatting
+        stats_elements.push_back(make_stat_row("Total simulation time", std::to_string(Scheduler::get_current_time()), Color::Cyan));
+        stats_elements.push_back(make_stat_row("Total processes completed", std::to_string(terminated_processes.size()), Color::Green));
+        stats_elements.push_back(make_stat_row("CPU utilization", ss.str(), util_color));
+        stats_elements.push_back(make_stat_row("CPU idle time", 
+            std::to_string(Scheduler::get_current_time() - SchedulerStats::total_utilization_time), Color::Yellow));
+        stats_elements.push_back(make_stat_row("Average waiting time", std::to_string(average_waiting_time), Color::Yellow));
+        stats_elements.push_back(make_stat_row("Average turnaround time", std::to_string(average_turnaround_time), Color::Yellow));
+        stats_elements.push_back(make_stat_row("Throughput", std::to_string(throughput) + " proc/sec", Color::Yellow));
+
+        return vbox(stats_elements) | border;
+    };
+
+    // Create the back button component
+    auto button = Button("   Back   ", [&] { 
+        screen.Exit();
+        return true;
+    });
+    
+    // Combine statistics and button into the final component
+    auto component = Container::Vertical({
+        Renderer(render_stats),
+        Renderer(button, [&] { return button->Render() | center | color(Color::Aquamarine1); })
+    });
+
+    // Create a size-constrained layout that centers in the screen
+    auto renderer = Renderer(component, [&] {
+        return vbox({
+            text(" ") | flex,
+            hbox({
+                text(" ") | flex,
+                vbox({
+                    text(" Final Statistics - " + title + " ") | bold | center | color(Color::White) | bgcolor(Color::Blue),
+                    separator(),
+                    component->Render(),
+                    separator(),
+                    text(" Press TAB to focus button, ENTER to select, ESC to exit ") | center | color(Color::GrayDark)
+                }) | size(WIDTH, LESS_THAN, 70) | border | bgcolor(Color::Black),
+                text(" ") | flex
+            }),
+            text(" ") | flex
+        });
+    });
+
+    // Keyboard handlers for additional ways to exit
+    auto exit_keys = CatchEvent(renderer, [&](Event event) {
+        if (event == Event::Escape || event.is_character() && event.character() == "q") {
+            screen.Exit();
+            return true;
+        }
+        return false;
+    });
+
+    std::cout << "\033[H\033[J";  // Clear the screen
+    screen.Loop(exit_keys);
+}
 
 void SchedulerStats::display_stats(std::string title)
 {
@@ -254,11 +336,12 @@ void SchedulerStats::display_stats(std::string title)
 
         gantt_elements.push_back(
             hbox({text(""),
-                  text("-60s")| flex,
+                  text("-60s") | flex,
                   text("") | flex,
-                  text("-30s")| flex,
+                  text("-30s") | flex,
                   text("") | flex,
-                  text("Now")})| size(WIDTH, EQUAL, 60)) ;
+                  text("Now")}) |
+            size(WIDTH, EQUAL, 60));
 
         return vbox({hbox({text("Scheduler Statistics - " + title) | bold | center | flex, text("  ")}) |
                          color(Color::White) | bgcolor(Color::Blue),
@@ -363,9 +446,9 @@ void SchedulerStats::display_stats_real_time(std::string title)
             }
         }
 
-        table_with_border.push_back(text( "┌─────────────────┬──────────────────────┬─────────────────┬─────────────────┬─────────────────┬──────────────────────┐"));
+        table_with_border.push_back(text("┌─────────────────┬──────────────────────┬─────────────────┬─────────────────┬─────────────────┬──────────────────────┐"));
         table_with_border.insert(table_with_border.end(), table_rows.begin(), table_rows.end());
-        table_with_border.push_back(text( "└─────────────────┴──────────────────────┴─────────────────┴─────────────────┴─────────────────┴──────────────────────┘"));
+        table_with_border.push_back(text("└─────────────────┴──────────────────────┴─────────────────┴─────────────────┴─────────────────┴──────────────────────┘"));
 
         if (hidden_processes > 0)
         {
@@ -408,7 +491,7 @@ void SchedulerStats::display_stats_real_time(std::string title)
                   text(ss.str()) | color(util_color)}));
 
         // todo: add response time and deadline miss ratio!
-        
+
         // Show cpu util bounds
         current_process_elements.push_back(
             hbox({text("CPU utilization Bound: "),
@@ -495,11 +578,12 @@ void SchedulerStats::display_stats_real_time(std::string title)
 
         gantt_elements.push_back(
             hbox({text(""),
-                  text("-60s")| flex,
+                  text("-60s") | flex,
                   text("") | flex,
-                  text("-30s")| flex,
+                  text("-30s") | flex,
                   text("") | flex,
-                  text("Now")})| size(WIDTH, EQUAL, 60)) ;
+                  text("Now")}) |
+            size(WIDTH, EQUAL, 60));
 
         return vbox({hbox({text("Scheduler Statistics - " + title) | bold | center | flex, text("  ")}) |
                          color(Color::White) | bgcolor(Color::Blue),
@@ -539,82 +623,67 @@ void SchedulerStats::collect(int current_time,
     std::reverse(SchedulerStats::terminated_processes.begin(), SchedulerStats::terminated_processes.end());
     SchedulerStats::ready_queue = ready_queue;
 
-    updateWaitingTime(current_time);
+    updateWaitingTime(ready_queue);
+    calculateAverageWaitingTime();
     updateTurnaroundTime(terminated_processes);
     updateThroughput(current_time);
-    updateDeadlineMisses(terminated_processes);
+    calculateAverageWaitingTime();
 
     total_completed_processes = terminated_processes.size(); // update the number of completed processes
 }
 
-void SchedulerStats::updateWaitingTime(int current_time)
+void SchedulerStats::updateWaitingTime(const std::vector<PCB> &ready_queue)
 {
-    total_waiting_time = 0;
-    total_processes = 0;
-
     for (const auto &pcb : ready_queue)
     {
-        if (pcb.get_arrival_time() < current_time)
-        {
-            int waiting_time = current_time - pcb.get_arrival_time();
-            total_waiting_time += waiting_time;
-            total_processes++;
-        }
-    }
-
-    const PCB *running_process = Scheduler::get_running_process().get();
-    if (running_process)
-    {
-        int running_waiting_time = current_time - running_process->get_arrival_time();
-        total_waiting_time += running_waiting_time;
-        total_processes++;
-    }
-
-    if (total_processes > 0)
-    {
-        average_waiting_time = static_cast<float>(total_waiting_time) / total_processes;
-    }
-    else
-    {
-        average_waiting_time = 0.0;
+        waiting_times[pcb.get_pid()]++;
     }
 }
 
-void SchedulerStats::updateTurnaroundTime(const std::vector<PCB>& terminated) {
+void SchedulerStats::calculateAverageWaitingTime()
+{
+    total_waiting_time = 0;
+    total_processes = waiting_times.size();
+
+    for (const auto &entry : waiting_times)
+    {
+        total_waiting_time += entry.second;
+    }
+
+    average_waiting_time = (total_processes > 0)
+                               ? static_cast<float>(total_waiting_time) / total_processes
+                               : 0.0;
+}
+
+void SchedulerStats::updateTurnaroundTime(const std::vector<PCB> &terminated)
+{
     total_turnaround_time = 0;
-    total_completed_processes = terminated.size();
-    
-    for (const auto& pcb : terminated) {
-        if (pcb.get_state() == ProcessState::Terminated) {
+    total_completed_processes = 0;
+
+    for (const auto &pcb : terminated)
+    {
+        if (pcb.get_state() == ProcessState::Terminated)
+        {
             int turnaround = pcb.get_completion_time() - pcb.get_arrival_time();
             total_turnaround_time += turnaround;
+            total_completed_processes++;
         }
     }
-    
-    average_turnaround_time = total_completed_processes > 0 
-        ? static_cast<float>(total_turnaround_time) / total_completed_processes 
-        : 0.0f;
+
+    average_turnaround_time = total_completed_processes > 0
+                                  ? static_cast<float>(total_turnaround_time) / total_completed_processes
+                                  : 0.0f;
 }
 
 void SchedulerStats::updateThroughput(int current_time)
 {
-    if (current_time > 0) {
-        // Calcula processos por 100 unidades de tempo 
-        throughput = static_cast<float>(total_completed_processes) / (current_time / 100.0f);
-    } else {
-        throughput = 0.0f;
-    }
-}
-
-void SchedulerStats::updateDeadlineMisses(const std::vector<PCB> &terminated_processes)
-{
-    deadline_misses = 0;
-
-    for (const auto &pcb : terminated_processes)
+    if (current_time > 0)
     {
-        if (pcb.get_completion_time() > pcb.get_deadline())
-        {
-            deadline_misses++;
-        }
+        // Calcula processos por 100 unidades de tempo
+        throughput = static_cast<float>(total_completed_processes) / (current_time / 100.0f);
+    }
+    else
+    {
+        throughput = 0.0f;
     }
 }

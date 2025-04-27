@@ -178,8 +178,7 @@ void simulator()
                     && Scheduler::get_loaded_processes_size() == 0)
                 || (gen_mode == 3 && Scheduler::get_current_time() >= execution_time_limit))
             {
-                std::cout << "All processes completed. Simulation ending..." << std::endl;
-                std::this_thread::sleep_for(std::chrono::seconds(3));
+                SchedulerStats::display_final_stats(algorithms[i]->get_scheduler_name());
                 stop_sched = true;
             }
         }

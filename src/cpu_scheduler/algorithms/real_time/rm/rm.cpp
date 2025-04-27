@@ -123,13 +123,16 @@ void RateMonotonic::load_to_ready()
     if (loaded_processes.empty())
         return;
 
-    for (int i = 0; i < (int)loaded_processes.size(); i++)
+    for (int i = 0; i < (int)loaded_processes.size(); )
     {
         if (loaded_processes[i].get_arrival_time() == current_time)
         {
-            all_tasks.push_back(loaded_processes[i]);
+            add_pcb(loaded_processes[i]);
             loaded_processes.erase(loaded_processes.begin() + i);
         }
-        // fingers crossed this works smoothly :')
+        else
+        {
+            ++i;
+        }
     }
 }
