@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include <atomic>
 #include <iomanip>
 
@@ -32,18 +31,10 @@ void RateMonotonic::schedule()
         }
     }
 
-    std::ofstream outfile;
-    outfile.open("./inputs/test.txt", std::ios_base::app); // append instead of overwrite
-
-    outfile << "===============================================" << std::endl;
-    outfile << "NEW CICLE" << std::endl;
-
     // * 2 - Find highest priority task (smallest period)
     PCB *highest_priority_task = nullptr;
     for (auto &task : all_tasks)
     {
-        outfile << task.get_name() << " " << task.get_period() << std::endl;
-
         // Skip tasks that aren't ready or have completed execution
         if (task.get_arrival_time() > current_time || task.get_exec_time() < 0)
         {
@@ -53,8 +44,6 @@ void RateMonotonic::schedule()
         // ! Select highest priority task (smallest period)
         if (highest_priority_task == nullptr || task.get_period() < highest_priority_task->get_period())
         {
-            outfile << "NEW HIGHEST_PRIORITY_TASK: " << task.get_name() << std::endl;
-
             highest_priority_task = &task;
         }
     }
@@ -62,7 +51,6 @@ void RateMonotonic::schedule()
     // * 3 - Run the highest priority task
     if (highest_priority_task)
     {
-        outfile << "SELECTED HIGHEST_PRIORITY_TASK: " << highest_priority_task->get_name() << std::endl;
         highest_priority_task->dec_exec_time();
 
         // Set running process for display/logging
@@ -83,7 +71,6 @@ void RateMonotonic::schedule()
             // Check for deadline miss
             if (task.get_arrival_time() <= current_time && task.get_exec_time() > 0)
             {
-                outfile << "INC MISS: " << task.get_name() << std::endl;
                 task.inc_deadline_misses();
             }
 
@@ -94,8 +81,6 @@ void RateMonotonic::schedule()
         }
     }
 
-    outfile << "===============================================" << std::endl;
-    outfile.close();
 }
 
 // convert to vector

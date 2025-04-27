@@ -13,7 +13,6 @@
 #include "../process/process_generator/process_generator.hpp"
 #include "../process/process_generator/random_generator.hpp"
 
-#include <fstream>
 std::atomic<bool> stop_sched(false);
 
 // Handle CTRL + C
@@ -111,7 +110,6 @@ void simulator()
             // Check if algorithm is real time (in function) & load the processes from the file
             load(pick_file(algorithms[i]->real_time()), algorithms[i]->real_time());
         }
-
         // * GEN MODE 3: Run for specific execution time *******************************************************************
         if (gen_mode == 3)
         {
@@ -124,7 +122,6 @@ void simulator()
             {
                 // real time algorithms , generate 3 processes
                 algorithms[i]->generate_pcb_queue(3);
-
             }
         }
 
@@ -166,7 +163,7 @@ void simulator()
             else
             {
                 // Display stats for real time algorithms
-                if (!SchedulerStats::get_skip_to_final() || algorithms[i]->real_time())
+                if (!SchedulerStats::get_skip_to_final() )
                 {
 
                     if (!(algorithms[i]->real_time()))
@@ -181,10 +178,18 @@ void simulator()
             SchedulerStats::updateWaitingTime();
             SchedulerStats::calculateAverageWaitingTime();
             // When all processes are done executing in GEN MODE 1 or 2
-            if (((gen_mode == 1 || gen_mode == 2) && (!algorithms[i]->real_time()) && algorithms[i]->is_ready_empty() && Scheduler::get_running_process() == nullptr && Scheduler::get_loaded_processes_size() == 0) || (gen_mode == 3 && Scheduler::get_current_time() >= execution_time_limit))
+            if (   ((gen_mode == 1 || gen_mode == 2) 
+                    && (!algorithms[i]->real_time()) 
+                    && algorithms[i]->is_ready_empty() 
+                    && Scheduler::get_running_process() == nullptr 
+                    && Scheduler::get_loaded_processes_size() == 0)
+                    || 
+                    (gen_mode == 3 && Scheduler::get_current_time() >= execution_time_limit))
             {
-                // todo: final stats for real time
-                SchedulerStats::display_final_stats(algorithms[i]->get_scheduler_name());
+                if(algorithms[i]->real_time())
+                    SchedulerStats::display_final_stats_real_time(algorithms[i]->get_scheduler_name());
+                else
+                    SchedulerStats::display_final_stats(algorithms[i]->get_scheduler_name());
                 stop_sched = true;
             }
         }

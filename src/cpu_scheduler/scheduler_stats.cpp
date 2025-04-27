@@ -81,7 +81,90 @@ void SchedulerStats::display_final_stats(std::string title)
     // Keyboard handlers for additional ways to exit
     auto exit_keys = CatchEvent(renderer, [&](Event event)
                                 {
-        if (event == Event::Escape || event.is_character() && event.character() == "q") {
+        if (event == Event::Escape || (event.is_character() && event.character() == "q")) {
+            screen.Exit();
+            return true;
+        }
+        return false; });
+
+    std::cout << "\033[H\033[J"; // Clear the screen
+    screen.Loop(exit_keys);
+}
+
+void SchedulerStats::display_final_stats_real_time(std::string title)
+{
+    // Prepare the screen for interactive rendering
+    auto screen = ScreenInteractive::Fullscreen();
+
+    // Create the render function with prettier formatting
+    auto render_stats = [&]() -> Element
+    {
+        // Helper function to create consistent labels
+        auto make_stat_row = [](const std::string &label, const std::string &value, Color value_color = Color::White)
+        {
+            return hbox({text(label + ": ") | size(WIDTH, EQUAL, 28) | color(Color::GrayLight),
+                         text(value) | color(value_color)});
+        };
+
+        Elements stats_elements;
+        // Calculate CPU utilization
+        float cpu_util = (Scheduler::get_current_time() > 0)
+                             ? ((float)SchedulerStats::total_utilization_time / Scheduler::get_current_time()) * 100.0
+                             : 0;
+
+        std::stringstream ss;
+        ss << std::fixed << std::setprecision(2) << cpu_util << "%";
+
+        Color util_color = cpu_util > 70 ? Color::Green : cpu_util > 30 ? Color::Yellow
+                                                                        : Color::Red;
+        Color c = deadline_misses > 0 ? Color::GreenLight : Color::RedLight;
+        Color bound = cpu_util_bound > 1.0 ? Color::RedLight : Color::GreenLight;
+        Color other_bound = Color::White;
+
+
+        // Add statistics with consistent formatting
+        stats_elements.push_back(make_stat_row("Total simulation time", std::to_string(Scheduler::get_current_time()), Color::Cyan));
+        stats_elements.push_back(make_stat_row("Total processes completed", std::to_string(terminated_processes.size()), Color::Green));
+        stats_elements.push_back(make_stat_row("CPU utilization", ss.str(), util_color));
+        stats_elements.push_back(make_stat_row("CPU idle time",
+                                               std::to_string(Scheduler::get_current_time() - SchedulerStats::total_utilization_time), Color::Yellow));
+        stats_elements.push_back(make_stat_row("Total deadline misses", std::to_string(deadline_misses), c));
+
+        stats_elements.push_back(make_stat_row(("CPU utilization bound: "), std::to_string(cpu_util_bound), bound));
+        stats_elements.push_back(make_stat_row(("L&L bound (RM): "), std::to_string(liu_ley_bound), other_bound));
+
+
+        return vbox(stats_elements) | border;
+    };
+
+    // Create the back button component
+    auto button = Button("   Back   ", [&]
+                         { 
+        screen.Exit();
+        return true; });
+
+    // Combine statistics and button into the final component
+    auto component = Container::Vertical({Renderer(render_stats),
+                                          Renderer(button, [&]
+                                                   { return button->Render() | center | color(Color::Aquamarine1); })});
+
+    // Create a size-constrained layout that centers in the screen
+    auto renderer = Renderer(component, [&]
+                             { return vbox({text(" ") | flex,
+                                            hbox({text(" ") | flex,
+                                                  vbox({text(" Final Statistics - " + title + " ") | bold | center | color(Color::White) | bgcolor(Color::Blue),
+                                                        separator(),
+                                                        component->Render(),
+                                                        separator(),
+                                                        text(" Press TAB to focus button, ENTER to select, ESC to exit ") | center | color(Color::GrayDark)}) |
+                                                      size(WIDTH, LESS_THAN, 70) | border | bgcolor(Color::Black),
+                                                  text(" ") | flex}),
+                                            text(" ") | flex}); });
+
+    // Keyboard handlers for additional ways to exit
+    auto exit_keys = CatchEvent(renderer, [&](Event event)
+                                {
+        if (event == Event::Escape || (event.is_character() && event.character() == "q")) {
             screen.Exit();
             return true;
         }
@@ -385,6 +468,8 @@ void SchedulerStats::display_stats_real_time(std::string title)
     // Create the elements for rendering
     auto render_elements = [&]() -> Element
     {
+        Color c = deadline_misses > 0 ? Color::GreenLight : Color::RedLight;
+
         // Declaração de variáveis no escopo correto
         Elements current_process_elements;
         Elements gantt_elements;
@@ -415,7 +500,7 @@ void SchedulerStats::display_stats_real_time(std::string title)
                                      text(std::to_string(pcb.get_arrival_time())),
                                      text(std::to_string(pcb.get_burst_time())),
                                      text(std::to_string(pcb.get_deadline())),
-                                     text(std::to_string(pcb.get_deadline_misses())) | color(Color::Red)});
+                                     text(std::to_string(pcb.get_deadline_misses())) | color(c)});
         }
 
         for (const auto &row : table_content)
@@ -484,7 +569,7 @@ void SchedulerStats::display_stats_real_time(std::string title)
             hbox({text("CPU Utilization: "),
                   text(ss.str()) | color(util_color)}));
 
-        // todo: add response time and deadline miss ratio!
+        // todo: add response time and deadline miss ratio! -- NO
 
         // Show cpu util bounds
         current_process_elements.push_back(
@@ -619,6 +704,7 @@ void SchedulerStats::collect(int current_time,
 
     updateTurnaroundTime(terminated_processes);
     updateThroughput(current_time);
+    update_deadline_misses();
 
     total_completed_processes = terminated_processes.size(); // update the number of completed processes
 }
@@ -631,16 +717,12 @@ void SchedulerStats::updateWaitingTime()
     }
 }
 
-#include <fstream>
 void SchedulerStats::calculateAverageWaitingTime()
 {
     total_waiting_time = 0;
-    std::ofstream outfile;
-    outfile.open("./debugg.txt", std::ios_base::app); // append instead of overwrite
 
     for (const auto &entry : waiting_times)
     {
-        outfile << "id: " << entry.first << " | waiting time: " << entry.second << std::endl;
         total_waiting_time += entry.second;
     }
 
@@ -648,9 +730,6 @@ void SchedulerStats::calculateAverageWaitingTime()
                                ? static_cast<float>(total_waiting_time) / total_processes
                                : 0.0;
 
-    outfile << "numero processos: " << total_processes << " | avg atual: " << average_waiting_time << "| tempo total waiting: " << total_waiting_time << std::endl;
-    outfile << "-------------------------------------------------------------------------------------" << std::endl;
-    outfile.close();
 }
 
 void SchedulerStats::updateTurnaroundTime(const std::vector<PCB> &terminated)
@@ -684,4 +763,14 @@ void SchedulerStats::updateThroughput(int current_time)
     {
         throughput = 0.0f;
     }
+}
+
+void SchedulerStats::update_deadline_misses()
+{
+    int sum = 0;
+    for (const auto &pcb : SchedulerStats::ready_queue)
+    {
+        sum += pcb.get_deadline_misses();
+    }
+    deadline_misses = sum;
 }

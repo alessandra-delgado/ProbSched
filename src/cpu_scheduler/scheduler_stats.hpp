@@ -12,7 +12,7 @@ private:
     inline static int total_waiting_time = 0;
     inline static int total_response_time = 0; // todo: add response time to RT stats
     inline static int total_utilization_time = 0;
-    
+
     inline static int current_time = 0;
     inline static int total_processes = 0;
     inline static float average_waiting_time = 0;
@@ -39,10 +39,9 @@ private:
 
 public:
     // total created processes
-    static inline void set_total_processes(int n ) { total_processes = n;}
-    static inline void inc_total_processes() { total_processes++;}
-    static inline int get_total_processes() { return total_processes;}
-    
+    static inline void set_total_processes(int n) { total_processes = n; }
+    static inline void inc_total_processes() { total_processes++; }
+    static inline int get_total_processes() { return total_processes; }
 
     static inline bool get_skip_to_final() { return skip_to_final_stats; }
     static inline void set_skip_to_final(bool b) { skip_to_final_stats = b; }
@@ -53,20 +52,23 @@ public:
         const std::vector<PCB> terminated_processes);
 
     static void display_final_stats(std::string title);
-    static void final_stats_rt(std::string title);
+    static void display_final_stats_real_time(std::string title);
     static void display_stats(std::string title);
     static void display_stats_real_time(std::string title);
     static void updateWaitingTime();
     static void calculateAverageWaitingTime();
     static void updateTurnaroundTime(const std::vector<PCB> &terminated_processes);
     static void updateThroughput(int current_time);
+
+    static void update_deadline_misses();
+
     static void reset_stats()
     {
+        deadline_misses = 0;
         total_processes = 0;
         total_response_time = 0;
         total_utilization_time = 0;
         total_turnaround_time = 0;
-        total_utilization_time = 0;
         total_processes = 0;
         total_completed_processes = 0;
         current_time = 0;
@@ -84,7 +86,6 @@ public:
         history_index = 0;
     }
 
-    
     // For real time
     static void set_cpu_utilization_bounds(std::vector<PCB> tasks)
     {

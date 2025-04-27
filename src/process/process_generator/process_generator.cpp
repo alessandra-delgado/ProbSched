@@ -1,6 +1,5 @@
 #include "process_generator.hpp"
 
-#include <fstream>
 ProcessGenerator::ProcessGenerator(double lambda, double mean_burst, double stddev_burst, int burs_lambda, int max_prio, int dl_range)
 {
 	arrival_rate = lambda;
@@ -162,10 +161,6 @@ std::vector<PCB> ProcessGenerator::generatePCBListInterArrival(int num_processes
 				pcbs.push_back(pcb);
 				amount--;
 				num_processes--;
-				std::ofstream outfile;
-				outfile.open("./test.txt", std::ios_base::app); // append instead of overwrite
-				outfile << "id: " << pcb.get_pid() << " | priority: " << pcb.get_priority() << " | arrival: " << pcb.get_arrival_time() << " | burst: " << pcb.get_burst_time() << std::endl;
-				outfile.close();
 			}
 			current_time++;
 		}
@@ -180,11 +175,6 @@ std::vector<PCB> ProcessGenerator::generatePCBListInterArrival(int num_processes
 			pcbs.push_back(pcb);
 			// Update the time
 			current_time = arrival;
-			// Debugging --------------------------------------------------------------------------------------------------
-			std::ofstream outfile;
-			outfile.open("./test.txt", std::ios_base::app); // append instead of overwrite
-			outfile << "id: " << pcb.get_pid() << " | priority: " << pcb.get_priority() << " | arrival: " << pcb.get_arrival_time() << " | burst: " << pcb.get_burst_time() << std::endl;
-			outfile.close();
 		}
 	}
 
