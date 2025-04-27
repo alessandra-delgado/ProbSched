@@ -20,33 +20,33 @@ void SchedulerStats::display_final_stats(std::string title)
     auto screen = ScreenInteractive::Fullscreen();
 
     // Create the render function with prettier formatting
-    auto render_stats = [&]() -> Element 
+    auto render_stats = [&]() -> Element
     {
         // Helper function to create consistent labels
-        auto make_stat_row = [](const std::string& label, const std::string& value, Color value_color = Color::White) {
-            return hbox({
-                text(label + ": ") | size(WIDTH, EQUAL, 28) | color(Color::GrayLight),
-                text(value) | color(value_color)
-            });
+        auto make_stat_row = [](const std::string &label, const std::string &value, Color value_color = Color::White)
+        {
+            return hbox({text(label + ": ") | size(WIDTH, EQUAL, 28) | color(Color::GrayLight),
+                         text(value) | color(value_color)});
         };
 
         Elements stats_elements;
         // Calculate CPU utilization
         float cpu_util = (Scheduler::get_current_time() > 0)
-                          ? ((float)SchedulerStats::total_utilization_time / Scheduler::get_current_time()) * 100.0
-                          : 0;
+                             ? ((float)SchedulerStats::total_utilization_time / Scheduler::get_current_time()) * 100.0
+                             : 0;
 
         std::stringstream ss;
         ss << std::fixed << std::setprecision(2) << cpu_util << "%";
 
-        Color util_color = cpu_util > 70 ? Color::Green : cpu_util > 30 ? Color::Yellow : Color::Red;
+        Color util_color = cpu_util > 70 ? Color::Green : cpu_util > 30 ? Color::Yellow
+                                                                        : Color::Red;
 
         // Add statistics with consistent formatting
         stats_elements.push_back(make_stat_row("Total simulation time", std::to_string(Scheduler::get_current_time()), Color::Cyan));
         stats_elements.push_back(make_stat_row("Total processes completed", std::to_string(terminated_processes.size()), Color::Green));
         stats_elements.push_back(make_stat_row("CPU utilization", ss.str(), util_color));
-        stats_elements.push_back(make_stat_row("CPU idle time", 
-            std::to_string(Scheduler::get_current_time() - SchedulerStats::total_utilization_time), Color::Yellow));
+        stats_elements.push_back(make_stat_row("CPU idle time",
+                                               std::to_string(Scheduler::get_current_time() - SchedulerStats::total_utilization_time), Color::Yellow));
         stats_elements.push_back(make_stat_row("Average waiting time", std::to_string(average_waiting_time), Color::Yellow));
         stats_elements.push_back(make_stat_row("Average turnaround time", std::to_string(average_turnaround_time), Color::Yellow));
         stats_elements.push_back(make_stat_row("Throughput", std::to_string(throughput) + " proc/sec", Color::Yellow));
@@ -55,46 +55,39 @@ void SchedulerStats::display_final_stats(std::string title)
     };
 
     // Create the back button component
-    auto button = Button("   Back   ", [&] { 
+    auto button = Button("   Back   ", [&]
+                         { 
         screen.Exit();
-        return true;
-    });
-    
+        return true; });
+
     // Combine statistics and button into the final component
-    auto component = Container::Vertical({
-        Renderer(render_stats),
-        Renderer(button, [&] { return button->Render() | center | color(Color::Aquamarine1); })
-    });
+    auto component = Container::Vertical({Renderer(render_stats),
+                                          Renderer(button, [&]
+                                                   { return button->Render() | center | color(Color::Aquamarine1); })});
 
     // Create a size-constrained layout that centers in the screen
-    auto renderer = Renderer(component, [&] {
-        return vbox({
-            text(" ") | flex,
-            hbox({
-                text(" ") | flex,
-                vbox({
-                    text(" Final Statistics - " + title + " ") | bold | center | color(Color::White) | bgcolor(Color::Blue),
-                    separator(),
-                    component->Render(),
-                    separator(),
-                    text(" Press TAB to focus button, ENTER to select, ESC to exit ") | center | color(Color::GrayDark)
-                }) | size(WIDTH, LESS_THAN, 70) | border | bgcolor(Color::Black),
-                text(" ") | flex
-            }),
-            text(" ") | flex
-        });
-    });
+    auto renderer = Renderer(component, [&]
+                             { return vbox({text(" ") | flex,
+                                            hbox({text(" ") | flex,
+                                                  vbox({text(" Final Statistics - " + title + " ") | bold | center | color(Color::White) | bgcolor(Color::Blue),
+                                                        separator(),
+                                                        component->Render(),
+                                                        separator(),
+                                                        text(" Press TAB to focus button, ENTER to select, ESC to exit ") | center | color(Color::GrayDark)}) |
+                                                      size(WIDTH, LESS_THAN, 70) | border | bgcolor(Color::Black),
+                                                  text(" ") | flex}),
+                                            text(" ") | flex}); });
 
     // Keyboard handlers for additional ways to exit
-    auto exit_keys = CatchEvent(renderer, [&](Event event) {
+    auto exit_keys = CatchEvent(renderer, [&](Event event)
+                                {
         if (event == Event::Escape || event.is_character() && event.character() == "q") {
             screen.Exit();
             return true;
         }
-        return false;
-    });
+        return false; });
 
-    std::cout << "\033[H\033[J";  // Clear the screen
+    std::cout << "\033[H\033[J"; // Clear the screen
     screen.Loop(exit_keys);
 }
 
@@ -376,6 +369,7 @@ void SchedulerStats::display_stats(std::string title)
 
 void SchedulerStats::display_stats_real_time(std::string title)
 {
+    SchedulerStats::set_cpu_utilization_bounds(ready_queue);
     // Record current running process in history
     const auto &running_process = Scheduler::get_running_process();
     if (running_process)
@@ -623,36 +617,40 @@ void SchedulerStats::collect(int current_time,
     std::reverse(SchedulerStats::terminated_processes.begin(), SchedulerStats::terminated_processes.end());
     SchedulerStats::ready_queue = ready_queue;
 
-    updateWaitingTime(ready_queue);
-    calculateAverageWaitingTime();
     updateTurnaroundTime(terminated_processes);
     updateThroughput(current_time);
-    calculateAverageWaitingTime();
 
     total_completed_processes = terminated_processes.size(); // update the number of completed processes
 }
 
-void SchedulerStats::updateWaitingTime(const std::vector<PCB> &ready_queue)
+void SchedulerStats::updateWaitingTime()
 {
-    for (const auto &pcb : ready_queue)
+    for (const auto &pcb : SchedulerStats::ready_queue)
     {
         waiting_times[pcb.get_pid()]++;
     }
 }
 
+#include <fstream>
 void SchedulerStats::calculateAverageWaitingTime()
 {
     total_waiting_time = 0;
-    total_processes = waiting_times.size();
+    std::ofstream outfile;
+    outfile.open("./debugg.txt", std::ios_base::app); // append instead of overwrite
 
     for (const auto &entry : waiting_times)
     {
+        outfile << "id: " << entry.first << " | waiting time: " << entry.second << std::endl;
         total_waiting_time += entry.second;
     }
 
     average_waiting_time = (total_processes > 0)
                                ? static_cast<float>(total_waiting_time) / total_processes
                                : 0.0;
+
+    outfile << "numero processos: " << total_processes << " | avg atual: " << average_waiting_time << "| tempo total waiting: " << total_waiting_time << std::endl;
+    outfile << "-------------------------------------------------------------------------------------" << std::endl;
+    outfile.close();
 }
 
 void SchedulerStats::updateTurnaroundTime(const std::vector<PCB> &terminated)

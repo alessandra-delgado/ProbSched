@@ -51,7 +51,7 @@ void simulator()
         if (gen_mode == 4) // Back selected
             continue;
 
-        int process_count = -1; // -1 significa infinito
+        int process_count = -1;        // -1 significa infinito
         int execution_time_limit = -1; // -1 significa sem limite de tempo
 
         // ! 3 - Reset algorithm before applying settings
@@ -113,14 +113,18 @@ void simulator()
         }
 
         // * GEN MODE 3: Run for specific execution time *******************************************************************
-        if (gen_mode == 3){
+        if (gen_mode == 3)
+        {
             execution_time_limit = get_execution_time();
-            if (!algorithms[i]->real_time()){
-                Scheduler::set_infinite_mode(true); 
-            }else{
-                // real time algorithms , generat 3 processes
+            if (!algorithms[i]->real_time())
+            {
+                Scheduler::set_infinite_mode(true);
+            }
+            else
+            {
+                // real time algorithms , generate 3 processes
                 algorithms[i]->generate_pcb_queue(3);
-                SchedulerStats::set_cpu_utilization_bounds(algorithms[i]->ready_queue_to_vector());
+
             }
         }
 
@@ -139,7 +143,7 @@ void simulator()
                     {
                         PCB pcb = algorithms[i]->genPCB(Scheduler::get_current_time());
                         algorithms[i]->add_pcb(pcb);
-                        Scheduler::inc_created_processes();
+                        SchedulerStats::inc_total_processes();
                     }
                 }
             }
@@ -162,28 +166,27 @@ void simulator()
             else
             {
                 // Display stats for real time algorithms
-                if(!SchedulerStats::get_skip_to_final()){
+                if (!SchedulerStats::get_skip_to_final() || algorithms[i]->real_time())
+                {
+
                     if (!(algorithms[i]->real_time()))
                         SchedulerStats::display_stats(algorithms[i]->get_scheduler_name());
                     else // Diplsay stats for general algorithms
                         SchedulerStats::display_stats_real_time(algorithms[i]->get_scheduler_name());
-    
+
                     std::this_thread::sleep_for(std::chrono::seconds(1)); // just so the screen is readable
                 }
                 Scheduler::increment_current_time();
             }
+            SchedulerStats::updateWaitingTime();
+            SchedulerStats::calculateAverageWaitingTime();
             // When all processes are done executing in GEN MODE 1 or 2
-            if (((gen_mode == 1 || gen_mode == 2) 
-                    && (!algorithms[i]->real_time()) 
-                    && algorithms[i]->is_ready_empty()
-                    && Scheduler::get_running_process() == nullptr
-                    && Scheduler::get_loaded_processes_size() == 0)
-                || (gen_mode == 3 && Scheduler::get_current_time() >= execution_time_limit))
+            if (((gen_mode == 1 || gen_mode == 2) && (!algorithms[i]->real_time()) && algorithms[i]->is_ready_empty() && Scheduler::get_running_process() == nullptr && Scheduler::get_loaded_processes_size() == 0) || (gen_mode == 3 && Scheduler::get_current_time() >= execution_time_limit))
             {
+                // todo: final stats for real time
                 SchedulerStats::display_final_stats(algorithms[i]->get_scheduler_name());
                 stop_sched = true;
             }
         }
-        // // might delete this -> std::cout << "Simulation stopped" << std::endl;
     }
 }

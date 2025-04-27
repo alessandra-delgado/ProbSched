@@ -46,18 +46,6 @@ void RoundRobin::schedule()
     if (stop_sched)
         return;
 
-    /* if (random_generation && max_processes == INT_MAX) {
-        int queue_size = ready.size();
-        double prob = 1.0 / (1 + queue_size * 0.5);
-        if (rand() / double(RAND_MAX) < prob) {
-            double e = (rng.exponential(0.5));
-            if (e > 1.5 && e < 4.5) {
-                PCB pcb = pg.generatePCB(Scheduler::get_current_time());
-                add_pcb(pcb);
-            }
-        }
-    } */
-
     if (running_process != nullptr)
     {
         running_process->dec_exec_time();
@@ -77,9 +65,6 @@ void RoundRobin::schedule()
             }
         }
         else if ((current_time - current_process_start_time) % time_quantum == 0) {
-            std::cout << "DEBUG: Preempting process " << running_process->get_name() 
-                      << " after " << (current_time - current_process_start_time) 
-                      << " units (quantum=" << time_quantum << ")" << std::endl;
             running_process->set_state(ProcessState::Ready);
             add_pcb(*running_process);
             running_process = nullptr;
@@ -128,6 +113,7 @@ void RoundRobin::load_to_ready()
         if (loaded_processes[i].get_arrival_time() == current_time)
         {
             add_pcb(loaded_processes[i]);
+            SchedulerStats::inc_total_processes();
             loaded_processes.erase(loaded_processes.begin() + i);
         }
         else

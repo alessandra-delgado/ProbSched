@@ -23,7 +23,6 @@ int main_menu(bool ignore_first_click = false)
     std::vector<std::string> menu_entries = {
         "Start Simulation",
         "Settings",
-        "About",
         "Quit"};
 
     int selected = 0;
@@ -39,7 +38,6 @@ int main_menu(bool ignore_first_click = false)
                                              separator(),
                                              selected == 0   ? text("Start the CPU scheduler")
                                              : selected == 1 ? text("Change process generation settings")
-                                             : selected == 2 ? text("About ProbSched")
                                                              : text("That's a self explanatory option") // exit selected
                                          }) |
                                          border | center; // center the vbox and add a border

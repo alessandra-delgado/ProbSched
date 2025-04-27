@@ -7,13 +7,12 @@ class SchedulerStats
 {
 private:
     inline static bool skip_to_final_stats = false;
-    
     // For intermediate calculations
     inline static int total_turnaround_time = 0;
     inline static int total_waiting_time = 0;
     inline static int total_response_time = 0; // todo: add response time to RT stats
     inline static int total_utilization_time = 0;
-
+    
     inline static int current_time = 0;
     inline static int total_processes = 0;
     inline static float average_waiting_time = 0;
@@ -39,6 +38,12 @@ private:
     static inline int history_index = 0;
 
 public:
+    // total created processes
+    static inline void set_total_processes(int n ) { total_processes = n;}
+    static inline void inc_total_processes() { total_processes++;}
+    static inline int get_total_processes() { return total_processes;}
+    
+
     static inline bool get_skip_to_final() { return skip_to_final_stats; }
     static inline void set_skip_to_final(bool b) { skip_to_final_stats = b; }
     static void collect(
@@ -51,12 +56,13 @@ public:
     static void final_stats_rt(std::string title);
     static void display_stats(std::string title);
     static void display_stats_real_time(std::string title);
-    static void updateWaitingTime(const std::vector<PCB> &ready_queue);
+    static void updateWaitingTime();
     static void calculateAverageWaitingTime();
     static void updateTurnaroundTime(const std::vector<PCB> &terminated_processes);
     static void updateThroughput(int current_time);
     static void reset_stats()
     {
+        total_processes = 0;
         total_response_time = 0;
         total_utilization_time = 0;
         total_turnaround_time = 0;
@@ -71,7 +77,8 @@ public:
         deadline_misses = 0;
         terminated_processes.clear();
         ready_queue.clear();
-
+        cpu_util_bound = 0.0f;
+        liu_ley_bound = 0.0f;
 
         process_history = std::vector<std::string>(HISTORY_SIZE, "");
         history_index = 0;

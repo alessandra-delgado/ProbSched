@@ -127,7 +127,8 @@ void RateMonotonic::load_to_ready()
     {
         if (loaded_processes[i].get_arrival_time() == current_time)
         {
-            add_pcb(loaded_processes[i]);
+            all_tasks.push_back(loaded_processes[i]);
+            SchedulerStats::inc_total_processes();
             loaded_processes.erase(loaded_processes.begin() + i);
         }
         else
