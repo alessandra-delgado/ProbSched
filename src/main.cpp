@@ -20,11 +20,9 @@ int main()
 			settings();
 			ignore_next_click = true;
 			break;
-		case 2:
-			std::cout << "no about yet" << std::endl;
 		default:
 			break;
 		}
-	} while (opt != 3); // exited
+	} while (opt != 2); // exited
 	return 0;
 }

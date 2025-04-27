@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include <atomic>
 #include <iomanip>
 
@@ -31,17 +30,10 @@ void EarliestDeadlineFirst::schedule()
         }
     }
 
-    std::ofstream outfile;
-    outfile.open("./test.txt", std::ios_base::app); // append instead of overwrite
-
-    outfile << "===============================================" << std::endl;
-    outfile << "NEW CICLE" << std::endl;
-
     // * 2 - Find highest priority task (earliest deadline)
     PCB *highest_priority_task = nullptr;
     for (auto &task : all_tasks)
     {
-        outfile << task.get_name() << " " << task.get_deadline() << std::endl;
 
         // Skip tasks that aren't ready or have completed execution
         if (task.get_arrival_time() > current_time || task.get_exec_time() < 0)
@@ -52,8 +44,6 @@ void EarliestDeadlineFirst::schedule()
         // ! Select highest priority task (earliest deadline)
         if (highest_priority_task == nullptr || task.get_deadline() < highest_priority_task->get_deadline())
         {
-            outfile << "NEW HIGHEST_PRIORITY_TASK: " << task.get_name() << std::endl;
-
             highest_priority_task = &task;
         }
     }
@@ -61,9 +51,7 @@ void EarliestDeadlineFirst::schedule()
     // * 3 - Run the highest priority task
     if (highest_priority_task)
     {
-        outfile << "SELECTED HIGHEST_PRIORITY_TASK: " << highest_priority_task->get_name() << std::endl;
         highest_priority_task->dec_exec_time();
-        cpu_time++;
 
         // Set running process for display/logging
         running_process = std::make_unique<PCB>(*highest_priority_task);
@@ -83,7 +71,6 @@ void EarliestDeadlineFirst::schedule()
             // Check for deadline miss
             if (task.get_arrival_time() <= current_time && task.get_exec_time() > 0)
             {
-                outfile << "INC MISS: " << task.get_name() << std::endl;
                 task.inc_deadline_misses();
             }
 
@@ -94,8 +81,6 @@ void EarliestDeadlineFirst::schedule()
         }
     }
 
-    outfile << "===============================================" << std::endl;
-    outfile.close();
 }
 
 // convert to vector
@@ -123,13 +108,17 @@ void EarliestDeadlineFirst::load_to_ready()
     if (loaded_processes.empty())
         return;
 
-    for (int i = 0; i < (int)loaded_processes.size(); i++)
+    for (int i = 0; i < (int)loaded_processes.size(); )
     {
         if (loaded_processes[i].get_arrival_time() == current_time)
         {
             all_tasks.push_back(loaded_processes[i]);
+            SchedulerStats::inc_total_processes();
             loaded_processes.erase(loaded_processes.begin() + i);
         }
-        // fingers crossed this works smoothly :')
+        else
+        {
+            ++i;
+        }
     }
 }

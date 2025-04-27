@@ -80,11 +80,7 @@ void PriorityPreemptive::schedule()
 }
 
 void PriorityPreemptive::generate_pcb_queue(int num_processes) {
-    for (int i = 0; i < num_processes; ++i) {
-        PCB pcb = ProcessGenerator::generatePCB(Scheduler::get_current_time());
-        add_pcb(pcb);
-    }
-    generated_processes = num_processes;
+    loaded_processes = ProcessGenerator::generatePCBListInterArrival(num_processes);
 }
 
 std::vector<PCB> PriorityPreemptive::ready_queue_to_vector()
@@ -113,12 +109,17 @@ void PriorityPreemptive::load_to_ready()
     if (loaded_processes.empty())
         return;
 
-    for (int i = 0; i < (int)loaded_processes.size(); i++)
+    for (int i = 0; i < (int)loaded_processes.size(); )
     {
-        if(loaded_processes[i].get_arrival_time() == current_time){
-            add_pcb(Scheduler::loaded_processes[i]);
-            loaded_processes.erase(loaded_processes.begin()+i);
+        if (loaded_processes[i].get_arrival_time() == current_time)
+        {
+            add_pcb(loaded_processes[i]);
+            SchedulerStats::inc_total_processes();
+            loaded_processes.erase(loaded_processes.begin() + i);
         }
-        // fingers crossed this works smoothly :')
+        else
+        {
+            ++i;
+        }
     }
 }

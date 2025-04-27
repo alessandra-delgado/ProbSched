@@ -23,7 +23,6 @@ int main_menu(bool ignore_first_click = false)
     std::vector<std::string> menu_entries = {
         "Start Simulation",
         "Settings",
-        "About",
         "Quit"};
 
     int selected = 0;
@@ -39,7 +38,6 @@ int main_menu(bool ignore_first_click = false)
                                              separator(),
                                              selected == 0   ? text("Start the CPU scheduler")
                                              : selected == 1 ? text("Change process generation settings")
-                                             : selected == 2 ? text("About ProbSched")
                                                              : text("That's a self explanatory option") // exit selected
                                          }) |
                                          border | center; // center the vbox and add a border
@@ -118,7 +116,6 @@ void settings()
     
 
     // Create components ------------------------------------------------------------------
-    // todo: dynamic generation opts ^^??
     auto gen_rate_input = Input(&gen_rate_str, "") | size(WIDTH, EQUAL, 15);
     // For distribution parameters
     auto arrival_rate_input = Input(&arrival_rate_str, "") | size(WIDTH, EQUAL, 15);
@@ -136,12 +133,20 @@ void settings()
     auto burst_radio = Radiobox(&burst_options, &burst_index);
     auto priority_radio = Radiobox(&priority_options, &priority_index);
 
+    bool skip = SchedulerStats::get_skip_to_final();
+
     std::vector<std::string> toggle_ready_entries = {
         "Soft",
         "Off"
     };
+
     int toggle_ready_selected = 0;
     Component toggle_ready = Toggle(&toggle_ready_entries, &toggle_ready_selected);
+
+    // other settings
+    auto other = Container::Vertical({
+        Checkbox("Skip to final stats", &skip)
+    });
 
     std::string button_label = "Apply Settings";
     auto apply_button = Button(&button_label, [&]
@@ -161,7 +166,7 @@ void settings()
         catch(...){
             // Handle conversion errors
         }
-
+        SchedulerStats::set_skip_to_final(skip);
         ProcessGenerator::set_soft_limit(toggle_ready_selected == 0);
         ProcessGenerator::set_use_poisson(arrival_index == 0);
         ProcessGenerator::set_use_exponential(burst_index == 0);
@@ -169,7 +174,7 @@ void settings()
 
         return true; });
 
-    std::string button_back_label = "Back";
+    std::string button_back_label = "     Back";
     auto back_button = Button(&button_back_label, [&]
                               {
         screen.Exit();
@@ -189,6 +194,7 @@ void settings()
         max_burst_str = std::to_string(ProcessGenerator::get_max_burst());
         max_priority_str = std::to_string(ProcessGenerator::get_max_priority());
 
+        skip = SchedulerStats::get_skip_to_final();
         toggle_ready_selected = ProcessGenerator::get_soft_limit() ? 0 : 1;
         arrival_index = ProcessGenerator::get_use_poisson() ? 0 : 1;
         burst_index = ProcessGenerator::get_use_exponential() ? 0 : 1;
@@ -244,12 +250,16 @@ void settings()
                                                    apply_button,
                                                    back_button});
 
+    
+
+
     // Main components
     Components main_components;
     main_components.push_back(Renderer([]
                                        { return text("ProbSched Settings") | bold; }));
     main_components.push_back(arrival_container);
     main_components.push_back(general_container);
+    main_components.push_back(other);
     main_components.push_back(button_container);
 
     auto main_container = Container::Vertical(main_components);
@@ -345,6 +355,16 @@ void settings()
         
         content = vbox(elements);
 
+        Element content_other;
+        Elements other_elmts;
+        other_elmts.push_back(vbox({
+            text("Other configurations") | bold | color(Color::SeaGreen2),
+            other->Render(),
+            skip ? text("Warning: Statistics will only be displayed on non-infinite modes.") | color(Color::RedLight)
+            : text("")
+        }));
+
+        content_other = vbox(other_elmts);
         // Button styles
         auto styled_button = [&](Element button, Color c) {
             return button | color(c) | bold | size(WIDTH, EQUAL, 16) ;
@@ -355,7 +375,8 @@ void settings()
             separator() | color(Color::Blue),
             arrival | flex | size(HEIGHT, EQUAL, 10),
             content | hcenter | flex,
-            text("Other options coming soon? :)") | center | color(Color::LightGreen), 
+            separator(),
+            content_other,
             separator() | color(Color::Blue),
             hbox({
                 styled_button(reset_button->Render(), Color::Red),
@@ -430,6 +451,7 @@ int pick_algorithm()
                                                     menu->Render() | center, // center the menu itself
                                                     separator(),
                                                     selected == 5 ? text("Current time quantum: " + std::to_string(rr_quantum))
+                                                    : selected == 4 ? text("Better known as SRTF.")
                                                     : selected == 8 ? text("Yes, that does exactly as it says.") | color(Color::GrayDark)
                                                     : text(""),
                                                 }) | border); });

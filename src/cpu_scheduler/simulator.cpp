@@ -13,7 +13,6 @@
 #include "../process/process_generator/process_generator.hpp"
 #include "../process/process_generator/random_generator.hpp"
 
-#include <fstream>
 std::atomic<bool> stop_sched(false);
 
 // Handle CTRL + C
@@ -51,7 +50,7 @@ void simulator()
         if (gen_mode == 4) // Back selected
             continue;
 
-        int process_count = -1; // -1 significa infinito
+        int process_count = -1;        // -1 significa infinito
         int execution_time_limit = -1; // -1 significa sem limite de tempo
 
         // ! 3 - Reset algorithm before applying settings
@@ -67,11 +66,6 @@ void simulator()
         // * GEN MODE 0: infinite process generation ******************************************************************
         if (gen_mode == 0)
         {
-            if (i == 5)
-            { // Round Robin
-                dynamic_cast<RoundRobin *>(algorithms[i].get())->set_max_processes(INT_MAX);
-                dynamic_cast<RoundRobin *>(algorithms[i].get())->enable_random_generation(); // ? why complicate..?
-            }
             if (algorithms[i]->real_time())
             {
                 algorithms[i]->generate_pcb_queue(3);
@@ -93,16 +87,8 @@ void simulator()
             }
             else
             {
-                if (i == 5) // Catch round robin
-                {
-                    dynamic_cast<RoundRobin *>(algorithms[i].get())->set_max_processes(process_count);
-                    dynamic_cast<RoundRobin *>(algorithms[i].get())->disable_random_generation();
-                    dynamic_cast<RoundRobin *>(algorithms[i].get())->generate_pcb_queue(process_count);
-                }
-                else
-                {
-                    algorithms[i]->generate_pcb_queue(process_count);
-                }
+
+                algorithms[i]->generate_pcb_queue(process_count);
             }
         }
         // * GEN MODE 2: Load processes from a file *******************************************************************
@@ -111,16 +97,18 @@ void simulator()
             // Check if algorithm is real time (in function) & load the processes from the file
             load(pick_file(algorithms[i]->real_time()), algorithms[i]->real_time());
         }
-
         // * GEN MODE 3: Run for specific execution time *******************************************************************
-        if (gen_mode == 3){
+        if (gen_mode == 3)
+        {
             execution_time_limit = get_execution_time();
-            if (!algorithms[i]->real_time()){
-                Scheduler::set_infinite_mode(true); 
-            }else{
-                // real time algorithms , generat 3 processes
+            if (!algorithms[i]->real_time())
+            {
+                Scheduler::set_infinite_mode(true);
+            }
+            else
+            {
+                // real time algorithms , generate 3 processes
                 algorithms[i]->generate_pcb_queue(3);
-                SchedulerStats::set_cpu_utilization_bounds(algorithms[i]->ready_queue_to_vector());
             }
         }
 
@@ -139,7 +127,7 @@ void simulator()
                     {
                         PCB pcb = algorithms[i]->genPCB(Scheduler::get_current_time());
                         algorithms[i]->add_pcb(pcb);
-                        Scheduler::inc_created_processes();
+                        SchedulerStats::inc_total_processes();
                     }
                 }
             }
@@ -161,28 +149,31 @@ void simulator()
             }
             else
             {
-                // Display stats for real time algorithms
-                if (!(algorithms[i]->real_time()))
-                    SchedulerStats::display_stats(algorithms[i]->get_scheduler_name());
-                else // Diplsay stats for general algorithms
-                    SchedulerStats::display_stats_real_time(algorithms[i]->get_scheduler_name());
+                if (!SchedulerStats::get_skip_to_final() || (SchedulerStats::get_skip_to_final() &&  (gen_mode == 0 || (algorithms[i]->real_time() && gen_mode != 3))))
+                {
 
-                std::this_thread::sleep_for(std::chrono::seconds(1)); // just so the screen is readable
+                    if (!(algorithms[i]->real_time()))
+                        // Display stats for real time algorithms
+                        SchedulerStats::display_stats(algorithms[i]->get_scheduler_name());
+                    else // Diplsay stats for general algorithms
+                        SchedulerStats::display_stats_real_time(algorithms[i]->get_scheduler_name());
+
+                    std::this_thread::sleep_for(std::chrono::seconds(1)); // just so the screen is readable
+                }
                 Scheduler::increment_current_time();
             }
+            SchedulerStats::updateWaitingTime();
+            SchedulerStats::calculateAverageWaitingTime();
             // When all processes are done executing in GEN MODE 1 or 2
-            if (((gen_mode == 1 || gen_mode == 2) 
-                    && (!algorithms[i]->real_time()) 
-                    && algorithms[i]->is_ready_empty()
-                    && Scheduler::get_running_process() == nullptr
-                    && Scheduler::get_loaded_processes_size() == 0)
-                || (gen_mode == 3 && Scheduler::get_current_time() >= execution_time_limit))
+            if (((gen_mode == 1 || gen_mode == 2) && (!algorithms[i]->real_time()) && algorithms[i]->is_ready_empty() && Scheduler::get_running_process() == nullptr && Scheduler::get_loaded_processes_size() == 0) ||
+                (gen_mode == 3 && Scheduler::get_current_time() >= execution_time_limit))
             {
-                std::cout << "All processes completed. Simulation ending..." << std::endl;
-                std::this_thread::sleep_for(std::chrono::seconds(3));
+                if (algorithms[i]->real_time())
+                    SchedulerStats::display_final_stats_real_time(algorithms[i]->get_scheduler_name());
+                else
+                    SchedulerStats::display_final_stats(algorithms[i]->get_scheduler_name());
                 stop_sched = true;
             }
         }
-        // // might delete this -> std::cout << "Simulation stopped" << std::endl;
     }
 }

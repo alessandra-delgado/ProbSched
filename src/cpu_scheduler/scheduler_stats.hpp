@@ -1,10 +1,12 @@
 #pragma once
 #include <vector>
 #include <cmath>
+#include <unordered_map>
 #include "scheduler.hpp"
 class SchedulerStats
 {
 private:
+    inline static bool skip_to_final_stats = false;
     // For intermediate calculations
     inline static int total_turnaround_time = 0;
     inline static int total_waiting_time = 0;
@@ -24,7 +26,8 @@ private:
 
     inline static std::vector<PCB> terminated_processes; // get amount of completed processes with size()
     inline static std::vector<PCB> ready_queue;
-    
+    inline static std::unordered_map<int, int> waiting_times;
+
     // For real time
     inline static double cpu_util_bound = 0.0;
     inline static double liu_ley_bound = 0.0;
@@ -34,36 +37,50 @@ private:
     static inline std::vector<std::string> process_history;
     static inline int history_index = 0;
 
-
-
 public:
+    // total created processes
+    static inline void set_total_processes(int n) { total_processes = n; }
+    static inline void inc_total_processes() { total_processes++; }
+    static inline int get_total_processes() { return total_processes; }
+
+    static inline bool get_skip_to_final() { return skip_to_final_stats; }
+    static inline void set_skip_to_final(bool b) { skip_to_final_stats = b; }
     static void collect(
         int current_time,
         int total_utilization_time,
         const std::vector<PCB> ready_queue,
         const std::vector<PCB> terminated_processes);
 
+    static void display_final_stats(std::string title);
+    static void display_final_stats_real_time(std::string title);
     static void display_stats(std::string title);
     static void display_stats_real_time(std::string title);
-    static void updateWaitingTime(int current_time);
+    static void updateWaitingTime();
+    static void calculateAverageWaitingTime();
     static void updateTurnaroundTime(const std::vector<PCB> &terminated_processes);
     static void updateThroughput(int current_time);
-    static void updateDeadlineMisses(const std::vector<PCB> &terminated_processes);
+
+    static void update_deadline_misses();
+
     static void reset_stats()
     {
+        deadline_misses = 0;
+        total_processes = 0;
         total_response_time = 0;
         total_utilization_time = 0;
         total_turnaround_time = 0;
-        total_utilization_time = 0;
         total_processes = 0;
         total_completed_processes = 0;
         current_time = 0;
         average_turnaround_time = 0.0;
+        waiting_times.clear();
         average_waiting_time = 0;
         throughput = 0.0;
         deadline_misses = 0;
         terminated_processes.clear();
         ready_queue.clear();
+        cpu_util_bound = 0.0f;
+        liu_ley_bound = 0.0f;
 
         process_history = std::vector<std::string>(HISTORY_SIZE, "");
         history_index = 0;
@@ -86,9 +103,7 @@ public:
         }
 
         cpu_util_bound = sum_util;
-        liu_ley_bound = static_cast<double>(tasks.size()) * 
-                (std::pow(2.0, 1.0 / static_cast<double>(tasks.size())) - 1.0);
-
-
+        liu_ley_bound = static_cast<double>(tasks.size()) *
+                        (std::pow(2.0, 1.0 / static_cast<double>(tasks.size())) - 1.0);
     }
 };

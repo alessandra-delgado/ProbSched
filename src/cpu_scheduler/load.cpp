@@ -34,5 +34,6 @@ void load(std::string file, bool real_time)
 
         processes.push_back(pcb);
     }
+    infile.close();
     Scheduler::set_loaded_processes(processes);
 }
