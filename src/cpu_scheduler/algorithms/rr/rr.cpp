@@ -34,11 +34,7 @@ const PCB RoundRobin::get_next_pcb()
 }
 
 void RoundRobin::generate_pcb_queue(int num_processes) {
-    generated_processes = num_processes;
-    for (int i = 0; i < num_processes; ++i) {
-        PCB pcb = ProcessGenerator::generatePCB(Scheduler::get_current_time());
-        add_pcb(pcb);
-    }
+    loaded_processes = ProcessGenerator::generatePCBListInterArrival(num_processes);
 }
 
 void RoundRobin::schedule()

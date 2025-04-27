@@ -95,7 +95,7 @@ void SchedulerStats::display_final_stats_real_time(std::string title)
 {
     // Prepare the screen for interactive rendering
     auto screen = ScreenInteractive::Fullscreen();
-
+    SchedulerStats::set_cpu_utilization_bounds(ready_queue);
     // Create the render function with prettier formatting
     auto render_stats = [&]() -> Element
     {

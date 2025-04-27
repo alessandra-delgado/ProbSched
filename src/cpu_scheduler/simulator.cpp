@@ -66,11 +66,6 @@ void simulator()
         // * GEN MODE 0: infinite process generation ******************************************************************
         if (gen_mode == 0)
         {
-            if (i == 5)
-            { // Round Robin
-                dynamic_cast<RoundRobin *>(algorithms[i].get())->set_max_processes(INT_MAX);
-                dynamic_cast<RoundRobin *>(algorithms[i].get())->enable_random_generation(); // ? why complicate..?
-            }
             if (algorithms[i]->real_time())
             {
                 algorithms[i]->generate_pcb_queue(3);
@@ -92,16 +87,8 @@ void simulator()
             }
             else
             {
-                if (i == 5) // Catch round robin
-                {
-                    dynamic_cast<RoundRobin *>(algorithms[i].get())->set_max_processes(process_count);
-                    dynamic_cast<RoundRobin *>(algorithms[i].get())->disable_random_generation();
-                    dynamic_cast<RoundRobin *>(algorithms[i].get())->generate_pcb_queue(process_count);
-                }
-                else
-                {
-                    algorithms[i]->generate_pcb_queue(process_count);
-                }
+
+                algorithms[i]->generate_pcb_queue(process_count);
             }
         }
         // * GEN MODE 2: Load processes from a file *******************************************************************
@@ -162,11 +149,11 @@ void simulator()
             }
             else
             {
-                // Display stats for real time algorithms
-                if (!SchedulerStats::get_skip_to_final() )
+                if (!SchedulerStats::get_skip_to_final() || (SchedulerStats::get_skip_to_final() &&  (gen_mode == 0 || (algorithms[i]->real_time() && gen_mode != 3))))
                 {
 
                     if (!(algorithms[i]->real_time()))
+                        // Display stats for real time algorithms
                         SchedulerStats::display_stats(algorithms[i]->get_scheduler_name());
                     else // Diplsay stats for general algorithms
                         SchedulerStats::display_stats_real_time(algorithms[i]->get_scheduler_name());
@@ -178,15 +165,10 @@ void simulator()
             SchedulerStats::updateWaitingTime();
             SchedulerStats::calculateAverageWaitingTime();
             // When all processes are done executing in GEN MODE 1 or 2
-            if (   ((gen_mode == 1 || gen_mode == 2) 
-                    && (!algorithms[i]->real_time()) 
-                    && algorithms[i]->is_ready_empty() 
-                    && Scheduler::get_running_process() == nullptr 
-                    && Scheduler::get_loaded_processes_size() == 0)
-                    || 
-                    (gen_mode == 3 && Scheduler::get_current_time() >= execution_time_limit))
+            if (((gen_mode == 1 || gen_mode == 2) && (!algorithms[i]->real_time()) && algorithms[i]->is_ready_empty() && Scheduler::get_running_process() == nullptr && Scheduler::get_loaded_processes_size() == 0) ||
+                (gen_mode == 3 && Scheduler::get_current_time() >= execution_time_limit))
             {
-                if(algorithms[i]->real_time())
+                if (algorithms[i]->real_time())
                     SchedulerStats::display_final_stats_real_time(algorithms[i]->get_scheduler_name());
                 else
                     SchedulerStats::display_final_stats(algorithms[i]->get_scheduler_name());

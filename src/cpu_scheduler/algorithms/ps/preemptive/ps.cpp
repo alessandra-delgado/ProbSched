@@ -80,11 +80,7 @@ void PriorityPreemptive::schedule()
 }
 
 void PriorityPreemptive::generate_pcb_queue(int num_processes) {
-    for (int i = 0; i < num_processes; ++i) {
-        PCB pcb = ProcessGenerator::generatePCB(Scheduler::get_current_time());
-        add_pcb(pcb);
-    }
-    generated_processes = num_processes;
+    loaded_processes = ProcessGenerator::generatePCBListInterArrival(num_processes);
 }
 
 std::vector<PCB> PriorityPreemptive::ready_queue_to_vector()
