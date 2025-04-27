@@ -6,6 +6,8 @@
 class SchedulerStats
 {
 private:
+    inline static bool skip_to_final_stats = false;
+    
     // For intermediate calculations
     inline static int total_turnaround_time = 0;
     inline static int total_waiting_time = 0;
@@ -37,6 +39,8 @@ private:
     static inline int history_index = 0;
 
 public:
+    static inline bool get_skip_to_final() { return skip_to_final_stats; }
+    static inline void set_skip_to_final(bool b) { skip_to_final_stats = b; }
     static void collect(
         int current_time,
         int total_utilization_time,

@@ -162,12 +162,14 @@ void simulator()
             else
             {
                 // Display stats for real time algorithms
-                if (!(algorithms[i]->real_time()))
-                    SchedulerStats::display_stats(algorithms[i]->get_scheduler_name());
-                else // Diplsay stats for general algorithms
-                    SchedulerStats::display_stats_real_time(algorithms[i]->get_scheduler_name());
-
-                std::this_thread::sleep_for(std::chrono::seconds(1)); // just so the screen is readable
+                if(!SchedulerStats::get_skip_to_final()){
+                    if (!(algorithms[i]->real_time()))
+                        SchedulerStats::display_stats(algorithms[i]->get_scheduler_name());
+                    else // Diplsay stats for general algorithms
+                        SchedulerStats::display_stats_real_time(algorithms[i]->get_scheduler_name());
+    
+                    std::this_thread::sleep_for(std::chrono::seconds(1)); // just so the screen is readable
+                }
                 Scheduler::increment_current_time();
             }
             // When all processes are done executing in GEN MODE 1 or 2
